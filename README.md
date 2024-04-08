@@ -10,7 +10,7 @@ Este proyecto utiliza las siguientes convenciones de estilo:
 *  **Nombres de variables**: en inglés 
 
 **Ejemplos**: 
-``` 
+```javascript 
 const fullName = 'Juan Pérez'; 
 const funcCalculateArea = (ancho, alto) => { // ... };
 ```
