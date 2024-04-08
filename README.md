@@ -2,8 +2,8 @@
 
 Bienvenido al proyecto **Typical Medical Center**. Este proyecto está basado en un sistema de un centro médico, desarrollado con fines educativos y, en esta ocasión, para presentarlo como portafolio de título en **DuocUC**.
 
-
-# Estructura de código
+# Código
+## Estilo de código
 
 Este proyecto utiliza las siguientes convenciones de estilo: 
 *  **Nombres de variables, funciones y métodos**: camelCase
