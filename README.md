@@ -12,5 +12,5 @@ Este proyecto utiliza las siguientes convenciones de estilo:
 **Ejemplos**: 
 ```javascript 
 const fullName = 'Juan Pérez'; 
-const funcCalculateArea = (ancho, alto) => { // ... };
+const funcCalculateArea = (width, height) => { // ... };
 ```
