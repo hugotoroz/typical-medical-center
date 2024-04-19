@@ -10,23 +10,24 @@ function App() {
     const [count, setCount] = useState(0);
 
     return (
-      <Router>
         <div className="App">
-          <PrincipalNavbar />
-            <div className="container-fluid"> 
-              <div className="row">
-                <div className="col">
-                  <img src={imageHospital} alt="" className="initialImage" />
+          <Router>
+            <PrincipalNavbar />
+          </Router>
+          <div className="container-fluid"> 
+            <div className="row">
+              <div className="col">
+                <img src={imageHospital} alt="" className="initialImage" />
+              </div>
+              <div className="col">
+                <div className="initialText">
+                  <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi aspernatur ab natus dolorum fuga facilis optio voluptatibus accusamus fugit labore ea rem dignissimos asperiores voluptatem temporibus, cumque vero eveniet adipisci?</h2>
                 </div>
-                <div className="col">
-                  <div className="initialText">
-                    <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi aspernatur ab natus dolorum fuga facilis optio voluptatibus accusamus fugit labore ea rem dignissimos asperiores voluptatem temporibus, cumque vero eveniet adipisci?</h2>
-                  </div>
-                </div>
-              </div> 
-            </div>
+              </div>
+            </div> 
+          </div>
         </div>
-      </Router>
+      
     );
   
 }
