@@ -8,9 +8,9 @@
 }
 
 .show-navbar {
-    background-color: #fff; /* color de fondo del navbar cuando está visible */
+    background-color: #fff; 
   }
   
   .hide-navbar {
-    background-color: transparent; /* color de fondo del navbar cuando está oculto */
+    background-color: transparent; 
   }
