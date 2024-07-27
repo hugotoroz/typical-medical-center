@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { GiMedicalDrip } from "react-icons/gi";
+import React from 'react';
+import { FaBriefcaseMedical } from "react-icons/fa";
 import "../css/navbar.css"
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -11,29 +11,11 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const PrincipalNavbar = () => {
 
-    const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-    const [prevScrollPos, setPrevScrollPos] = useState(0);
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-        window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-    const handleScroll = () => {
-        const currentScrollPos = window.pageYOffset;
-        setIsNavbarVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
-        setPrevScrollPos(currentScrollPos);
-    };
-
-
     return (
         <>
-        <Navbar collapseOnSelect expand="lg" className={isNavbarVisible ? 'navbar show-navbar' : 'navbar hide-navbar'} fixed="top" >
+        <Navbar collapseOnSelect expand="lg" className="navbar" fixed="top" >
         <Container fluid>
-            <Navbar.Brand href="#home"><GiMedicalDrip  style={{ fontSize: '1.9em' }}/></Navbar.Brand>
+            <Navbar.Brand href="#home"><FaBriefcaseMedical  style={{ fontSize: '1.9em' }}/></Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">

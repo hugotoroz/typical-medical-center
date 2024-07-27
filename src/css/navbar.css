@@ -4,13 +4,4 @@
     width: 100%;
     z-index: 1000;
     background-color: rgb(231, 237, 238);
-    transition: background-color 0.3s ease;
 }
-
-.show-navbar {
-    background-color: #fff; /* color de fondo del navbar cuando está visible */
-  }
-  
-  .hide-navbar {
-    background-color: transparent; /* color de fondo del navbar cuando está oculto */
-  }
