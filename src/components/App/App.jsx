@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MainPage from '../../pages/mainPage';
-import Login from '../../pages/login';
+import Index from '../../pages/index/index';
+import Login from '../../pages/login/login';
 import './App.css'
 
 ////Configures routes and renders the application with routing.
@@ -13,7 +13,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </Router>

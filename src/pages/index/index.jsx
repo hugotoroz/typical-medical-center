@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/navbar/navbar.jsx';
 
 const MainPage = () => {
 
@@ -12,7 +13,10 @@ const MainPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <>
+    <Navbar />
+
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl pt-16">
         <div className="md:flex text-left">
             <div className="md:shrink-0">
                 <img className="h-48 w-full object-cover md:h-full md:w-48" src="src/images/mainPage/hospital.jpg" alt="Modern building architecture"/>
@@ -27,6 +31,8 @@ const MainPage = () => {
             </div>
         </div>
     </div>
+    </>
+    
   );
 };
 
