@@ -12,7 +12,7 @@ function Navbar() {
                     <div className="flex items-center">
                         <img className="w-10 h-10 rounded-full" src="src/images/mainPage/hospital.jpg" alt="Logo" />
                     </div>
-                    <div className="hidden md:flex space-x-8 ml-7">
+                    <div className="hidden md:flex space-x-9 ml-9">
                         <a href="#" className="text-gray-700 hover:text-blue-500">Services</a>
                         <a href="#" className="text-gray-700 hover:text-blue-500">Patient</a>
                         <a href="#" className="text-gray-700 hover:text-blue-500">Contact</a>
