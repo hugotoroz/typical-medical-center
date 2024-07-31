@@ -35,7 +35,7 @@ function Navbar() {
       <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-30"> {/* Navbar with z-30 */}
         <div className="max-w-8xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <img className="hidden md:block w-10 h-10 rounded-full" src="src/images/mainPage/hospital.jpg" alt="Logo" />
+            <img className="hidden md:block w-10 h-10 rounded-full" src="src/images/index/hospital.jpg" alt="Logo" />
             <div className="md:hidden">
               <button onClick={toggleMenu} className="text-gray-700 focus:outline-none">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -46,7 +46,6 @@ function Navbar() {
           </div>
           <div className="hidden md:flex space-x-9 ml-9">
             <NavLink
-              exact
               to="/"
               className={`text-gray-700 underline-black ${location.pathname === '/' ? 'active' : ''}`}
             >
@@ -73,7 +72,7 @@ function Navbar() {
           </div>
           <div className="flex items-center space-x-6 ml-auto">
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
-              Make a reservation
+              Make an appointment
             </button>
             <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
           </div>
@@ -83,7 +82,6 @@ function Navbar() {
       <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} z-20 mt-16`}> {/* Add mt-16 */}
         <div className="p-4">
           <NavLink
-            exact
             to="/"
             className={`block text-gray-700 p-4 ${location.pathname === '/' ? 'active' : ''}`}
             onClick={closeMenu}

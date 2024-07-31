@@ -1,39 +1,117 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/navbar/navbar.jsx';
+    import React, { useState, useEffect } from 'react'; // hooks
+    import { useNavigate } from 'react-router-dom';
+    import Navbar from '../../components/navbar/navbar.jsx';
+    import { motion, AnimatePresence } from 'framer-motion'; // animations
+    import './index.css';
 
-const MainPage = () => {
+    /* animated text from the banner */
+    const texts = [
+    "Your Health Starts Here",
+    "We provide high-quality medical care",
+    "Here for Your Health, Every Step of the Way",
+    "We are here to help you anytime",
+    "Advanced Medical Solutions for All Your Needs"
+    ];
 
-  ////Function to navegate trough the pages
+    const TextSwitcher = () => {
+    const [index, setIndex] = useState(0);
 
-  const navigate = useNavigate();
+    useEffect(() => {
+        const interval = setInterval(() => {
+        setIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }, 6000); // Change every 6  seconds
 
-  const handleLoginRedirect = () => {
-      navigate('/login');
-  };
+        return () => clearInterval(interval);
+    }, []);
 
-  return (
-    <>
-    <Navbar />
+    return (
+        <div className="relative w-full max-w-4xl">
+        <AnimatePresence>
+            <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.0 }}
+            className="absolute w-full"
+            >
+            <h1 className="text-xxs font-bold mb-3 sm:text-xl md:text-2xl lg:text-3xl">{texts[index]}</h1>
+            {/* Adjusted font sizes for different screen sizes */}
+            </motion.div>
+        </AnimatePresence>
+        </div>
+    );
+    };
 
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl pt-16">
-        <div className="md:flex text-left">
-            <div className="md:shrink-0">
-                <img className="h-48 w-full object-cover md:h-full md:w-48" src="src/images/mainPage/hospital.jpg" alt="Modern building architecture"/>
+    const MainPage = () => {
+    // Function to navigate through the pages
+    const navigate = useNavigate();
+
+    const handleLoginRedirect = () => {
+        navigate('/login');
+    };
+
+    return (
+        <>
+        <Navbar />
+        {/* banner */}
+        <div className="mt-navbar relative w-full max-h-[500px]">
+            <img
+            className="w-full h-full object-cover shadow-bottom "
+            src="src/images/index/banner.png"
+            alt="Hospital banner"
+            />
+
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+            <TextSwitcher />
             </div>
-            <div className="p-8">
-                <div className="tracking-wide text-sm text-indigo-500 font-semibold">Company retreats</div>
-                <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">Incredible accommodation for your team</a>
-                <p className="mt-2 text-slate-500">Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.</p>
-                <button onClick={handleLoginRedirect} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Go to Login
-                </button>
+            
+        
+        </div>
+
+        {/* content */}
+        {/* locations */}
+        <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Locations</p>
+        <div className="flex flex-wrap justify-center gap-4 my-4">
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt=""/>
+                </a>
+            </div>
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt=""/>
+                </a>
+            </div>
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt=""/>
+                </a>
             </div>
         </div>
-    </div>
-    </>
-    
-  );
-};
 
-export default MainPage;
+        {/* specialties */}
+        <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialties</p>
+        <div className="flex flex-wrap justify-center gap-4 my-4">
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt=""/>
+                </a>
+            </div>
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt=""/>
+                </a>
+            </div>
+            <div className="max-w-xs">
+                <a href="#" className="flex flex-col">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt=""/>
+                </a>
+            </div>
+        </div>
+        
+        </>
+    );
+    };
+
+    export default MainPage;

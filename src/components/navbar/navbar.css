@@ -37,7 +37,6 @@
   overflow: hidden;
 }
 
-/* Ensure z-index stacking context is correct */
 .fixed {
   position: fixed;
   width: 100%;
@@ -46,3 +45,5 @@
 .top-16 {
   top: 4rem; /* Adjust based on the actual height of your navbar */
 }
+
+
