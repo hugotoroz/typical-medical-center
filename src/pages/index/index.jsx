@@ -1,6 +1,7 @@
     import React, { useState, useEffect } from 'react'; // hooks
     import { useNavigate } from 'react-router-dom';
     import Navbar from '../../components/navbar/navbar.jsx';
+    import Chatbot from '../../components/chatbot/chatbot.jsx';
     import { motion, AnimatePresence } from 'framer-motion'; // animations
     import './index.css';
 
@@ -55,15 +56,16 @@
         <>
         <Navbar />
         {/* banner */}
-        <div className="mt-navbar relative w-full max-h-[500px]">
+        <div className="absolute mt-navbar relative">
             <img
-            className="w-full h-full object-cover shadow-bottom "
+            className="h-auto w-full shadow-bottom"
             src="src/images/index/banner.png"
             alt="Hospital banner"
             />
 
             <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-            <TextSwitcher />
+                <TextSwitcher />
+                <Chatbot />
             </div>
             
         
