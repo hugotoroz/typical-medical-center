@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import './navbar.css';
 
 function Navbar() {
@@ -71,9 +71,10 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
+            <Link to="/login" className="text-gray-700 underline-black">
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
               Make an appointment
-            </button>
+            </button></Link>
             <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
           </div>
         </div>
