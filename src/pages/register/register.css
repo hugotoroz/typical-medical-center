@@ -1,0 +1,10 @@
+/* register.css */
+.divider {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #ccc;
+    z-index: 10;
+  }
