@@ -1,6 +1,7 @@
     import React, { useState, useEffect } from 'react'; // hooks
     import { useNavigate } from 'react-router-dom';
     import Navbar from '../../components/navbar/navbar.jsx';
+    import Footer from '../../components/footer/footer.jsx';
     import Chatbot from '../../components/chatbot/chatbot.jsx';
     import { motion, AnimatePresence } from 'framer-motion'; // animations
     import './index.css';
@@ -65,53 +66,110 @@
 
             <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
                 <TextSwitcher />
-                <Chatbot />
             </div>
             
         
         </div>
 
         {/* content */}
+        {/* Section with 4 rounded squares */}
+        <div className="flex justify-center gap-20 my-20">
+            <a href='#' className="shortcuts">
+                <i className="fas fa-calendar-alt fa-2x mb-2 text-red-500"></i> {/* Icon for Appointment */}
+                <p className="text-center font-semibold">Appointment</p> {/* Text */}
+            </a>
+            <a href='#' className="shortcuts">
+                <i className="fas fa-map-marker-alt fa-2x mb-2 text-blue-500"></i> {/* Icon for Doctors */}
+                <p className="text-center font-semibold">Locations</p> {/* Text */}
+            </a>
+            <a href='#' className="shortcuts">
+                <i className="fas fa-clipboard-list fa-2x mb-2 text-green-500"></i> {/* Icon for Services */}
+                <p className="text-center font-semibold">Specialities</p> {/* Text */}
+            </a>
+            <a href='#' className="shortcuts">
+                <i className="fas fa-user-md fa-2x mb-2 text-yellow-500"></i> {/* Icon for Customer Service */}
+                <p className="text-center font-semibold">Doctors</p> {/* Text */}
+            </a>
+        </div>
+
         {/* locations */}
         <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Locations</p>
         <div className="flex flex-wrap justify-center gap-4 my-4">
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Rio imperial 460</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Pje Mar Rojo 2489</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt="Hospital 3"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Ñuñoa 345</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
         </div>
 
-        {/* specialties */}
-        <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialties</p>
+        {/* Specialities */}
+        <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialities</p>
         <div className="flex flex-wrap justify-center gap-4 my-4">
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Rio imperial 460</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Pje Mar Rojo 2489</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
             <div className="max-w-xs">
-                <a href="#" className="flex flex-col">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt=""/>
+                <a href="#" className="flex flex-col location-card">
+                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt="Hospital 3"/>
+                    <div className="location-overlay">
+                        <p className="location-text">Ñuñoa 345</p>
+                        <button className="location-button" onClick={() => {/* Maps */}}>
+                            View on map
+                        </button>
+                    </div>
                 </a>
             </div>
         </div>
-        
+
+        <Footer />
+        <Chatbot />
         </>
     );
     };

@@ -71,7 +71,7 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
-            <Link to="/login" className="text-gray-700 underline-black">
+            <Link to="/login" className="text-gray-700">
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
               Make an appointment
             </button></Link>

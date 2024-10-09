@@ -5,6 +5,7 @@ import Login from '../../pages/login/login';
 import Contact from '../../pages/contact/contact';
 import './App.css'
 import Register from '../../pages/register/register';
+import '@fortawesome/fontawesome-free/css/all.min.css'; ////font-awesome icons
 
 ////Configures routes and renders the application with routing.
 
