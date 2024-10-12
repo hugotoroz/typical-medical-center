@@ -17,15 +17,15 @@ const AdminManagment = () => {
   const [openId, setOpenId] = useState(null); // State to store user ID open
 
   const [data, setData] = useState([
-    { id: 1, name: 'John Doe', role: 'Admin', email: 'john@example.com', disabled: false },
-    { id: 2, name: 'Jane Smith', role: 'Editor', email: 'jane@example.com', disabled: false },
-    { id: 3, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 4, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 5, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 6, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 7, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 8, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 9, name: 'Bob Johnson', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 1, name: '21255252-6', role: 'Admin', email: 'john@example.com', disabled: false },
+    { id: 2, name: '21255252-6', role: 'Editor', email: 'jane@example.com', disabled: false },
+    { id: 3, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 4, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 5, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 6, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 7, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 8, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
+    { id: 9, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
   ]);
 
   return (
@@ -37,8 +37,8 @@ const AdminManagment = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
