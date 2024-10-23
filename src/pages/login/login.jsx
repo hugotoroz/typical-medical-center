@@ -2,7 +2,10 @@ import React,{useState} from 'react';
 import Navbar from '../../components/navbar/navbar';
 import loginImg from '../../images/login/centromedico.jpg';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     rut: '',
     clave: ''
@@ -48,6 +51,7 @@ const Login = () => {
         if (response.ok) {
           console.log('Form submitted successfully', data);
           localStorage.setItem('token', data.token);
+          navigate('/');
         } else {
           console.error('Error logging in', data);
           setErrors({ form: data.data || 'Credenciales inválidas' });
