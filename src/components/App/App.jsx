@@ -5,6 +5,7 @@ import Login from '../../pages/login/login';
 import Contact from '../../pages/contact/contact';
 import './App.css'
 import Register from '../../pages/register/register';
+import Schedule from '../../pages/scheduleAppointments/schedule';
 
 ////Configures routes and renders the application with routing.
 
@@ -19,7 +20,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Register />} />
-        </Routes>
+          <Route path="/schedule" element={<Schedule />} />
+        </Routes> 
       </Router>
     </>
   )
