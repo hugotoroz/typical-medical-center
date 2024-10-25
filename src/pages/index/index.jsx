@@ -1,5 +1,5 @@
     import React, { useState, useEffect } from 'react'; // hooks
-    import { useNavigate } from 'react-router-dom';
+    import { Link, useNavigate } from 'react-router-dom';
     import Navbar from '../../components/navbar/navbar.jsx';
     import { motion, AnimatePresence } from 'framer-motion'; // animations
     import './index.css';
@@ -93,11 +93,12 @@
         {/* specialties */}
         <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialties</p>
         <div className="flex flex-wrap justify-center gap-4 my-4">
+            <Link to="/schedule">
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col">
                     <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt=""/>
                 </a>
-            </div>
+            </div></Link>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col">
                     <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt=""/>
