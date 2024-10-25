@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios'; // Importa Axios
 import Navbar from '../../components/navbar/navbar.jsx';
 import Footer from '../../components/footer/footer.jsx';
 import Chatbot from '../../components/chatbot/chatbot.jsx';
@@ -13,25 +14,45 @@ import { motion } from "framer-motion";
 import './adminManagment.css';
 
 const AdminManagment = () => {
-
   const [openId, setOpenId] = useState(null); // State to store user ID open
+  const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
+  const [error, setError] = useState(null); // Estado para manejar errores
 
-  const [data, setData] = useState([
-    { id: 1, name: '21255252-6', role: 'Admin', email: 'john@example.com', disabled: false },
-    { id: 2, name: '21255252-6', role: 'Editor', email: 'jane@example.com', disabled: false },
-    { id: 3, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 4, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 5, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 6, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 7, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 8, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-    { id: 9, name: '21255252-6', role: 'Viewer', email: 'bob@example.com', disabled: false },
-  ]);
+  // Función para obtener los datos de la API usando Axios
+  const fetchData = async () => {
+    try {
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwicnV0IjoiMTIzNDU2NzgtayIsImVtYWlsIjoiaHVnb3Rvcm9AZ21haWwuY29tIiwiZnVsbE5hbWUiOiJIdWdvIFRvcm8gWsO6w7FpZ2EiLCJyb2xlIjoicGFjaWVudGUiLCJpYXQiOjE3MjkzNzI3MDcsImV4cCI6MTcyOTQxNTkwN30.XFZkIt7bYWzsXs95elQnl32XIh10Qj2T1mRTNNtmBKo'; // Token de autenticación
+      const response = await axios.get('https://backend-tmc.onrender.com/patients', {
+        headers: {
+          Authorization: `Bearer ${token}` // Enviar el token en los headers
+        }
+      });
+
+      // Bring all the data
+      const filteredData = response.data.map((user) => ({
+        id: user.id, 
+        name: user.nom, 
+        rut: user.rut, 
+        email: user.email 
+      }));
+
+      setData(filteredData); // Actualizar el estado con los datos filtrados
+    } catch (error) {
+      setError('Error fetching data'); // Manejar error si la API falla
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  // useEffect para obtener los datos al montar el componente
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="container mx-auto mt-10 pt-16 mb-10 flex-grow">
+        {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
         <div className="overflow-x-auto">
           <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
             <thead className="bg-gray-50">
@@ -47,8 +68,8 @@ const AdminManagment = () => {
               {data.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-100 transition-colors duration-200">
                   <td className="px-4 py-3 border-b border-gray-200 text-sm">{user.id}</td>
+                  <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.rut}</td>
                   <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.role}</td>
                   <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
                   <td className="px-4 py-3 border-b border-gray-200 text-sm">
                     <div className="flex items-center justify-center">
@@ -106,6 +127,7 @@ const Option = ({ text, Icon, setOpen }) => {
 
 export default AdminManagment;
 
+// Variants for animations
 const wrapperVariants = {
   open: {
     scaleY: 1,
