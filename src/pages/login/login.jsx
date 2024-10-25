@@ -3,6 +3,7 @@ import Navbar from '../../components/navbar/navbar';
 import loginImg from '../../images/login/centromedico.jpg';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -50,8 +51,23 @@ const Login = () => {
         const data = await response.json();
         if (response.ok) {
           console.log('Form submitted successfully', data);
-          localStorage.setItem('token', data.token);
-          navigate('/');
+          localStorage.setItem('token', data.data.token);
+
+          console.log('token: ' + data.data.token);
+
+          // We decode the token
+          const decodedToken = jwtDecode(data.data.token);
+          const userRole = decodedToken.role;
+
+          if (userRole === 'paciente') {
+            navigate('/'); 
+          } else if (userRole === 'doctor') {
+            navigate('/DoctorsPage'); 
+          } else {
+            console.error('Rol desconocido');
+            setErrors({ form: 'Rol desconocido' });
+          }
+
         } else {
           console.error('Error logging in', data);
           setErrors({ form: data.data || 'Credenciales inválidas' });
