@@ -7,6 +7,7 @@ import AdminManagment from '../../pages/adminManagment/adminManagment';
 import './App.css'
 import Register from '../../pages/register/register';
 import '@fortawesome/fontawesome-free/css/all.min.css'; ////font-awesome icons
+import Schedule from '../../pages/scheduleAppointments/schedule';
 
 ////Configures routes and renders the application with routing.
 
@@ -17,11 +18,12 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Index />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Register />} />
           <Route path="/adminManagment" element={<AdminManagment />} />
+          <Route path="/schedule" element={<Schedule />} />
         </Routes>
       </Router>
     </>

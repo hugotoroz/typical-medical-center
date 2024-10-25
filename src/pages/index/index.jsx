@@ -1,5 +1,5 @@
     import React, { useState, useEffect } from 'react'; // hooks
-    import { useNavigate } from 'react-router-dom';
+    import { Link, useNavigate } from 'react-router-dom';
     import Navbar from '../../components/navbar/navbar.jsx';
     import Footer from '../../components/footer/footer.jsx';
     import Chatbot from '../../components/chatbot/chatbot.jsx';
@@ -133,6 +133,7 @@
         {/* Specialities */}
         <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialities</p>
         <div className="flex flex-wrap justify-center gap-4 my-4">
+            <Link to="/schedule">
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
                     <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
@@ -143,7 +144,7 @@
                         </button>
                     </div>
                 </a>
-            </div>
+            </div></Link>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
                     <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>

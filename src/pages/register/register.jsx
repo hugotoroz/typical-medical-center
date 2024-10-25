@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navbar/navbar';
 import loginImg from '../../images/login/centromedico.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nombres: '',
     email:'',
@@ -107,7 +110,7 @@ const Register = () => {
         if (response.ok) {
           console.log('Form submitted successfully', data);
           localStorage.setItem('token', data.token);
-          history.push('/menu');
+          navigate('/');
           // Handle successful registration, e.g., redirect or show a success message
         } else {
           if (data.data && data.data.error_code === 'DUPLICATE_KEY') {
