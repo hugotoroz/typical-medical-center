@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios'; // Importa Axios
+import axios from 'axios'; // Import Axios
 import Navbar from '../../components/navbar/navbar.jsx';
 import Footer from '../../components/footer/footer.jsx';
 import Chatbot from '../../components/chatbot/chatbot.jsx';
@@ -26,7 +26,7 @@ const AdminManagment = () => {
         headers: {
           Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
-      });
+      }); 
 
       // Bring all the data
       const filteredData = response.data.map((user) => ({

@@ -51,7 +51,7 @@ const Login = () => {
         const data = await response.json();
         if (response.ok) {
           console.log('Form submitted successfully', data);
-          localStorage.setItem('token', data.data.token);
+          sessionStorage.setItem('token', data.data.token);
 
           console.log('token: ' + data.data.token);
 

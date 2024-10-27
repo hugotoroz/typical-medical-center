@@ -54,7 +54,7 @@
     const [rut, setRut] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserName(decodedToken.fullName); 
