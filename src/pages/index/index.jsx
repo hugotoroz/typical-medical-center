@@ -88,10 +88,10 @@
         {/* Section with 4 rounded squares */}
         <div className="flex justify-center gap-20 my-20">
         {userName && <h2 className="text-xl text-white mt-4">Welcome, {rut} {userName}!</h2>}
-            <a href='#' className="shortcuts">
+            <Link to="/schedule"><a href='#' className="shortcuts">
                 <i className="fas fa-calendar-alt fa-2x mb-2 text-red-500"></i> {/* Icon for Appointment */}
                 <p className="text-center font-semibold">Appointment</p> {/* Text */}
-            </a>
+            </a></Link>
             <a href='#' className="shortcuts">
                 <i className="fas fa-map-marker-alt fa-2x mb-2 text-blue-500"></i> {/* Icon for Doctors */}
                 <p className="text-center font-semibold">Locations</p> {/* Text */}
@@ -147,7 +147,7 @@
         {/* Specialities */}
         <p className="mb-banner text-center text-3xl font-semibold text-gray-800 mb-4">Specialities</p>
         <div className="flex flex-wrap justify-center gap-4 my-4">
-        <Link to="/schedule">
+
             <div className="max-w-xs flex flex-col location-card">
                 <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
                 <div className="location-overlay">
@@ -157,7 +157,6 @@
                     </button>
                 </div>
             </div>
-        </Link>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
                     <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>
