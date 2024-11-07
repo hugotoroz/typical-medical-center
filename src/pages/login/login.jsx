@@ -37,7 +37,7 @@ const Login = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await fetch('https://backend-tmc.onrender.com/user/login', {
+        const response = await fetch('https://clownfish-app-o3bfn.ondigitalocean.app/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

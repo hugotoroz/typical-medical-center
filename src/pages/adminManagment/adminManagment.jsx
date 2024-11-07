@@ -18,11 +18,16 @@ const AdminManagment = () => {
   const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
   const [error, setError] = useState(null); // Estado para manejar errores
 
+  const token = sessionStorage.getItem('token');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // Función para obtener los datos de la API usando Axios
   const fetchData = async () => {
     try {
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1IiwicnV0IjoiMTIzNDU2NzgtayIsImVtYWlsIjoiaHVnb3Rvcm9AZ21haWwuY29tIiwiZnVsbE5hbWUiOiJIdWdvIFRvcm8gWsO6w7FpZ2EiLCJyb2xlIjoicGFjaWVudGUiLCJpYXQiOjE3MjkzNzI3MDcsImV4cCI6MTcyOTQxNTkwN30.XFZkIt7bYWzsXs95elQnl32XIh10Qj2T1mRTNNtmBKo'; // Token de autenticación
-      const response = await axios.get('https://backend-tmc.onrender.com/patients', {
+      const response = await axios.get('https://clownfish-app-o3bfn.ondigitalocean.app/doctors', {
         headers: {
           Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
