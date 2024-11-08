@@ -48,11 +48,6 @@ const AdminManagment = () => {
     }
   };
 
-  // useEffect para obtener los datos al montar el componente
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
