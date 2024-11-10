@@ -12,6 +12,7 @@ import {
     FiShare,
     FiPlusSquare,
   } from "react-icons/fi";
+import { API_URL } from '../../../config.js'; //VARIABLE DE ENTORNO
 import './doctorsPage.css';
 
 const DoctorsPage = () => {
@@ -27,11 +28,13 @@ const DoctorsPage = () => {
 
     const fetchData = async () => {
     try {
-        const response = await axios.get('https://clownfish-app-o3bfn.ondigitalocean.app/doctors', {
+        const response = await axios.get(`${API_URL}/specialities/doctors`, {
         headers: {
             Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
         }); 
+
+        console.log(response.data);
 
         // Bring all the data
         const filteredData = response.data.map((user) => ({
@@ -115,6 +118,7 @@ return (
         </div>
       </div>
     </div>
+    
     </>
 );
 };

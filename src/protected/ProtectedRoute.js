@@ -1,13 +1,17 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
-  if (!token) {
-    // Si no hay token, redirige a la página de login
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    const token = sessionStorage.getItem('token'); // Asegúrate de que 'token' está almacenado en sessionStorage
+
+    if (!token) {
+      // Redirige a la página de login si no hay token
+      navigate('/login');
+    }
+  }, [navigate]);
 
   // Si hay token, renderiza el componente hijo
   return children;

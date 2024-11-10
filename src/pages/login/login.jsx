@@ -4,6 +4,7 @@ import loginImg from '../../images/login/centromedico.jpg';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
+import { API_URL } from '../../../config.js';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Login = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await fetch('https://clownfish-app-o3bfn.ondigitalocean.app/user/login', {
+        const response = await fetch(`${API_URL}/user/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
-import Navbar from '../../components/navbar/navbar.jsx';
-import Footer from '../../components/footer/footer.jsx';
 import Chatbot from '../../components/chatbot/chatbot.jsx';
+import { Sidebar, SidebarItem } from '../../components/sidebar/sidebar.jsx';
+import { Link } from 'react-router-dom';
 import {
   FiEdit,
   FiChevronDown,
@@ -11,6 +11,7 @@ import {
   FiPlusSquare,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { API_URL } from '../../../config.js'; //VARIABLE DE ENTORNO
 import './adminManagment.css';
 
 const AdminManagment = () => {
@@ -27,7 +28,7 @@ const AdminManagment = () => {
   // Función para obtener los datos de la API usando Axios
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://clownfish-app-o3bfn.ondigitalocean.app/doctors', {
+      const response = await axios.get(`${API_URL}/doctors`, {
         headers: {
           Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
@@ -49,9 +50,19 @@ const AdminManagment = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="container mx-auto mt-10 pt-16 mb-10 flex-grow">
+    <>
+    <div className="flex">
+        <Sidebar>
+          <SidebarItem iconName="Home" text="Home" active />
+          <Link to="/newDoctor" className="text-gray-700">
+              <SidebarItem iconName="User" text="Crear doctor" />
+          </Link>
+          <SidebarItem iconName="Settings" text="Settings" />
+        </Sidebar>
+
+       
+      
+      <div className="container mx-auto mt-10 pt-16 mb-10 flex-grow px-4">
         {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
         <div className="overflow-x-auto">
           <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
@@ -104,9 +115,11 @@ const AdminManagment = () => {
           </table>
         </div>
       </div>
-      <Footer />
       <Chatbot />
+   
     </div>
+    
+    </>
   );
 };
 
