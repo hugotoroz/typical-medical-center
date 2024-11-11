@@ -63,7 +63,9 @@ const Login = () => {
           if (userRole === 'paciente') {
             navigate('/'); 
           } else if (userRole === 'doctor') {
-            navigate('/DoctorsPage'); 
+            navigate('/doctorsPage'); 
+          } else if (userRole === 'admin'){
+            navigate('/adminManagment'); 
           } else {
             console.error('Rol desconocido');
             setErrors({ form: 'Rol desconocido' });

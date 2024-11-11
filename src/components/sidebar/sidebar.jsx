@@ -1,6 +1,8 @@
 import { MoreVertical, ChevronLast, ChevronFirst, Home, User, Settings } from "lucide-react";
 import { useContext, createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { Link, useLocation } from "react-router-dom";
+import  logo from "../../images/logo/logo2.jpeg" 
 
 const SidebarContext = createContext();
 
@@ -10,29 +12,46 @@ const iconMap = {
   Settings: <Settings />
 };
 
-export function Sidebar({ children }) {
+// Opciones del sidebar para cada rol
+const sidebarOptionsByRole = {
+  admin: [
+    { path: "/adminManagment", iconName: "Home", text: "Doctores" },
+    { path: "/newDoctor", iconName: "User", text: "Crear doctor" },
+    { path: "/settings", iconName: "Settings", text: "Perfil" }
+  ],
+  doctor: [
+    { path: "/doctorsPage", iconName: "Home", text: "Dashboard" },
+    { path: "/profile", iconName: "User", text: "Perfil" }
+  ]
+  // Otros roles según necesites
+};
+
+export function Sidebar() {
   const [expanded, setExpanded] = useState(true);
   const [userName, setUserName] = useState('');
   const [rut, setRut] = useState('');
+  const [role, setRole] = useState('doctor'); // Rol por defecto (puede configurarse después de decodificar el token)
+  const location = useLocation(); // Para obtener la ruta actual
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      setUserName(decodedToken.fullName); 
-      setRut(decodedToken.rut); 
+      setUserName(decodedToken.fullName);
+      setRut(decodedToken.rut);
+      setRole(decodedToken.role); // Asumiendo que el rol está en el token
     }
   }, []);
 
+  const sidebarItems = sidebarOptionsByRole[role] || [];
+
   return (
-    <aside className="h-screen">
+    <aside className="sticky top-0 h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
-            src="src/images/index/hospital.jpg"
-            className={`overflow-hidden transition-all ${
-              expanded ? "w-32" : "w-0"
-            }`}
+            src={logo}
+            className={`overflow-hidden transition-all ${expanded ? "w-48" : "w-0"}`}
             alt=""
           />
           <button
@@ -44,7 +63,17 @@ export function Sidebar({ children }) {
         </div>
 
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">{children}</ul>
+          <ul className="flex-1 px-3">
+            {sidebarItems.map((item, index) => (
+              <Link to={item.path} className="text-gray-700" key={index}>
+                <SidebarItem
+                  iconName={item.iconName}
+                  text={item.text}
+                  active={location.pathname === item.path} // Establece como activo si la ruta coincide
+                />
+              </Link>
+            ))}
+          </ul>
         </SidebarContext.Provider>
 
         <div className="border-t flex p-3">
@@ -84,7 +113,7 @@ export function SidebarItem({ iconName, text, active, alert }) {
 
       {!expanded && (
         <div
-          className="absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0"
+          className="absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-400"
         >
           {text}
         </div>

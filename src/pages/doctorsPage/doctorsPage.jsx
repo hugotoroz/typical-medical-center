@@ -28,7 +28,7 @@ const DoctorsPage = () => {
 
     const fetchData = async () => {
     try {
-        const response = await axios.get(`${API_URL}/specialities/doctors`, {
+        const response = await axios.get(`${API_URL}/appointments/doctors`, {
         headers: {
             Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
@@ -57,66 +57,69 @@ const handleLoginRedirect = () => {
 
 return (
     <>
-    <div className="flex">
-        <Sidebar>
-          <SidebarItem iconName="Home" text="Home" active />
-          <SidebarItem iconName="User" text="Profile" />
-          <SidebarItem iconName="Settings" text="Settings" />
-        </Sidebar>
+    <div className="flex min-h-screen bg-gradient-to-br from-teal-100 to-teal-150">
+        <Sidebar />
 
-        <div className="container mx-auto mt-10 pt-16 mb-10 flex-grow px-4">
-        {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
-                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-100 transition-colors duration-200">
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm">{user.id}</td>
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.rut}</td>
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
-                  <td className="px-4 py-3 border-b border-gray-200 text-sm">
-                    <div className="flex items-center justify-center">
-                      <motion.div animate={openId === user.id ? "open" : "closed"} className="absolute">
-                        <button
-                          onClick={() => setOpenId(openId === user.id ? null : user.id)} // Alternate Id
-                          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
-                        >
-                          <span className="font-medium text-sm">Post actions</span>
-                          <motion.span variants={iconVariants}>
-                            <FiChevronDown />
-                          </motion.span>
-                        </button>
+        <div className="flex-1 p-8 bg-white bg-opacity-90 rounded-lg shadow-lg m-4">
+          <h2 className="text-2xl font-semibold mb-6">Citas medicas</h2>
+          <div className="container mx-auto  flex-grow px-4">
+            
+          {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
+            <div className="flex justify-center"></div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-100 transition-colors duration-200">
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm">{user.id}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.rut}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm">
+                        <div className="flex items-center justify-center">
+                          <motion.div animate={openId === user.id ? "open" : "closed"} className="absolute">
+                            <button
+                              onClick={() => setOpenId(openId === user.id ? null : user.id)} // Alternate Id
+                              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
+                            >
+                              <span className="font-medium text-sm">Post actions</span>
+                              <motion.span variants={iconVariants}>
+                                <FiChevronDown />
+                              </motion.span>
+                            </button>
 
-                        <motion.ul
-                          initial={wrapperVariants.closed}
-                          variants={wrapperVariants}
-                          style={{ originY: "top", translateX: "-50%" }}
-                          className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
-                        >
-                          <Option setOpen={setOpenId} Icon={FiEdit} text="Edit" />
-                          <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Duplicate" />
-                          <Option setOpen={setOpenId} Icon={FiShare} text="Share" />
-                          <Option setOpen={setOpenId} Icon={FiTrash} text="Remove" />
-                        </motion.ul>
-                      </motion.div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                            <motion.ul
+                              initial={wrapperVariants.closed}
+                              variants={wrapperVariants}
+                              style={{ originY: "top", translateX: "-50%" }}
+                              className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
+                            >
+                              <Option setOpen={setOpenId} Icon={FiEdit} text="Edit" />
+                              <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Duplicate" />
+                              <Option setOpen={setOpenId} Icon={FiShare} text="Share" />
+                              <Option setOpen={setOpenId} Icon={FiTrash} text="Remove" />
+                            </motion.ul>
+                          </motion.div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
-      </div>
+
     </div>
     
     </>

@@ -1,2 +1,2 @@
 //URL DataBase
-export const API_URL = 'https://tmcenter.cl/api';
+export const API_URL = 'clownfish-app-o3bfn.ondigitalocean.app/api';
