@@ -2,6 +2,7 @@ import { MoreVertical, ChevronLast, ChevronFirst, Home, User, Settings } from "l
 import { useContext, createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link, useLocation } from "react-router-dom";
+import  logo from "../../images/logo/logo2.jpeg" 
 
 const SidebarContext = createContext();
 
@@ -49,7 +50,7 @@ export function Sidebar() {
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
-            src="src/images/logo/logo2.jpeg"
+            src={logo}
             className={`overflow-hidden transition-all ${expanded ? "w-48" : "w-0"}`}
             alt=""
           />

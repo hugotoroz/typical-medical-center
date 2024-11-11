@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import logo from "../../images/logo/logo.jpeg"
+import profile from "../../images/navbar/profile.jpg"
 import './navbar.css';
 
 function Navbar() {
@@ -35,7 +37,7 @@ function Navbar() {
       <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-30"> {/* Navbar with z-30 */}
         <div className="max-w-8xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <img className="hidden md:block w-10 h-10 rounded-full" src="src/images/logo/logo.jpeg" alt="Logo" />
+            <img className="hidden md:block w-10 h-10 rounded-full" src={logo} alt="Logo" />
             <div className="md:hidden">
               <button onClick={toggleMenu} className="text-gray-700 focus:outline-none">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +77,7 @@ function Navbar() {
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
               Make an appointment
             </button></Link>
-            <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
+            <img className="w-10 h-10 rounded-full" src={profile} alt="User" />
           </div>
         </div>
       </nav>

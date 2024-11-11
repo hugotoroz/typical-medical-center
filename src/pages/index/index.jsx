@@ -5,6 +5,11 @@
     import Chatbot from '../../components/chatbot/chatbot.jsx';
     import { jwtDecode } from "jwt-decode";
     import { motion, AnimatePresence } from 'framer-motion'; // animations
+    import banner from "../../images/index/banner.png";
+    import hospital from "../../images/index/hospital.jpg"
+    import hospital1 from "../../images/index/hospital1.jpg"
+    import hospital2 from "../../images/index/hospital2.jpg"
+
     import './index.css';
 
     /* animated text from the banner */
@@ -73,7 +78,7 @@
         <div className="absolute mt-navbar relative">
             <img
             className="h-auto w-full shadow-bottom"
-            src="src/images/index/banner.png"
+            src={banner}
             alt="Hospital banner"
             />
 
@@ -111,7 +116,7 @@
         <div className="flex flex-wrap justify-center gap-4 my-4">
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
+                    <img className="object-cover w-full h-48 rounded-3xl" src={hospital} alt="Hospital 1"/>
                     <div className="location-overlay">
                         <p className="location-text">Rio imperial 460</p>
                         <button className="location-button" onClick={() => {/* Maps */}}>
@@ -122,7 +127,7 @@
             </div>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>
+                    <img className="object-cover w-full h-48 rounded-3xl" src={hospital1} alt="Hospital 2"/>
                     <div className="location-overlay">
                         <p className="location-text">Pje Mar Rojo 2489</p>
                         <button className="location-button" onClick={() => {/* Maps */}}>
@@ -133,7 +138,7 @@
             </div>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt="Hospital 3"/>
+                    <img className="object-cover w-full h-48 rounded-3xl" src={hospital2} alt="Hospital 3"/>
                     <div className="location-overlay">
                         <p className="location-text">Ñuñoa 345</p>
                         <button className="location-button" onClick={() => {/* Maps */}}>
@@ -149,7 +154,7 @@
         <div className="flex flex-wrap justify-center gap-4 my-4">
 
             <div className="max-w-xs flex flex-col location-card">
-                <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital.jpg" alt="Hospital 1"/>
+                <img className="object-cover w-full h-48 rounded-3xl" src={hospital} alt="Hospital 1"/>
                 <div className="location-overlay">
                     <p className="location-text">Rio imperial 460</p>
                     <button className="location-button" onClick={() => {/* Maps */}}>
@@ -159,7 +164,7 @@
             </div>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital1.jpg" alt="Hospital 2"/>
+                    <img className="object-cover w-full h-48 rounded-3xl" src={hospital1} alt="Hospital 2"/>
                     <div className="location-overlay">
                         <p className="location-text">Pje Mar Rojo 2489</p>
                         <button className="location-button" onClick={() => {/* Maps */}}>
@@ -170,7 +175,7 @@
             </div>
             <div className="max-w-xs">
                 <a href="#" className="flex flex-col location-card">
-                    <img className="object-cover w-full h-48 rounded-3xl" src="src/images/index/hospital2.jpg" alt="Hospital 3"/>
+                    <img className="object-cover w-full h-48 rounded-3xl" src={hospital2} alt="Hospital 3"/>
                     <div className="location-overlay">
                         <p className="location-text">Ñuñoa 345</p>
                         <button className="location-button" onClick={() => {/* Maps */}}>
