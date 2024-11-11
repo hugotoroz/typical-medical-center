@@ -1,5 +1,6 @@
 import React from 'react';
 import './footer.css';
+import logo from '../../images/logo/logo2.jpeg'
 
 function Footer() {
 
@@ -8,7 +9,7 @@ function Footer() {
       <div className="container mx-auto flex justify-between items-center max-w-6xl px-4">
         {/* Logo Section */}
         <div className="flex items-center">
-          <img src="src/images/index/hospital.jpg" alt="Logo" className="h-16 w-auto mr-4" />
+          <img src={logo} alt="Logo" className="h-16 w-auto mr-4" />
         </div>
         
         {/* Text Columns Section */}
