@@ -52,6 +52,7 @@
 
     const [userName, setUserName] = useState('');
     const [rut, setRut] = useState('');
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
@@ -59,6 +60,7 @@
             const decodedToken = jwtDecode(token);
             setUserName(decodedToken.fullName); 
             setRut(decodedToken.rut); 
+            setEmail(decodedToken.email);
         }
     }, []);
 
@@ -88,10 +90,10 @@
         {/* Section with 4 rounded squares */}
         <div className="flex justify-center gap-20 my-20">
         {userName && <h2 className="text-xl text-white mt-4">Welcome, {rut} {userName}!</h2>}
-            <Link to="/schedule"><a href='#' className="shortcuts">
+            <Link to="/schedule" className="shortcuts">
                 <i className="fas fa-calendar-alt fa-2x mb-2 text-red-500"></i> {/* Icon for Appointment */}
                 <p className="text-center font-semibold">Appointment</p> {/* Text */}
-            </a></Link>
+            </Link>
             <a href='#' className="shortcuts">
                 <i className="fas fa-map-marker-alt fa-2x mb-2 text-blue-500"></i> {/* Icon for Doctors */}
                 <p className="text-center font-semibold">Locations</p> {/* Text */}
@@ -102,7 +104,7 @@
             </a>
             <a href='#' className="shortcuts">
                 <i className="fas fa-user-md fa-2x mb-2 text-yellow-500"></i> {/* Icon for Customer Service */}
-                <p className="text-center font-semibold">Doctors</p> {/* Text */}
+                <p className="text-center font-semibold">Doctors {email}</p> {/* Text */}
             </a>
         </div>
 

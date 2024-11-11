@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation,useNavigate } from 'react-router-dom';
 import './navbar.css';
 
 function Navbar() {
+  const navigate = useNavigate();
   // The useLocation hook provides the current location object
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +30,16 @@ function Navbar() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const handleLogout = () => {
+    // Eliminar el token de sessionStorage
+    sessionStorage.removeItem("token");
+    
+    // Redirigir al usuario a la página de inicio de sesión
+    navigate("/login");
+  };
+
+  const isLoggedIn = Boolean(sessionStorage.getItem("token"));
 
   return (
     <>
@@ -71,11 +82,25 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
-            <Link to="/login" className="text-gray-700">
-            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
-              Make an appointment
-            </button></Link>
+          {isLoggedIn ? (
+          <>
+            <Link to="/profile" className="hover:underline">
             <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition duration-150"
+            >
+              Cerrar sesión
+            </button>
+          </>
+        ) : (
+          <Link to="/login">
+            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
+              Iniciar Sesión
+            </button>
+          </Link>
+        )}
           </div>
         </div>
       </nav>

@@ -11,6 +11,7 @@ const Register = () => {
     email:'',
     apellidoPaterno: '',
     apellidoMaterno: '',
+    genero: '',
     rut: '',
     numDoc: '',
     telefono: '',
@@ -36,7 +37,7 @@ const Register = () => {
 
   const validateRut = async (rut,numDoc) => {
     try {
-      const response = await fetch('https://backend-tmc.onrender.com/user/validate', {
+      const response = await fetch('https://tmcenter.cl/api/user/validate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,6 +56,11 @@ const Register = () => {
     }
   };
 
+  const validateGenero = (genero) => {
+    const validGeneros = ['masculino', 'femenino'];
+    return validGeneros.includes(genero.toLowerCase());
+  };
+
   const validate = () => {
     let errors = {};
 
@@ -64,6 +70,9 @@ const Register = () => {
     if (formData.apellidoPaterno.length > 50) errors.apellidoPaterno = 'Apellido Paterno no puede tener más de 50 caracteres';
     if (!formData.apellidoMaterno) errors.apellidoMaterno = 'Apellido Materno es requerido';
     if (formData.apellidoMaterno.length > 50) errors.apellidoMaterno = 'Apellido Materno no puede tener más de 50 caracteres';
+    if (!validateGenero(formData.genero)) {
+      validationErrors.genero = 'El género debe ser "masculino" o "femenino".';
+    }
     if (!formData.rut) errors.rut = 'Rut es requerido';
     if (formData.rut.length > 12) errors.rut = 'Rut no puede tener más de 12 caracteres';
     if (!formData.numDoc) errors.numDoc = 'Número de Documento es requerido';
@@ -89,7 +98,7 @@ const Register = () => {
         return;
       }
       try {
-        const response = await fetch('https://backend-tmc.onrender.com/patients', {
+        const response = await fetch('https://tmcenter.cl/api/patients', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -101,6 +110,7 @@ const Register = () => {
             name: formData.nombres,
             patSurName: formData.apellidoPaterno,
             matSurName: formData.apellidoMaterno,
+            genre: formData.genero,
             dateBirth: formData.fechaNacimiento,
             cellphone: formData.telefono
           })
@@ -159,6 +169,11 @@ const Register = () => {
         <label>Apellido Materno</label>
         <input className='border p-2' type="text" name='apellidoMaterno' value={formData.apellidoMaterno} onChange={handleChange}/>
         {errors.apellidoMaterno && <p className="text-red-500">{errors.apellidoMaterno}</p>}
+      </div>
+      <div className='flex flex-col py-2'>
+        <label>Genero</label>
+        <input className='border p-2' type="text" name='genero' value={formData.genero} onChange={handleChange}/>
+        {errors.genero && <p className="text-red-500">{errors.genero}</p>}
       </div>
       <div className='flex flex-col py-2'>
         <label>Rut</label>
