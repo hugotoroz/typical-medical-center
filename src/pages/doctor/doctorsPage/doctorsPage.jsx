@@ -47,7 +47,8 @@ const DoctorsPage = () => {
                     fecha: new Date(appointment.fecha).toLocaleDateString(),  // Fecha en formato de cadena
                     horario: `${appointment.hora_inicio} - ${appointment.hora_fin}`,  // Hora inicio y fin combinadas
                     estado: appointment.estado,  // Estado de la cita
-                    pacienteId: appointment.id_paciente
+                    pacienteId: appointment.id_paciente,
+                    citaID: appointment.id_cita
                 }));
                 setData(filteredData); // Actualizar el estado con los datos filtrados
             } else {
@@ -118,7 +119,7 @@ return (
                               className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                             >
                               {appointment.pacienteId ? (
-                                  <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idPaciente={appointment.pacienteId} />
+                                  <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idCita={appointment.citaID} />
                               ) : null}
                               <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
                               <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
@@ -141,12 +142,13 @@ return (
 );
 };
 
-const Option = ({ text, Icon, setOpen, idPaciente }) => {
+const Option = ({ text, Icon, setOpen, idCita }) => {
   const navigate = useNavigate();
 
   const handleOptionClick = async (action) => { 
       if (action === "Diagnosticar") {
-        navigate(`/diagnosis/${idPaciente}`);
+        localStorage.setItem("idCita", idCita);
+        navigate(`/doctor/diagnosis`);
       }
     };
 
