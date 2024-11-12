@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
-import Chatbot from '../../components/chatbot/chatbot.jsx';
-import { Sidebar, SidebarItem } from '../../components/sidebar/sidebar.jsx';
+import Chatbot from '../../../components/chatbot/chatbot.jsx';
+import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {
@@ -12,7 +12,7 @@ import {
   FiEyeOff,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { API_URL } from '../../../config.js'; //VARIABLE DE ENTORNO
+import { API_URL } from '../../../../config.js'; //VARIABLE DE ENTORNO
 import './adminManagment.css';
 
 const AdminManagment = () => {

@@ -1,10 +1,10 @@
 import React,{useState} from 'react';
-import Navbar from '../../components/navbar/navbar';
-import loginImg from '../../images/login/centromedico.jpg';
+import Navbar from '../../../components/navbar/navbar.jsx';
+import loginImg from '../../../images/login/centromedico.jpg';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
-import { API_URL } from '../../../config.js';
+import { API_URL } from '../../../../config.js';
 import axios from 'axios';
 
 const Login = () => {

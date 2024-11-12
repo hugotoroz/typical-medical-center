@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'; // hooks
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Sidebar, SidebarItem } from '../../components/sidebar/sidebar.jsx';
-import { API_URL } from '../../../config.js';
+import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
+import { API_URL } from '../../../../config.js';
 import Swal from 'sweetalert2';
 import './newDoctor.css';
 
