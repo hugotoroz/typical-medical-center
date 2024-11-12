@@ -79,66 +79,6 @@ const NewDoctor = () => {
       });
     };
 
-    const handleRutChange = async (e) => {
-      const { value } = e.target;
-    
-      // Asegúrate de que el valor del RUT solo contenga números y el guion
-      const cleanValue = value
-        .replace(/[^0-9kK-]/g, '') // Solo permite números, k, K y el guion
-        .toUpperCase(); // Convertir todo a mayúsculas
-    
-      // Evitar perder el valor del RUT, manteniendo el guion
-      setFormData((prevState) => ({
-        ...prevState,
-        rut: cleanValue, // Asigna el RUT limpio con el guion
-      }));
-    
-      if (cleanValue.length === 10) {
-        try {
-          const response = await axios.post(`${API_URL}/user/data`, {
-            rut: cleanValue,  // Rut enviado en el cuerpo de la solicitud
-          }, {
-            headers: {
-              'Content-Type': 'application/json', // Asegúrate de que el tipo de contenido es JSON
-            }
-          });
-    
-          const dataJason = response.data;
-    
-          // Log del contenido recibido
-          console.log(dataJason);
-    
-          if (dataJason.status === 'success') {
-            console.log("paso");
-    
-            // Función para convertir la fecha al formato yyyy-MM-dd
-            const convertDateFormat = (date) => {
-              const [day, month, year] = date.split('-');
-              return `${year}-${month}-${day}`;
-            };
-    
-            const formattedFechaNacimiento = convertDateFormat(dataJason.data.date_of_birth);
-    
-            console.log(formattedFechaNacimiento);
-    
-            setFormData({
-              ...formData,
-              rut:cleanValue,
-              nombre: dataJason.data.name,
-              apellidoPaterno: dataJason.data.father_lastname,
-              apellidoMaterno: dataJason.data.mother_lastname,
-              fechaNacimiento: formattedFechaNacimiento,  // Formato de la fecha
-              edad: dataJason.data.age,  // Asumí que esto es la edad
-              estadoCivil: dataJason.data.marital_status,
-            });
-          }
-        } catch (error) {
-          setError('Error fetching data');
-          console.error('Error fetching user data:', error.response?.data || error.message);
-        }
-      }
-    };
-
     const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(String(email).toLowerCase());
@@ -346,7 +286,7 @@ const NewDoctor = () => {
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="Rut"
                     value={formData.rut}
-                    onChange={handleRutChange}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div>

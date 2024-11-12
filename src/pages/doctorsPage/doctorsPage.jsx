@@ -5,7 +5,6 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { Sidebar, SidebarItem } from '../../components/sidebar/sidebar.jsx';
 import { motion } from "framer-motion";
-import Swal from 'sweetalert2';
 import {
     FiEdit,
     FiChevronDown,
@@ -27,40 +26,34 @@ const DoctorsPage = () => {
         fetchData();
       }, []);
 
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/appointments/doctor`, {
-            headers: {
-              Authorization: `Bearer ${token}` // Enviar el token en los headers
-            }
-          });
-      
-          // Log de la respuesta para inspección
-          console.log('API response:', response.data);
-
-          const data = response.data.data;
-      
-          // Verificar si response.data es un array antes de intentar mapear
-          if (Array.isArray(data)) {
-            // Si es un array, entonces filtramos los datos
-            const filteredData = data.map((appointment) => ({
-              especialidad: appointment.nombre_especialidad,  // Especialidad
-              fecha: new Date(appointment.fecha).toLocaleDateString(),  // Fecha en formato de cadena
-              horario: `${appointment.hora_inicio} - ${appointment.hora_fin}`,  // Hora inicio y fin combinadas
-              estado: appointment.estado,  // Estado de la cita
-              pacienteId: appointment.id_paciente
-            }));
-            setData(filteredData); // Actualizar el estado con los datos filtrados
-          } else {
-            // Si no es un array, se muestra un error
-            setError('The response data is not an array');
-            console.error('Error: response data is not an array');
-          }
-        } catch (error) {
-          setError('Error fetching data'); // Manejar error si la API falla
-          console.error('Error fetching data:', error);
+    const fetchData = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/appointments/doctor`, {
+        headers: {
+            Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
-      };
+        }); 
+
+        console.log(response.data);
+
+        // Bring all the data
+        const filteredData = response.data.map((user) => ({
+        id: user.id, 
+        name: user.nom, 
+        rut: user.rut, 
+        email: user.email 
+        }));
+
+        setData(filteredData); // Actualizar el estado con los datos filtrados
+    } catch (error) {
+        setError('Error fetching data'); // Manejar error si la API falla
+        console.error('Error fetching data:', error);
+    }
+    };
+
+const handleLoginRedirect = () => {
+    navigate('/login');
+};
 
 return (
     <>
@@ -77,25 +70,25 @@ return (
               <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                     <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((appointment, index) => (
-                    <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.especialidad}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.estado}</td>
+                  {data.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-100 transition-colors duration-200">
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm">{user.id}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.rut}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
+                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
                       <td className="px-4 py-3 border-b border-gray-200 text-sm">
                         <div className="flex items-center justify-center">
-                            <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
+                          <motion.div animate={openId === user.id ? "open" : "closed"} className="absolute">
                             <button
-                              onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
+                              onClick={() => setOpenId(openId === user.id ? null : user.id)} // Alternate Id
                               className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
                             >
                               <span className="font-medium text-sm">Post actions</span>
@@ -110,11 +103,10 @@ return (
                               style={{ originY: "top", translateX: "-50%" }}
                               className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                             >
-                              {appointment.pacienteId ? (
-                                  <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idPaciente={appointment.pacienteId} />
-                              ) : null}
-                              <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
-                              <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
+                              <Option setOpen={setOpenId} Icon={FiEdit} text="Edit" />
+                              <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Duplicate" />
+                              <Option setOpen={setOpenId} Icon={FiShare} text="Share" />
+                              <Option setOpen={setOpenId} Icon={FiTrash} text="Remove" />
                             </motion.ul>
                           </motion.div>
                         </div>
@@ -134,20 +126,11 @@ return (
 );
 };
 
-const Option = ({ text, Icon, setOpen, idPaciente }) => {
-  const navigate = useNavigate();
-
-  const handleOptionClick = async (action) => { 
-      if (action === "Diagnosticar") {
-        navigate(`/diagnosticar/${idPaciente}`);
-      }
-    };
-
+const Option = ({ text, Icon, setOpen }) => {
     return (
       <motion.li
         variants={itemVariants}
-        //onClick={() => setOpen(null)} // Close the menu when clicking an option
-        onClick={() => handleOptionClick(text)}
+        onClick={() => setOpen(null)} // Close the menu when clicking an option
         className="flex items-center gap-2 w-full p-2 text-xs font-medium whitespace-nowrap rounded-md hover:bg-indigo-100 text-slate-700 hover:text-indigo-500 transition-colors cursor-pointer"
       >
         <motion.span variants={actionIconVariants}>
