@@ -5,6 +5,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { API_URL } from '../../../config.js';
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,54 +37,65 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
+
+    console.log(formData.rut);
+    console.log(formData.clave);
+  
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await fetch(`${API_URL}/user/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            rut: formData.rut,
-            password: formData.clave
-          })
+        // Usamos axios para hacer la solicitud POST
+        const response = await axios.post(`${API_URL}/user/login`, {
+          rut: formData.rut,
+          password: formData.clave
         });
-
-        const data = await response.json();
-        if (response.ok) {
-          console.log('Form submitted successfully', data);
-          sessionStorage.setItem('token', data.data.token);
-
-          console.log('token: ' + data.data.token);
-
-          // We decode the token
-          const decodedToken = jwtDecode(data.data.token);
-          const userRole = decodedToken.role;
-
-          if (userRole === 'paciente') {
-            navigate('/'); 
-          } else if (userRole === 'doctor') {
-            navigate('/doctorsPage'); 
-          } else if (userRole === 'admin'){
-            navigate('/adminManagment'); 
-          } else {
-            console.error('Rol desconocido');
-            setErrors({ form: 'Rol desconocido' });
-          }
-
+  
+        console.log('Respuesta del servidor:', response.data); // Verificamos qué estamos recibiendo
+  
+        const data = response.data; // axios ya parsea la respuesta como JSON
+  
+        // Si todo es correcto, continuamos con el proceso
+        console.log('Form submitted successfully', data);
+        sessionStorage.setItem('token', data.data.token);
+        console.log('token: ' + data.data.token);
+  
+        // Decodificamos el token
+        const decodedToken = jwtDecode(data.data.token);
+        const userRole = decodedToken.roleId;
+  
+        // Dependiendo del rol, redirigimos al usuario
+        if (userRole === '3') {
+          navigate('/'); 
+        } else if (userRole === '2') {
+          navigate('/doctorsPage'); 
+        } else if (userRole === '1'){
+          navigate('/adminManagment'); 
         } else {
-          console.error('Error logging in', data);
-          setErrors({ form: data.data || 'Credenciales inválidas' });
-          // Handle error response from the server
+          console.error('Rol desconocido');
+          setErrors({ form: 'Rol desconocido' });
         }
+  
       } catch (error) {
         console.error('Error submitting form', error);
-        // Handle network or other errors
+  
+        // Manejo de errores de red o de otro tipo
+        if (error.response) {
+          // El servidor respondió con un estado de error
+          console.error('Error from server:', error.response.status, error.response.data);
+          setErrors({ form: 'Credenciales inválidas' });
+        } else if (error.request) {
+          // La solicitud fue realizada pero no hubo respuesta
+          setErrors({ form: 'Problema de red. Verifica tu conexión.' });
+        } else {
+          // Otro tipo de error
+          setErrors({ form: 'Error desconocido. Intenta más tarde.' });
+        }
       }
     } else {
       setErrors(validationErrors);
     }
   };
+  
+  
 
   return (
     <>
