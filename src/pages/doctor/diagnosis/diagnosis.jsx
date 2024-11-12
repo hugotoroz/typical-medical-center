@@ -75,63 +75,8 @@ return (
         <Sidebar />
 
         <div className="flex-1 p-8 bg-white bg-opacity-90 rounded-lg shadow-lg m-4">
-          <h2 className="text-2xl font-semibold mb-6">Citas medicas</h2>
-          <div className="container mx-auto  flex-grow px-4">
-            
-          {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
-            <div className="flex justify-center"></div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((appointment, index) => (
-                    <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.especialidad}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.estado}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm">
-                        <div className="flex items-center justify-center">
-                            <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
-                            <button
-                              onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
-                              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
-                            >
-                              <span className="font-medium text-sm">Opciones</span>
-                              <motion.span variants={iconVariants}>
-                                <FiChevronDown />
-                              </motion.span>
-                            </button>
-
-                            <motion.ul
-                              initial={wrapperVariants.closed}
-                              variants={wrapperVariants}
-                              style={{ originY: "top", translateX: "-50%" }}
-                              className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
-                            >
-                              {appointment.pacienteId ? (
-                                  <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idPaciente={appointment.pacienteId} />
-                              ) : null}
-                              <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
-                              <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
-                            </motion.ul>
-                          </motion.div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <h2 className="text-2xl font-semibold mb-6">Diagnostico</h2>
+          
 
         </div>
 
