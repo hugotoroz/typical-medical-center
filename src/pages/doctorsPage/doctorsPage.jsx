@@ -28,7 +28,7 @@ const DoctorsPage = () => {
 
     const fetchData = async () => {
     try {
-        const response = await axios.get(`${API_URL}/appointments/doctors`, {
+        const response = await axios.get(`${API_URL}/appointments/doctor`, {
         headers: {
             Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
