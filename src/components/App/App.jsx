@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Index from '../../pages/index/index';
-import Login from '../../pages/login/login';
-import Contact from '../../pages/contact/contact';
-import AdminManagment from '../../pages/adminManagment/adminManagment';
+import Index from '../../pages/general/index/index';
+import Login from '../../pages/general/login/login';
+import Contact from '../../pages/general/contact/contact';
+import AdminManagment from '../../pages/admin/adminManagment/adminManagment';
 import './App.css'
-import Register from '../../pages/register/register';
+import Register from '../../pages/patient/register/register';
 import '@fortawesome/fontawesome-free/css/all.min.css'; ////font-awesome icons
-import Schedule from '../../pages/scheduleAppointments/schedule';
-import DoctorsPage from '../../pages/doctorsPage/doctorsPage';
+import Schedule from '../../pages/patient/scheduleAppointments/schedule';
+import DoctorsPage from '../../pages/doctor/doctorsPage/doctorsPage';
 import Profile from '../../pages/profile/profile';
-import NewDoctor from '../../pages/newDoctor/newDoctor';
+import NewDoctor from '../../pages/admin/newDoctor/newDoctor';
 import ProtectedRoute from '../../protected/ProtectedRoute.js';
 // Logo moved to index.html 
 // import logo from '../../images/logo/logo.jpeg';

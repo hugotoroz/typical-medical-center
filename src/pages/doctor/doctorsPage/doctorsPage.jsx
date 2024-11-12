@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'; // hooks
 import { Link, useNavigate } from 'react-router-dom';
-import Chatbot from '../../components/chatbot/chatbot.jsx';
+import Chatbot from '../../../components/chatbot/chatbot.jsx';
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
-import { Sidebar, SidebarItem } from '../../components/sidebar/sidebar.jsx';
+import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
 import { motion } from "framer-motion";
 import Swal from 'sweetalert2';
 import {
@@ -13,7 +13,7 @@ import {
     FiShare,
     FiPlusSquare,
   } from "react-icons/fi";
-import { API_URL } from '../../../config.js'; //VARIABLE DE ENTORNO
+import { API_URL } from '../../../../config.js'; //VARIABLE DE ENTORNO
 import './doctorsPage.css';
 
 const DoctorsPage = () => {

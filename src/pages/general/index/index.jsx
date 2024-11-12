@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../components/navbar/navbar.jsx";
-import Footer from "../../components/footer/footer.jsx";
-import Chatbot from "../../components/chatbot/chatbot.jsx";
+import Navbar from "../../../components/navbar/navbar.jsx";
+import Footer from "../../../components/footer/footer.jsx";
+import Chatbot from "../../../components/chatbot/chatbot.jsx";
 import { jwtDecode } from "jwt-decode";
 import { motion, AnimatePresence } from "framer-motion";
-import banner from "../../images/index/banner.png";
-import generalPractitioner from "../../images/index/general-practitioner.webp";
-import ophthalmologist from "../../images/index/ophthalmologist.webp";
-import kinesiologist from "../../images/index/kinesiologist.webp";
+import banner from "../../../images/index/banner.png";
+import generalPractitioner from "../../../images/index/general-practitioner.webp";
+import ophthalmologist from "../../../images/index/ophthalmologist.webp";
+import kinesiologist from "../../../images/index/kinesiologist.webp";
 
 import "./index.css";
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaCalendarAlt } from 'react-icons/fa';
-import Navbar from '../../components/navbar/navbar';
-import Footer from '../../components/footer/footer.jsx';
-import Chatbot from '../../components/chatbot/chatbot.jsx';
+import Navbar from '../../../components/navbar/navbar.jsx';
+import Footer from '../../../components/footer/footer.jsx';
+import Chatbot from '../../../components/chatbot/chatbot.jsx';
 import './schedule.css'; // Importamos los estilos CSS
 
 const Schedule = () => {
