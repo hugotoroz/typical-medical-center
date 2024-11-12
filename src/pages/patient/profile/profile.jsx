@@ -84,7 +84,7 @@ const Profile = () => {
             </svg>
             <figcaption className="sr-only">Información Basica</figcaption>
           </figure>
-          <h2 className="mt-4 text-xl font-bold text-indigo-600 dark:text-indigo-400">John Doe</h2>
+          <h2 className="mt-4 text-xl font-bold text-indigo-600 dark:text-indigo-400"></h2>
           <p className="mb-4 text-gray-600 dark:text-gray-300">{rut}</p>
           <p className="mb-4 text-gray-600 dark:text-gray-300">{email}</p>
           <p className="mb-4 text-gray-600 dark:text-gray-300">{password}</p>
