@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation,useNavigate } from 'react-router-dom';
+import logo from "../../images/logo/logo.jpeg"
+import profile from "../../images/navbar/profile.jpg"
 import './navbar.css';
 
 function Navbar() {
@@ -46,7 +48,7 @@ function Navbar() {
       <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-30"> {/* Navbar with z-30 */}
         <div className="max-w-8xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <img className="hidden md:block w-10 h-10 rounded-full" src="src/images/index/hospital.jpg" alt="Logo" />
+            <img className="hidden md:block w-10 h-10 rounded-full" src={logo} alt="Logo" />
             <div className="md:hidden">
               <button onClick={toggleMenu} className="text-gray-700 focus:outline-none">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -60,25 +62,25 @@ function Navbar() {
               to="/"
               className={`text-gray-700 underline-black ${location.pathname === '/' ? 'active' : ''}`}
             >
-              Home
+              Inicio
             </NavLink>
             <NavLink
-              to="/services"
+              to="/specialities"
               className={`text-gray-700 underline-black ${location.pathname === '/services' ? 'active' : ''}`}
             >
-              Services
+              Especialidades
             </NavLink>
             <NavLink
-              to="/patient"
+              to="/aboutUs"
               className={`text-gray-700 underline-black ${location.pathname === '/patient' ? 'active' : ''}`}
             >
-              Patient
+              ¿Quiénes Somos?
             </NavLink>
             <NavLink
               to="/contact"
               className={`text-gray-700 underline-black ${location.pathname === '/contact' ? 'active' : ''}`}
             >
-              Contact
+              Contáctanos
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
@@ -101,6 +103,11 @@ function Navbar() {
             </button>
           </Link>
         )}
+            <Link to="/login" className="text-gray-700">
+            <button className="bg-transparent hover:bg-blue-500 hover:text-white hover:border-transparent text-blue-700 font-semibold py-1.5 px-6 border border-blue-500 rounded-lg">
+              Agendar Cita
+            </button></Link>
+            <img className="w-10 h-10 rounded-full" src={profile} alt="User" />
           </div>
         </div>
       </nav>
@@ -112,28 +119,28 @@ function Navbar() {
             className={`block text-gray-700 p-4 ${location.pathname === '/' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Home
+            Inicio
           </NavLink>
           <NavLink
-            to="/services"
+            to="/specialities"
             className={`block text-gray-700 p-4 ${location.pathname === '/services' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Services
+            Especialidades
           </NavLink>
           <NavLink
-            to="/patient"
+            to="/aboutUs"
             className={`block text-gray-700 p-4 ${location.pathname === '/patient' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Patient
+            ¿Quiénes Somos?
           </NavLink>
           <NavLink
             to="/contact"
             className={`block text-gray-700 p-4 ${location.pathname === '/contact' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Contact
+            Contáctanos
           </NavLink>
         </div>
       </div>

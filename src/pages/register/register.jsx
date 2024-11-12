@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../../components/navbar/navbar';
 import loginImg from '../../images/login/centromedico.jpg';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../../config.js';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Register = () => {
 
   const validateRut = async (rut,numDoc) => {
     try {
-      const response = await fetch('https://tmcenter.cl/api/user/validate', {
+      const response = await fetch(`${API_URL}/user/validate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -98,7 +99,7 @@ const Register = () => {
         return;
       }
       try {
-        const response = await fetch('https://tmcenter.cl/api/patients', {
+        const response = await fetch(`${API_URL}/patients`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
