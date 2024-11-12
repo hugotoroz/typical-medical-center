@@ -13,6 +13,7 @@ import DoctorsPage from '../../pages/doctor/doctorsPage/doctorsPage';
 import Profile from '../../pages/patient/profile/profile';
 import NewDoctor from '../../pages/admin/newDoctor/newDoctor';
 import ProtectedRoute from '../../protected/ProtectedRoute.js';
+import Diagnosis from '../../pages/doctor/diagnosis/diagnosis';
 // Logo moved to index.html 
 // import logo from '../../images/logo/logo.jpeg';
 
@@ -21,24 +22,6 @@ import ProtectedRoute from '../../protected/ProtectedRoute.js';
 function App() {
   const [count, setCount] = useState(0)
 
-  useEffect(() => {
-    // Title moved to index.html 
-    // Cambiar el título de la pestaña
-    // document.title = "Typical Medical Center";
-
-    // Cambiar el favicon
-    // const favicon = document.querySelector('link[rel="icon"]');
-    // if (favicon) {
-    //   favicon.href = logo; // logo es la URL importada
-    // } else {
-    //   // Crear el favicon si no existe
-    //   const newFavicon = document.createElement('link');
-    //   newFavicon.rel = 'icon';
-    //   newFavicon.href = logo;
-    //   document.head.appendChild(newFavicon);
-    // }
-}, []);
-
   return (
     <>
       <Router>
@@ -46,12 +29,13 @@ function App() {
           <Route path="/" element={<Index />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/adminManagment" element={<ProtectedRoute><AdminManagment /></ProtectedRoute>} />
-          <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
-          <Route path="/doctorsPage" element={<ProtectedRoute><DoctorsPage /></ProtectedRoute>} />
-          <Route path="/newDoctor" element={<ProtectedRoute><NewDoctor /></ProtectedRoute>} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="patient/register" element={<Register />} />
+          <Route path="admin/adminManagment" element={<ProtectedRoute><AdminManagment /></ProtectedRoute>} />
+          <Route path="patient/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
+          <Route path="doctor/doctorsPage" element={<ProtectedRoute><DoctorsPage /></ProtectedRoute>} />
+          <Route path="admin/newDoctor" element={<ProtectedRoute><NewDoctor /></ProtectedRoute>} />
+          <Route path="patient/profile" element={<Profile />} />
+          <Route path="doctor/diagnosis" element={<ProtectedRoute><Diagnosis /></ProtectedRoute>} />
         </Routes>
       </Router>
     </>

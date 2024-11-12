@@ -3,6 +3,7 @@ import { FaCalendarAlt } from 'react-icons/fa';
 import Navbar from '../../../components/navbar/navbar.jsx';
 import Footer from '../../../components/footer/footer.jsx';
 import Chatbot from '../../../components/chatbot/chatbot.jsx';
+import Imagen from "../../../images/appointment/medicine.jpg";
 import './schedule.css'; // Importamos los estilos CSS
 
 const Schedule = () => {
@@ -87,7 +88,7 @@ const Schedule = () => {
               viewBox="0 0 100 100"
             >
                 <image
-              href="src/images/appointment/medicine.jpg"
+              href={Imagen}
               height="100"
               width="100"
   />
