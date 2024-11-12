@@ -51,31 +51,31 @@ function Navbar() {
               to="/"
               className={`text-gray-700 underline-black ${location.pathname === '/' ? 'active' : ''}`}
             >
-              Home
+              Inicio
             </NavLink>
             <NavLink
-              to="/services"
+              to="/specialities"
               className={`text-gray-700 underline-black ${location.pathname === '/services' ? 'active' : ''}`}
             >
-              Services
+              Especialidades
             </NavLink>
             <NavLink
-              to="/patient"
+              to="/aboutUs"
               className={`text-gray-700 underline-black ${location.pathname === '/patient' ? 'active' : ''}`}
             >
-              Patient
+              ¿Quiénes Somos?
             </NavLink>
             <NavLink
               to="/contact"
               className={`text-gray-700 underline-black ${location.pathname === '/contact' ? 'active' : ''}`}
             >
-              Contact
+              Contáctanos
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
             <Link to="/login" className="text-gray-700">
-            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
-              Make an appointment
+            <button className="bg-transparent hover:bg-blue-500 hover:text-white hover:border-transparent text-blue-700 font-semibold py-1.5 px-6 border border-blue-500 rounded-lg">
+              Agendar Cita
             </button></Link>
             <img className="w-10 h-10 rounded-full" src={profile} alt="User" />
           </div>
@@ -89,28 +89,28 @@ function Navbar() {
             className={`block text-gray-700 p-4 ${location.pathname === '/' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Home
+            Inicio
           </NavLink>
           <NavLink
-            to="/services"
+            to="/specialities"
             className={`block text-gray-700 p-4 ${location.pathname === '/services' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Services
+            Especialidades
           </NavLink>
           <NavLink
-            to="/patient"
+            to="/aboutUs"
             className={`block text-gray-700 p-4 ${location.pathname === '/patient' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Patient
+            ¿Quiénes Somos?
           </NavLink>
           <NavLink
             to="/contact"
             className={`block text-gray-700 p-4 ${location.pathname === '/contact' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Contact
+            Contáctanos
           </NavLink>
         </div>
       </div>
