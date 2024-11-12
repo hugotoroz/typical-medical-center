@@ -16,12 +16,12 @@ const iconMap = {
 // Opciones del sidebar basadas en los roleIds
 const sidebarOptionsByRole = {
   "1": [ // Ejemplo de ID para 'admin'
-    { path: "/adminManagment", iconName: "Home", text: "Doctores" },
-    { path: "/newDoctor", iconName: "User", text: "Crear doctor" },
+    { path: "/admin/adminManagment", iconName: "Home", text: "Doctores" },
+    { path: "/admin/newDoctor", iconName: "User", text: "Crear doctor" },
     { path: "/settings", iconName: "Settings", text: "Perfil" }
   ],
   "2": [ // Ejemplo de ID para 'doctor'
-    { path: "/doctorsPage", iconName: "Home", text: "Dashboard" },
+    { path: "/doctor/doctorsPage", iconName: "Home", text: "Dashboard" },
     { path: "/profile", iconName: "User", text: "Perfil" }
   ]
   // Otros roles según necesites
