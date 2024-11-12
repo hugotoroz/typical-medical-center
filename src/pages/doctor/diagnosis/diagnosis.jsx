@@ -14,9 +14,9 @@ import {
     FiPlusSquare,
   } from "react-icons/fi";
 import { API_URL } from '../../../../config.js'; //VARIABLE DE ENTORNO
-import './doctorsPage.css';
+import './diagnosis.css';
 
-const DoctorsPage = () => {
+const Diagnosis = () => {
     const [openId, setOpenId] = useState(null); // State to store user ID open
     const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
     const [error, setError] = useState(null); // Estado para manejar errores
@@ -165,7 +165,7 @@ const Option = ({ text, Icon, setOpen, idPaciente }) => {
     );
   };
 
-export default DoctorsPage;
+export default Diagnosis;
 
 // Variants for animations
 const wrapperVariants = {
