@@ -84,17 +84,21 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
+          <Link to="/login" className="text-gray-700">
+            <button className="bg-transparent hover:bg-blue-500 hover:text-white hover:border-transparent text-blue-700 font-semibold py-1.5 px-6 border border-blue-500 rounded-lg">
+              Agendar Cita
+            </button></Link>
           {isLoggedIn ? (
           <>
-            <Link to="/profile" className="hover:underline">
-            <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
-            </Link>
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition duration-150"
             >
               Cerrar sesión
             </button>
+            <Link to="/profile" className="hover:underline">
+            <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
+            </Link>
           </>
         ) : (
           <Link to="/login">
@@ -103,11 +107,7 @@ function Navbar() {
             </button>
           </Link>
         )}
-            <Link to="/login" className="text-gray-700">
-            <button className="bg-transparent hover:bg-blue-500 hover:text-white hover:border-transparent text-blue-700 font-semibold py-1.5 px-6 border border-blue-500 rounded-lg">
-              Agendar Cita
-            </button></Link>
-            <img className="w-10 h-10 rounded-full" src={profile} alt="User" />
+
           </div>
         </div>
       </nav>

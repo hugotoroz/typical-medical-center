@@ -10,7 +10,7 @@ import Register from '../../pages/patient/register/register';
 import '@fortawesome/fontawesome-free/css/all.min.css'; ////font-awesome icons
 import Schedule from '../../pages/patient/scheduleAppointments/schedule';
 import DoctorsPage from '../../pages/doctor/doctorsPage/doctorsPage';
-import Profile from '../../pages/profile/profile';
+import Profile from '../../pages/patient/profile/profile';
 import NewDoctor from '../../pages/admin/newDoctor/newDoctor';
 import ProtectedRoute from '../../protected/ProtectedRoute.js';
 // Logo moved to index.html 
