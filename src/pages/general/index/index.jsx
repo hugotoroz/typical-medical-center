@@ -150,7 +150,7 @@ const MainPage = () => {
           <ShortcutCard
             icon="fas fa-calendar-alt text-red-500"
             text="Agendar Cita"
-            href="/schedule"
+            href="/patient/schedule"
           />
           <ShortcutCard
             icon="fas fa-heart-pulse text-blue-500"
