@@ -50,7 +50,13 @@ function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-2">Contáctanos</h4>
             <p className="text-sm">
-              Dirección: Av. Principal 123, Lampa, Chile
+              <a
+                href="https://maps.app.goo.gl/Ya7DQpiZxnTXTwUa9"
+                className="hover:text-blue-500"
+                target="_blank"
+              >
+                Dirección: Av. Principal 123, Lampa, Chile
+              </a>
             </p>
             <p className="text-sm">
               Teléfono:{" "}
