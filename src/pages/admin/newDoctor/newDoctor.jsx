@@ -13,6 +13,7 @@ const NewDoctor = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
     const [error, setError] = useState(null); // Estado para manejar errores
+    const [isLoading, setIsLoading] = useState(true); // Estado para el spinner de carga
 
     // Estados para cada campo del formulario
     const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ const NewDoctor = () => {
       }, []);
 
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(`${API_URL}/doctors/specialities`);
         console.log(response.data);
@@ -44,9 +46,11 @@ const NewDoctor = () => {
           name: speciality.nom, // Suponiendo que el nombre de la especialidad está en 'nom'
         }));
         setData(filteredData); // Actualizar el estado con las especialidades
+        setIsLoading(false); // Finaliza la carga
       } catch (error) {
         setError('Error fetching data');
         console.error('Error fetching data:', error);
+        setIsLoading(false); // Finaliza la carga
       }
     };
 
@@ -447,7 +451,14 @@ const NewDoctor = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Especialidades</label>
                 <div className="checkbox-container">
-                  {data.map((speciality) => (
+                {/* Spinner de carga */}
+                {isLoading ? (
+                  <div className="flex justify-center items-center h-20">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : (
+                  // Muestra las especialidades solo cuando ya no esté cargando
+                  data.map((speciality) => (
                     <div key={speciality.id} className="checkbox-item">
                       <input
                         type="checkbox"
@@ -461,7 +472,8 @@ const NewDoctor = () => {
                         {speciality.name}
                       </label>
                     </div>
-                  ))}
+                  ))
+                )}
                 </div>
                 {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>

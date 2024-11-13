@@ -3,6 +3,8 @@ import { Link, NavLink, useLocation,useNavigate } from 'react-router-dom';
 import logo from "../../images/logo/logo.jpeg"
 import profile from "../../images/navbar/profile.jpg"
 import './navbar.css';
+// Button component
+import Button from '../button/hrefButton.jsx';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -84,10 +86,7 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
-          <Link to="/login" className="text-gray-700">
-            <button className="bg-transparent hover:bg-blue-500 hover:text-white hover:border-transparent text-blue-700 font-semibold py-1.5 px-6 border border-blue-500 rounded-lg">
-              Agendar Cita
-            </button></Link>
+          <Button text="Agendar Cita" href="/patient/schedule" />
           {isLoggedIn ? (
           <>
             <button

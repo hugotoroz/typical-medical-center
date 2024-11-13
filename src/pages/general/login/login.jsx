@@ -122,7 +122,7 @@ const Login = () => {
           <button className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white'>Ingresar</button>
           <div className='flex justify-between'>
             <p className='flex items-center'><input className='mr-2' type="checkbox" /> Recuerdame</p>
-            <Link to="/register">
+            <Link to="/patient/register">
             <p>Registrarme</p>
             </Link>
           </div>

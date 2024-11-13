@@ -20,6 +20,7 @@ const DoctorsPage = () => {
     const [openId, setOpenId] = useState(null); // State to store user ID open
     const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
     const [error, setError] = useState(null); // Estado para manejar errores
+    const [isLoading, setIsLoading] = useState(true); // Estado para el spinner de carga
 
     const token = sessionStorage.getItem('token');
 
@@ -28,6 +29,7 @@ const DoctorsPage = () => {
       }, []);
 
       const fetchData = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`${API_URL}/appointments/doctor`, {
                 headers: {
@@ -51,10 +53,12 @@ const DoctorsPage = () => {
                     citaID: appointment.id_cita
                 }));
                 setData(filteredData); // Actualizar el estado con los datos filtrados
+                setIsLoading(false); // Finaliza la carga
             } else {
                 setData([]); // Asegúrate de limpiar cualquier dato previo
                 setError('No hay citas médicas actuales.');
                 console.warn('No hay citas médicas actuales.');
+                setIsLoading(false); // Finaliza la carga
             }
         } catch (error) {
             if (error.response && error.response.status === 404) {
@@ -81,57 +85,65 @@ return (
             
           {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
             <div className="flex justify-center"></div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
-                    <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((appointment, index) => (
-                    <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.especialidad}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.estado}</td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm">
-                        <div className="flex items-center justify-center">
-                            <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
-                            <button
-                              onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
-                              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
-                            >
-                              <span className="font-medium text-sm">Opciones</span>
-                              <motion.span variants={iconVariants}>
-                                <FiChevronDown />
-                              </motion.span>
-                            </button>
-
-                            <motion.ul
-                              initial={wrapperVariants.closed}
-                              variants={wrapperVariants}
-                              style={{ originY: "top", translateX: "-50%" }}
-                              className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
-                            >
-                              {appointment.pacienteId ? (
-                                  <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idCita={appointment.citaID} />
-                              ) : null}
-                              <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
-                              <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
-                            </motion.ul>
-                          </motion.div>
-                        </div>
-                      </td>
+            {isLoading ? (
+              // Muestra solo el spinner mientras se cargan los datos
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            ) : (
+              // Muestra la tabla completa solo cuando los datos están listos
+              <div className="overflow-x-auto">
+                <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {data.map((appointment, index) => (
+                      <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.especialidad}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.estado}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm">
+                          <div className="flex items-center justify-center">
+                            <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
+                              <button
+                                onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
+                              >
+                                <span className="font-medium text-sm">Opciones</span>
+                                <motion.span variants={iconVariants}>
+                                  <FiChevronDown />
+                                </motion.span>
+                              </button>
+
+                              <motion.ul
+                                initial={wrapperVariants.closed}
+                                variants={wrapperVariants}
+                                style={{ originY: "top", translateX: "-50%" }}
+                                className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
+                              >
+                                {appointment.pacienteId ? (
+                                    <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idCita={appointment.citaID} />
+                                ) : null}
+                                <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
+                                <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
+                              </motion.ul>
+                            </motion.div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
         </div>
