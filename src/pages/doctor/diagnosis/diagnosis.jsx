@@ -65,6 +65,23 @@ const Diagnosis = () => {
             </Text>
         );
     
+        // Función para procesar texto con etiquetas de formato (negrita, cursiva)
+        const processText = (node) => {
+            let textParts = [];
+            
+            node.childNodes.forEach((childNode, index) => {
+                if (childNode.nodeName === 'B' || childNode.nodeName === 'STRONG') {
+                    textParts.push(<Text key={`bold-${index}`} style={{ fontWeight: 'bold' }}>{childNode.textContent}</Text>);
+                } else if (childNode.nodeName === 'I' || childNode.nodeName === 'EM') {
+                    textParts.push(<Text key={`italic-${index}`} style={{ fontStyle: 'italic' }}>{childNode.textContent}</Text>);
+                } else if (childNode.nodeName === '#text') {
+                    textParts.push(childNode.textContent);
+                }
+            });
+    
+            return textParts;
+        };
+    
         // Recorrer todos los nodos del HTML para mantener el orden
         const childNodes = doc.body.childNodes;
     
@@ -74,7 +91,7 @@ const Diagnosis = () => {
                 node.querySelectorAll('li').forEach((li, liIndex) => {
                     elements.push(
                         <Text key={`ol-${index}-${liIndex}`} style={{ marginBottom: 5 }}>
-                            {liIndex + 1}. {li.textContent}
+                            {liIndex + 1}. {processText(li)}
                         </Text>
                     );
                 });
@@ -83,7 +100,7 @@ const Diagnosis = () => {
                 node.querySelectorAll('li').forEach((li, liIndex) => {
                     elements.push(
                         <Text key={`ul-${index}-${liIndex}`} style={{ marginBottom: 5 }}>
-                            • {li.textContent}
+                            • {processText(li)}
                         </Text>
                     );
                 });
@@ -91,7 +108,7 @@ const Diagnosis = () => {
                 // Si encontramos un párrafo (p), agregarlo como texto
                 elements.push(
                     <Text key={`p-${index}`} style={{ marginBottom: 10 }}>
-                        {node.textContent}
+                        {processText(node)}
                     </Text>
                 );
             }
