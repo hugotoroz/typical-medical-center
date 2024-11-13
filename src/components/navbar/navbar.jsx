@@ -86,7 +86,7 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
-          <Button text="Agendar Cita" href="/schedule" />
+          <Button text="Agendar Cita" href="/patient/schedule" />
           {isLoggedIn ? (
           <>
             <button
