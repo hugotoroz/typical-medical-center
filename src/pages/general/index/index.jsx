@@ -95,12 +95,14 @@ const MainPage = () => {
             Welcome, {rut} {userName}!
           </h2>
         )}
-        <Link to="/schedule">
-          <a href="#" className="shortcuts">
+
+          <a className="shortcuts">        
+            <Link to="/patient/schedule">
             <i className="fas fa-calendar-alt fa-2x mb-2 text-red-500"></i>
             <p className="text-center font-semibold">Agendar Cita</p>
+            </Link>
           </a>
-        </Link>
+        
         <a href="#" className="shortcuts">
           <i className="fas fa-heart-pulse fa-2x mb-2 text-blue-500"></i>
           <p className="text-center font-semibold">Conócenos</p>
