@@ -185,21 +185,6 @@ const Schedule = () => {
                 </select>
               </div>
             </div>
-
-            <div className="sm:flex sm:flex-row-reverse flex gap-4">
-              <button
-                className="w-fit rounded-lg text-sm px-5 py-2 focus:outline-none h-[50px] border bg-violet-500 hover:bg-violet-600 focus:bg-violet-700 border-violet-500-violet- text-white focus:ring-4 focus:ring-violet-200 hover:ring-4 hover:ring-violet-100 transition-all duration-300"
-                type="button"
-              >
-                <div className="flex gap-2 items-center">Reservar Hora</div>
-              </button>
-              <button
-                className="w-fit rounded-lg text-sm px-5 py-2 focus:outline-none h-[50px] border bg-transparent border-primary text-primary focus:ring-4 focus:ring-gray-100"
-                type="button"
-              >
-                Cancelar
-              </button>
-            </div>
           </form>
 
 
@@ -218,7 +203,7 @@ const Schedule = () => {
                   <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
                   <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario de inicio</th>
                   <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre doctor</th>
-                  <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                  <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reservar</th>
                 </tr>
               </thead>
               <tbody>
