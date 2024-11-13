@@ -209,6 +209,37 @@ const MainPage = () => {
           <h2 className="text-center text-3xl font-semibold text-gray-800 mb-12">
             Especialidades
           </h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-gray-700 leading-relaxed max-w-3xl mx-auto mb-6"
+          >
+            Somos un nuevo centro médico ubicado en la comuna de Lampa, con el
+            objetivo de brindar atención de alta calidad a nuestra comunidad.
+            Nuestro equipo de profesionales altamente capacitados está
+            comprometido en ofrecer servicios médicos integrales y
+            personalizados, enfocados en la prevención, el diagnóstico y el
+            tratamiento de diversas condiciones de salud.
+          </motion.p>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-blue-500 hover:text-blue-600 transition-colors duration-300"
+            href="#"
+          >
+            Click aquí para más información
+          </motion.a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="mb-20"
+        >
+          <h2 className="text-center text-3xl font-semibold text-gray-800 mb-12">
+            Especialidades
+          </h2>
           <div className="flex flex-wrap justify-center gap-4 my-4 sm:gap-6 md:gap-8 lg:gap-12 mb-16">
             <SpecialityCard
               image={generalPractitioner}
