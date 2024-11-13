@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from '../../pages/general/index/index';
 import Login from '../../pages/general/login/login';
 import Contact from '../../pages/general/contact/contact';
+import AboutUs from '../../pages/general/aboutUs/aboutUs';
+import Specialities from '../../pages/general/specialities/specialities';
 import AdminManagment from '../../pages/admin/adminManagment/adminManagment';
 import './App.css'
 import Register from '../../pages/patient/register/register';
@@ -13,13 +13,10 @@ import DoctorsPage from '../../pages/doctor/doctorsPage/doctorsPage';
 import NewDoctor from '../../pages/admin/newDoctor/newDoctor';
 import ProtectedRoute from '../../protected/ProtectedRoute.js';
 import Diagnosis from '../../pages/doctor/diagnosis/diagnosis';
-// Logo moved to index.html 
-// import logo from '../../images/logo/logo.jpeg';
 
-////Configures routes and renders the application with routing.
+// Configures routes and renders the application with routing.
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -28,6 +25,8 @@ function App() {
           <Route path="/" element={<Index />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/specialities" element={<Specialities />} />
           <Route path="patient/register" element={<Register />} />
           <Route path="admin/adminManagment" element={<ProtectedRoute><AdminManagment /></ProtectedRoute>} />
           <Route path="patient/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
