@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from '../../../components/sidebar/sidebar.jsx';
 import axios from 'axios';
-import ReactQuill from 'react-quill'; // Importa ReactQuill
 import 'react-quill/dist/quill.snow.css'; // Importa el CSS para el estilo de Quill
 import { API_URL } from '../../../../config.js';
 import { Document, Page, Text, StyleSheet, PDFDownloadLink, View, pdf  } from '@react-pdf/renderer'; 
@@ -16,29 +15,13 @@ const Diagnosis = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // Nuevo estado para el segundo modal
     const [error, setError] = useState(null);
-    const [diagnosisText, setDiagnosisText] = useState(''); // Estado para el contenido del editor de texto en el modal
-    const [externalText, setExternalText] = useState(''); // Estado para el contenido del nuevo editor fuera del modal
     const [documentTypes, setDocumentTypes] = useState([]);
     const quillRef = useRef();
     const quillRef2 = useRef();
-    const [readOnly, setReadOnly] = useState(false);
-    const [range, setRange] = useState();
-    const [lastChange, setLastChange] = useState();
-    const [htmlContent, setHtmlContent] = useState('');
 
     const toggleModal = () => setIsOpen(!isOpen);
     const toggleSecondModal = () => setIsSecondModalOpen(!isSecondModalOpen); // Función para alternar el segundo modal
 
-    // Maneja el cambio de texto en el editor Quill del modal
-    const handleDiagnosisChange = (value) => {
-        console.log("aaa");
-        setDiagnosisText(value);
-    };
-
-    // Maneja el cambio de texto en el nuevo editor fuera del modal
-    const handleExternalChange = (value) => {
-        setExternalText(value);
-    };
 
     const token = sessionStorage.getItem('token');
 
