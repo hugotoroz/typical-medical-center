@@ -197,28 +197,41 @@ const Register = () => {
     <Navbar/>
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
   <div className='hidden sm:block'>
-    <img className='w-full h-full object-cover' src={loginImg} alt="" />
+    <img className='w-full h-full object-cover  mt-10' src={loginImg} alt="" />
   </div>
 
-  <div className='bg-gray-100 flex flex-col justify-center h-full'>
-    <form className='max-w-[400px] w-full mx-auto bg-white p-8 rounded-lg shadow-lg mt-8' onSubmit={handleSubmit}>
-      <h2 className='text-4xl font-bold text-center py-6'>Registrarse</h2>
-      
-      <div className='flex flex-col py-2'>
-        <label className="font-medium mb-1">Rut</label>
+  <div className='bg-gray-100 flex flex-col justify-center h-full mt-10'>
+  <form className='bg-white p-6 rounded-lg shadow-lg max-w-[500px] mx-auto' onSubmit={handleSubmit}>
+    <p className='text-4xl font-bold text-center py-6'>Registrarse</p>
+
+    <div className='grid grid-cols-2 gap-4'>
+      <div>
+        <label className="font-medium">Rut</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
           type="text" 
           name='rut' 
           value={formData.rut} 
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);
+            if (e.target.value === '') {
+              setFormData({
+                ...formData,
+                nombres: '',
+                apellidoPaterno: '',
+                apellidoMaterno: '',
+                genero: '',
+                fechaNacimiento: ''
+              });
+            }
+          }}
           placeholder="Ingrese RUT para autocompletar"
         />
         {errors.rut && <p className="text-red-500 text-sm mt-1">{errors.rut}</p>}
       </div>
-      
-      <div className='flex flex-col py-2'>
-        <label className="font-medium mb-1">Número de Documento</label>
+
+      <div>
+        <label className="font-medium">Número de Documento</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
           type="number" 
@@ -229,8 +242,7 @@ const Register = () => {
         {errors.numDoc && <p className="text-red-500 text-sm mt-1">{errors.numDoc}</p>}
       </div>
 
-      {/* Campos que se autocompletarán */}
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Nombres</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -242,7 +254,7 @@ const Register = () => {
         {errors.nombres && <p className="text-red-500 text-sm mt-1">{errors.nombres}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Apellido Paterno</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -254,7 +266,7 @@ const Register = () => {
         {errors.apellidoPaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoPaterno}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Apellido Materno</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -266,7 +278,7 @@ const Register = () => {
         {errors.apellidoMaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoMaterno}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Género</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -278,7 +290,7 @@ const Register = () => {
         {errors.genero && <p className="text-red-500 text-sm mt-1">{errors.genero}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Fecha de Nacimiento</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -290,8 +302,7 @@ const Register = () => {
         {errors.fechaNacimiento && <p className="text-red-500 text-sm mt-1">{errors.fechaNacimiento}</p>}
       </div>
 
-      {/* Campos que no se autocompletarán */}
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Correo Electrónico</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -303,7 +314,7 @@ const Register = () => {
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Teléfono</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -315,7 +326,7 @@ const Register = () => {
         {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Clave</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -327,7 +338,7 @@ const Register = () => {
         {errors.clave && <p className="text-red-500 text-sm mt-1">{errors.clave}</p>}
       </div>
 
-      <div className='flex flex-col py-2'>
+      <div>
         <label className="font-medium mb-1">Confirmar Clave</label>
         <input 
           className='border p-2 rounded focus:outline-none focus:border-green-300' 
@@ -338,12 +349,13 @@ const Register = () => {
         />
         {errors.confirmarClave && <p className="text-red-500 text-sm mt-1">{errors.confirmarClave}</p>}
       </div>
+    </div>
 
-      <button className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' type='submit'>
-        Continuar
-      </button>
-    </form>
-  </div>
+    <button className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' type='submit'>
+      Continuar
+    </button>
+  </form>
+</div>
 </div>
   </>
   );

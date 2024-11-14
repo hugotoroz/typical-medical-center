@@ -1,7 +1,7 @@
 import { MoreVertical, ChevronLast, ChevronFirst, Home, User, Settings } from "lucide-react";
 import { useContext, createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import logo from "../../images/logo/logo2.jpeg";
 
 const SidebarContext = createContext();
@@ -33,6 +33,7 @@ export function Sidebar() {
   const [rut, setRut] = useState('');
   const [roleId, setRoleId] = useState('2'); // '2' por defecto para el rol de doctor
   const location = useLocation(); // Para obtener la ruta actual
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -45,6 +46,11 @@ export function Sidebar() {
   }, []);
 
   const sidebarItems = sidebarOptionsByRole[roleId] || [];
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <aside className="sticky top-0 h-screen">
@@ -76,6 +82,12 @@ export function Sidebar() {
             ))}
           </ul>
         </SidebarContext.Provider>
+
+        <div className="flex p-3 justify-center">
+        <button onClick={handleLogout} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded font-medium">
+          Cerrar sesión
+        </button>
+      </div>
 
         <div className="border-t flex p-3">
           <img
