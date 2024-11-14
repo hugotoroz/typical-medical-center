@@ -18,6 +18,7 @@ const Diagnosis = () => {
     const [documentTypes, setDocumentTypes] = useState([]);
     const quillRef = useRef();
     const quillRef2 = useRef();
+    const [htmlContent, setHtmlContent] = useState('');
 
     const toggleModal = () => setIsOpen(!isOpen);
     const toggleSecondModal = () => setIsSecondModalOpen(!isSecondModalOpen); // Función para alternar el segundo modal
