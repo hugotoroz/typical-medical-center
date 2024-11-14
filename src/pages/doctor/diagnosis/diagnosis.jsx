@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from '../../../components/sidebar/sidebar.jsx';
 import axios from 'axios';
-import 'react-quill/dist/quill.snow.css'; // Importa el CSS para el estilo de Quill
 import { API_URL } from '../../../../config.js';
 import { Document, Page, Text, StyleSheet, PDFDownloadLink, View, pdf  } from '@react-pdf/renderer'; 
 import Editor from '../../../components/editor/Editor.jsx';
