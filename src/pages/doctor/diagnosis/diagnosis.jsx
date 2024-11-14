@@ -1,35 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from '../../../components/sidebar/sidebar.jsx';
 import axios from 'axios';
-import ReactQuill from 'react-quill'; // Importa ReactQuill
 import 'react-quill/dist/quill.snow.css'; // Importa el CSS para el estilo de Quill
 import { API_URL } from '../../../../config.js';
-import ReactDOMServer from 'react-dom/server';
-import { Document, Page, Text, StyleSheet, PDFDownloadLink, View  } from '@react-pdf/renderer'; 
-import { renderToStaticMarkup } from 'react-dom/server';
+import { Document, Page, Text, StyleSheet, PDFDownloadLink, View, pdf  } from '@react-pdf/renderer'; 
+import Editor from '../../../components/editor/Editor.jsx';
+import Quill from 'quill';
 import './diagnosis.css';
+
+const Delta = Quill.import('delta');
 
 const Diagnosis = () => {
     const [data, setData] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // Nuevo estado para el segundo modal
     const [error, setError] = useState(null);
-    const [diagnosisText, setDiagnosisText] = useState(''); // Estado para el contenido del editor de texto en el modal
-    const [externalText, setExternalText] = useState(''); // Estado para el contenido del nuevo editor fuera del modal
     const [documentTypes, setDocumentTypes] = useState([]);
+    const quillRef = useRef();
+    const quillRef2 = useRef();
 
     const toggleModal = () => setIsOpen(!isOpen);
     const toggleSecondModal = () => setIsSecondModalOpen(!isSecondModalOpen); // Función para alternar el segundo modal
 
-    // Maneja el cambio de texto en el editor Quill del modal
-    const handleDiagnosisChange = (value) => {
-        setDiagnosisText(value);
-    };
-
-    // Maneja el cambio de texto en el nuevo editor fuera del modal
-    const handleExternalChange = (value) => {
-        setExternalText(value);
-    };
 
     const token = sessionStorage.getItem('token');
 
@@ -51,10 +43,44 @@ const Diagnosis = () => {
         setDocumentTypes(jsonData.tipos_documento);
     }, []);
 
+    const getEditorContent = async () => {
+        // Obtener el contenido del editor
+        const content = quillRef2.current?.root.innerHTML;
+        setHtmlContent(content);
+
+        console.log(content);
+
+        // Crear el documento PDF
+        const pdfDoc = (
+            <Document>
+                <Page style={{ padding: 20 }}>
+                    <View>
+                        {renderHTMLToPDF(content)}
+                    </View>
+                </Page>
+            </Document>
+        );
+
+        // Generar el PDF y obtener el blob
+        const pdfBlob = await pdf(pdfDoc).toBlob();
+
+        // Crear enlace de descarga y activarlo
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(pdfBlob);
+        link.download = 'diagnosis.pdf';
+        link.click();
+    };
+
+
+      
+
     const renderHTMLToPDF = (htmlContent) => {
+
+        
+
         const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
     
-        console.log(htmlContent);
+        console.log("Contenido para el PDF:", htmlContent);
     
         const elements = [];
     
@@ -152,18 +178,8 @@ const Diagnosis = () => {
                     {/* Nuevo editor fuera del modal */}
                     <div className="mt-6">
                         <label className="text-lg font-medium block mb-2 text-left">Anamnesis:</label>
-                        <ReactQuill
-                            id="external-editor"
-                            value={externalText}
-                            onChange={handleExternalChange}
-                            theme="snow"
-                            className="mt-2 bg-white shadow-md"
-                            style={{
-                                maxHeight: '300px', // Establecer altura
-                                overflowY: 'auto', // Permitir desplazamiento vertical
-                                width: '100%', // Asegurar que ocupe el ancho completo disponible
-                                boxSizing: 'border-box', // Incluir padding y borde en el tamaño total
-                              }}
+                        <Editor
+                        ref={quillRef}
                         />
                     </div>
 
@@ -193,36 +209,14 @@ const Diagnosis = () => {
                             {/* Editor de texto Quill en el modal */}
                             <div className="mb-6">
                                 <label className="text-lg font-medium block mb-2 text-left">Escribe el diagnóstico:</label>
-                                <ReactQuill
-                                    id="diagnosis-patient"
-                                    value={diagnosisText}
-                                    onChange={handleDiagnosisChange}
-                                    theme="snow"
-                                    className="mt-2 bg-white shadow-md"
-                                    style={{
-                                        maxHeight: '250px', // Establecer altura
-                                        overflowY: 'auto', // Permitir desplazamiento vertical
-                                        width: '100%', // Asegurar que ocupe el ancho completo disponible
-                                        boxSizing: 'border-box', // Incluir padding y borde en el tamaño total
-                                      }}
+                                
+
+                                <Editor
+                                ref={quillRef2}
+                                
                                 />
 
-                                {/* Generar el PDF */}
-                                <PDFDownloadLink
-                                    document={
-                                        <Document>
-                                            <Page style={styles.page}>
-                                                {/* Convertir el HTML de ReactQuill al formato de react-pdf */}
-                                                <View>
-                                                    {renderHTMLToPDF(diagnosisText)}
-                                                </View>
-                                            </Page>
-                                        </Document>
-                                    }
-                                    fileName="diagnosis.pdf"
-                                >
-                                    {({ loading }) => (loading ? 'Generando PDF...' : 'Descargar PDF')}
-                                </PDFDownloadLink>
+                                
                             </div>
 
                             {/* Lista de Tipos de Documento */}
@@ -238,13 +232,10 @@ const Diagnosis = () => {
                             </div>
 
                             <button
-                                onClick={() => {
-                                    generatePDF();
-                                    toggleModal();
-                                }}
+                                onClick={getEditorContent}
                                 className="px-4 py-2 text-white bg-teal-500 rounded-lg hover:bg-teal-600 mt-8"
                             >
-                                Guardar Diagnóstico
+                                Generar Pdf
                             </button>
 
                             {error && <p className="text-red-500 mt-4">{error}</p>}
