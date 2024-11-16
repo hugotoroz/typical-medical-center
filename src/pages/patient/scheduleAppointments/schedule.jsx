@@ -12,15 +12,19 @@ import './schedule.css'; // Importamos los estilos CSS
 
 const Schedule = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredSpecialties, setFilteredSpecialties] = useState([]);
+  // const [filteredSpecialties, setFilteredSpecialties] = useState([]);
   const [specialties, setSpecialties] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState();
+  const [selectedDoctor, setSelectedDoctor] = useState();
+  const [selectedDate, setSelectedDate] = useState(null);
   const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchSpecialties();
+    fetchDoctors();
   }, []);
 
   const fetchSpecialties = async () => {
@@ -37,9 +41,32 @@ const Schedule = () => {
     }
   };
 
-  const fetchAppointments = async (id) => {
+  const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${API_URL}/appointments/search?speciality=${id}`, {
+      const response = await axios.get(`${API_URL}/doctors`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDoctors(response.data);
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    }
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      let url = `${API_URL}/appointments/search?`;
+      if (selectedSpecialty) {
+        url += `speciality=${selectedSpecialty}&`;
+      }
+      if (selectedDoctor) {
+        url += `doctor=${selectedDoctor}&`;
+      }
+      // if (selectedDate) {
+      //   url += `date=${format(selectedDate, 'yyyy-MM-dd')}&`;
+      // }
+      const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -165,27 +192,66 @@ const Schedule = () => {
             </div>
           </div>
           <form action="">
-            <div className="grid grid-cols-2 gap-6 mb-10">
-              <div className="mb-10">
-                <label htmlFor="specialty-select" className="block text-sm font-medium text-gray-700">
-                  Selecciona Especialidad
-                </label>
-                <select
-                  id="specialty-select"
-                  value={selectedSpecialty}
-                  onChange={handleSpecialtyChange}
-                  className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
-                >
-                  <option value="">Selecciona una especialidad</option>
-                  {specialties.map((specialty) => (
-                    <option key={specialty.id} value={specialty.id}>
-                      {specialty.nom}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </form>
+        <div className="grid grid-cols-3 gap-6 mb-10">
+          <div className="mb-10">
+            <label htmlFor="specialty-select" className="block text-sm font-medium text-gray-700">
+              Selecciona Especialidad
+            </label>
+            <select
+              id="specialty-select"
+              value={selectedSpecialty}
+              onChange={(e) => {
+                setSelectedSpecialty(e.target.value);
+                fetchAppointments();
+              }}
+              className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
+            >
+              <option value="">Selecciona una especialidad</option>
+              {specialties.map((specialty) => (
+                <option key={specialty.id} value={specialty.id}>
+                  {specialty.nom}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-10">
+            <label htmlFor="doctor-select" className="block text-sm font-medium text-gray-700">
+              Selecciona Doctor
+            </label>
+            <select
+              id="doctor-select"
+              value={selectedDoctor}
+              onChange={(e) => {
+                setSelectedDoctor(e.target.value);
+                fetchAppointments();
+              }}
+              className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
+            >
+              <option value="">Selecciona un doctor</option>
+              {doctors.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.nom}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* <div className="mb-10">
+            <label htmlFor="date-picker" className="block text-sm font-medium text-gray-700">
+              Selecciona Fecha
+            </label>
+            <input
+              id="date-picker"
+              type="date"
+              value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
+              onChange={(e) => {
+                setSelectedDate(new Date(e.target.value));
+                fetchAppointments();
+              }}
+              className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
+            />
+          </div> */}
+        </div>
+      </form>
 
 
 
