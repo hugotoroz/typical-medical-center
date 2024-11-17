@@ -386,7 +386,7 @@ const Diagnosis = () => {
                             {error && <p className="text-red-500 mt-4">{error}</p>}
 
                             <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
-                                <thead>
+                                <thead className="bg-gray-50">
                                     <tr>
                                         <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha</th>
                                         <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Observación</th>
