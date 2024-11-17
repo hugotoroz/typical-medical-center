@@ -424,7 +424,9 @@ const Diagnosis = () => {
                                                                     alt={doc.tipo_documento || "Documento"}
                                                                     className="w-8 h-8 object-cover"
                                                                 />
+                                                                
                                                             </a>
+                                                            
                                                         ))}
                                                         {/* Renderiza los tooltips */}
                                                         {item.documents.map((_, i) => (

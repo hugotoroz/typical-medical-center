@@ -83,11 +83,20 @@ export function Sidebar() {
           </ul>
         </SidebarContext.Provider>
 
+        {/* Botón de cerrar sesión con íconos para pantallas pequeñas */}
         <div className="flex p-3 justify-center">
-        <button onClick={handleLogout} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded font-medium">
-          Cerrar sesión
-        </button>
-      </div>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded font-medium w-full"
+          >
+            <div className={`flex items-center justify-center ${expanded ? 'block' : 'hidden'}`}>
+              Cerrar sesión
+            </div>
+            <div className={`flex items-center justify-center ${expanded ? 'hidden' : 'block'}`}>
+              <i className="fa fa-sign-out"></i> {/* Aquí el icono para pantallas pequeñas */}
+            </div>
+          </button>
+        </div>
 
         <div className="border-t flex p-3">
           <img
@@ -107,6 +116,7 @@ export function Sidebar() {
         </div>
       </nav>
     </aside>
+
   );
 }
 
