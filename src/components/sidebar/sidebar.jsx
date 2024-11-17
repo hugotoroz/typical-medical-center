@@ -99,11 +99,11 @@ export function Sidebar() {
         </div>
 
         <div className="border-t flex p-3">
-          <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-            alt=""
-            className="w-10 h-10 rounded-md"
-          />
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center">
+            <span className="text-2xl font-bold text-white">
+              {userName.charAt(0).toUpperCase()}
+            </span>
+          </div>
           <div
             className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}
           >

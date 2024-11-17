@@ -3,10 +3,22 @@ import { Link, NavLink, useLocation,useNavigate } from 'react-router-dom';
 import logo from "../../images/logo/logo.jpeg"
 import profile from "../../images/navbar/profile.jpg"
 import './navbar.css';
+import { jwtDecode } from "jwt-decode";
 // Button component
 import Button from '../button/hrefButton.jsx';
 
 function Navbar() {
+  const [rut, setRut] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [userName, setUserName] = useState('');
+    const [patSurName, setPatSurName] = useState('');
+    const [matSurName, setMatSurName] = useState('');
+    const [dateBirth, setDateBirth] = useState('');
+    const [cellphone, setCellphone] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [appointments, setAppointments] = useState([]);
+    const [activeTab, setActiveTab] = useState('profile');
   const navigate = useNavigate();
   // The useLocation hook provides the current location object
   const location = useLocation();
@@ -44,6 +56,23 @@ function Navbar() {
   };
 
   const isLoggedIn = Boolean(sessionStorage.getItem("token"));
+
+  useEffect(() => {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+          const decodedToken = jwtDecode(token);
+          setUserName(decodedToken.fullName);
+          setRut(decodedToken.rut);
+          setEmail(decodedToken.email);
+          setPassword(decodedToken.password);
+          setPatSurName(decodedToken.patSurName);
+          setMatSurName(decodedToken.matSurName);
+          setDateBirth(decodedToken.dateBirth);
+          setCellphone(decodedToken.cellphone);
+
+          //fetchUserData();
+      }
+  }, []);
 
   return (
     <>
@@ -95,8 +124,16 @@ function Navbar() {
             >
               Cerrar sesión
             </button>
-            <Link to="/patient/userProfile" className="hover:underline">
-            <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
+            <Link to="/patient/userProfile">
+              {userName ? (
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-white">
+                    {userName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              ) : (
+                <img className="w-12 h-12 rounded-full" src="../../images/navbar/profile.jpg" alt="User" />
+              )}
             </Link>
           </>
         ) : (
