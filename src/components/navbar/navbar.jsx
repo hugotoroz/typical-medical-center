@@ -95,7 +95,7 @@ function Navbar() {
             >
               Cerrar sesión
             </button>
-            <Link to="/patient/profile" className="hover:underline">
+            <Link to="/patient/userProfile" className="hover:underline">
             <img className="w-10 h-10 rounded-full" src="src/images/navbar/profile.jpg" alt="User" />
             </Link>
           </>
