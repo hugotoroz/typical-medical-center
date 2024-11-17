@@ -130,7 +130,13 @@ return (
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
                                 {appointment.pacienteId ? (
-                                    <Option setOpen={setOpenId} Icon={FiPlusSquare} text="Diagnosticar" idCita={appointment.citaID} />
+                                    <Option
+                                    setOpen={setOpenId}
+                                    Icon={FiPlusSquare}
+                                    text="Diagnosticar"
+                                    idCita={appointment.citaID}
+                                    idPaciente={appointment.pacienteId} // Pasar idPaciente
+                                  />
                                 ) : null}
                                 <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
                                 <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
@@ -154,12 +160,13 @@ return (
 );
 };
 
-const Option = ({ text, Icon, setOpen, idCita }) => {
+const Option = ({ text, Icon, setOpen, idCita, idPaciente }) => {
   const navigate = useNavigate();
 
   const handleOptionClick = async (action) => { 
-      if (action === "Diagnosticar") {
+      if (action === "Diagnosticar" && idCita && idPaciente) {
         localStorage.setItem("idCita", idCita);
+        localStorage.setItem("idPaciente", idPaciente);
         navigate(`/doctor/diagnosis`);
       }
     };
