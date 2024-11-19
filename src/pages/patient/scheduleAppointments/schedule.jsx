@@ -11,14 +11,12 @@ import Swal from 'sweetalert2';
 import './schedule.css'; // Importamos los estilos CSS
 
 const Schedule = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  // const [filteredSpecialties, setFilteredSpecialties] = useState([]);
   const [specialties, setSpecialties] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState();
   const [selectedDoctor, setSelectedDoctor] = useState();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
   const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 
@@ -63,9 +61,9 @@ const Schedule = () => {
       if (selectedDoctor) {
         url += `doctor=${selectedDoctor}&`;
       }
-      // if (selectedDate) {
-      //   url += `date=${format(selectedDate, 'yyyy-MM-dd')}&`;
-      // }
+       if (selectedDate) {
+         url += `date=${new Date(selectedDate).toISOString().split('T')[0]}&`;
+       }
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,44 +104,6 @@ const Schedule = () => {
     }
   };
 
-  const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    if (value) {
-      const filtered = specialties.filter((specialty) =>
-        specialty.nom.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredSpecialties(filtered);
-    } else {
-      setFilteredSpecialties(specialties);
-    }
-  };
-
-  const handleSpecialtySelect = (specialty) => {
-    setSearchTerm(specialty.nom);
-    setSelectedSpecialty(specialty.id);
-    setFilteredSpecialties([]);
-    fetchAppointments(specialty.id);
-  };
-
-  const handleFocus = () => {
-    setFilteredSpecialties(specialties);
-  };
-  const handleBlur = () => {
-    setTimeout(() => {
-      setFilteredSpecialties([]);
-    }, 100);
-  };
-
-  const handleSpecialtyChange = (event) => {
-    const specialtyId = event.target.value;
-    setSelectedSpecialty(specialtyId);
-    if (specialtyId) {
-      fetchAppointments(specialtyId);
-    } else {
-      setAppointments([]);
-    }
-  };
 
   const confirmAppointmentBooking = (availabilityId) => {
     Swal.fire({
@@ -235,21 +195,21 @@ const Schedule = () => {
               ))}
             </select>
           </div>
-          {/* <div className="mb-10">
-            <label htmlFor="date-picker" className="block text-sm font-medium text-gray-700">
-              Selecciona Fecha
-            </label>
-            <input
-              id="date-picker"
-              type="date"
-              value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
-              onChange={(e) => {
-                setSelectedDate(new Date(e.target.value));
-                fetchAppointments();
-              }}
-              className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
-            />
-          </div> */}
+          <div className="mb-10">
+          <label htmlFor="date-select" className="block text-sm font-medium text-gray-700">
+            Selecciona Fecha
+          </label>
+          <input
+            type="date"
+            id="date-select"
+            value={selectedDate}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              fetchAppointments();
+            }}
+            className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
+          />
+        </div>
         </div>
       </form>
 
