@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../../../config.js';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { Loader2 } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -144,49 +146,87 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+  
+
     const validationErrors = validate();
-    if (Object.keys(validationErrors).length === 0) {
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+
       const isRutValid = await validateRut(formData.rut, formData.numDoc);
       if (!isRutValid) {
-        setErrors({ ...validationErrors, rut: 'RUT no es válido' });
+        setErrors((prev) => ({
+          ...prev,
+          numDoc: 'N° Documento no es válido',
+        }));
+        setIsLoading(false);
         return;
       }
-      try {
-        const response = await axios.post(`${API_URL}/patients`, {
-          rut: formData.rut,
-          email: formData.email,
-          password: formData.clave,
-          name: formData.nombres,
-          patSurName: formData.apellidoPaterno,
-          matSurName: formData.apellidoMaterno,
-          genre: formData.genero,
-          dateBirth: formData.fechaNacimiento,
-          cellphone: formData.telefono
+  
+      const response = await axios.post(`${API_URL}/patients`, {
+        rut: formData.rut,
+        email: formData.email,
+        password: formData.clave,
+        name: formData.nombres,
+        patSurName: formData.apellidoPaterno,
+        matSurName: formData.apellidoMaterno,
+        genre: formData.genero,
+        dateBirth: formData.fechaNacimiento,
+        cellphone: formData.telefono,
+      });
+  
+      localStorage.setItem('token', response.data.token);
+      Swal.fire({
+        title: 'Registro exitoso',
+        text: 'El usuario ha sido registrado exitosamente.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      }).then(() => {
+        navigate('/');
+      });
+      
+    } catch (error) {
+      if (error.response && error.response.data?.error_code === 'DUPLICATE_KEY') {
+        const duplicateFields = error.response.data.fields || {};
+  
+        const newErrors = {
+          ...(duplicateFields.rut && { rut: 'RUT ya está registrado' }),
+          ...(duplicateFields.numDoc && { numDoc: 'N° Documento ya está registrado' }),
+          ...(duplicateFields.email && { email: 'Correo electrónico ya está registrado' }),
+        };
+
+        setErrors((prev) => ({
+          ...prev,
+          ...newErrors
+        }));
+
+        Swal.fire({
+          title: 'Error de registro',
+          text: Object.values(newErrors)[0],
+          icon: 'error',
+          confirmButtonText: 'OK'
         });
 
-        if (response.data) {
-          console.log('Form submitted successfully', response.data);
-          localStorage.setItem('token', response.data.token);
-          Swal.fire({
-            title: 'Registro exitoso',
-            text: 'El usuario ha sido registrado exitosamente.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            navigate('/');
-          });
-        }
-      } catch (error) {
-        if (error.response && error.response.data.data?.error_code === 'DUPLICATE_KEY') {
-          setErrors({ ...validationErrors, rut: 'RUT ya está registrado' });
-        } else {
-          console.error('Error submitting form:', error);
-        }
+        return;
+      } else {
+        console.error('Error submitting form:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema con el registro. Intente nuevamente.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
       }
-    } else {
-      setErrors(validationErrors);
+    } finally {
+      setIsLoading(false);
     }
-  };
+};
+  
 
 
 
@@ -355,12 +395,20 @@ const Register = () => {
     </div>
 
     <div className='flex space-x-4'>
-      <button 
-        className='border flex-1 my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' 
-        type='submit'
-      >
-        Continuar
-      </button>
+    <button
+          className='w-full flex justify-center items-center border my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' 
+          type='submit'
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Registrando...
+            </>
+          ) : (
+            'Continuar'
+          )}
+        </button>
       <button 
         type='button' 
         className='border flex-1 my-5 py-2 bg-red-300 hover:bg-red-200 text-white rounded font-medium transition duration-200'
