@@ -24,6 +24,7 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,7 +71,7 @@ const Register = () => {
           nombres: nombres,
           apellidoPaterno: response.data.data.father_lastname,
           apellidoMaterno: response.data.data.mother_lastname,
-          genero: response.data.data.gender.toLowerCase(),
+          genero: response.data.data.gender.toUpperCase(),
           fechaNacimiento: formattedDate,
         }));
       }
@@ -102,10 +103,11 @@ const Register = () => {
     }
   };
 
-  const validateGenero = (genero) => {
-    const validGeneros = ['masculino', 'femenino'];
-    return validGeneros.includes(genero.toLowerCase());
-  };
+
+  
+
+
+
 
   const validate = () => {
     let tempErrors = {};
@@ -118,11 +120,7 @@ const Register = () => {
     
     if (!formData.apellidoMaterno) tempErrors.apellidoMaterno = 'Apellido Materno es requerido';
     if (formData.apellidoMaterno.length > 50) tempErrors.apellidoMaterno = 'Apellido Materno no puede tener más de 50 caracteres';
-    
-    if (!validateGenero(formData.genero)) {
-      tempErrors.genero = 'El género debe ser "masculino" o "femenino"';
-    }
-    
+
     if (!formData.rut) tempErrors.rut = 'Rut es requerido';
     if (formData.rut.length > 12) tempErrors.rut = 'Rut no puede tener más de 12 caracteres';
     
@@ -202,7 +200,7 @@ const Register = () => {
 
   <div className='bg-gray-100 flex flex-col justify-center h-full mt-10'>
   <form className='bg-white p-6 rounded-lg shadow-lg max-w-[500px] mx-auto' onSubmit={handleSubmit}>
-    <p className='text-4xl font-bold text-center py-6'>Registrarse</p>
+  <p className='text-2xl font-bold text-center py-4'>Registrarse</p>
 
     <div className='grid grid-cols-2 gap-4'>
       <div>
@@ -225,7 +223,7 @@ const Register = () => {
               });
             }
           }}
-          placeholder="Ingrese RUT para autocompletar"
+          placeholder="Ingrese RUT"
         />
         {errors.rut && <p className="text-red-500 text-sm mt-1">{errors.rut}</p>}
       </div>
@@ -250,6 +248,7 @@ const Register = () => {
           name='nombres' 
           value={formData.nombres} 
           onChange={handleChange}
+          disabled={isDisabled}
         />
         {errors.nombres && <p className="text-red-500 text-sm mt-1">{errors.nombres}</p>}
       </div>
@@ -262,6 +261,7 @@ const Register = () => {
           name='apellidoPaterno' 
           value={formData.apellidoPaterno} 
           onChange={handleChange}
+          disabled={isDisabled}
         />
         {errors.apellidoPaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoPaterno}</p>}
       </div>
@@ -274,6 +274,7 @@ const Register = () => {
           name='apellidoMaterno' 
           value={formData.apellidoMaterno} 
           onChange={handleChange}
+          disabled={isDisabled}
         />
         {errors.apellidoMaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoMaterno}</p>}
       </div>
@@ -286,6 +287,7 @@ const Register = () => {
           name='genero' 
           value={formData.genero} 
           onChange={handleChange}
+          disabled={isDisabled}
         />
         {errors.genero && <p className="text-red-500 text-sm mt-1">{errors.genero}</p>}
       </div>
@@ -293,11 +295,12 @@ const Register = () => {
       <div>
         <label className="font-medium mb-1">Fecha de Nacimiento</label>
         <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
+          className='border p-2 rounded focus:outline-none focus:border-green-300 w-[200px] text-center' 
           type="date" 
           name='fechaNacimiento' 
           value={formData.fechaNacimiento} 
           onChange={handleChange}
+          disabled={isDisabled}
         />
         {errors.fechaNacimiento && <p className="text-red-500 text-sm mt-1">{errors.fechaNacimiento}</p>}
       </div>
@@ -351,9 +354,37 @@ const Register = () => {
       </div>
     </div>
 
-    <button className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' type='submit'>
-      Continuar
-    </button>
+    <div className='flex space-x-4'>
+      <button 
+        className='border flex-1 my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' 
+        type='submit'
+      >
+        Continuar
+      </button>
+      <button 
+        type='button' 
+        className='border flex-1 my-5 py-2 bg-red-300 hover:bg-red-200 text-white rounded font-medium transition duration-200'
+        onClick={() => {
+          setFormData({
+            rut: '',
+            numDoc: '',
+            nombres: '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
+            genero: '',
+            fechaNacimiento: '',
+            email: '',
+            telefono: '',
+            clave: '',
+            confirmarClave: ''
+          });
+          setErrors({});
+        }}
+      >
+        Limpiar
+      </button>
+    </div>
+    
   </form>
 </div>
 </div>
