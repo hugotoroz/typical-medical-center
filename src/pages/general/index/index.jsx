@@ -127,7 +127,7 @@ const MainPage = () => {
         className="relative mt-nav"
       >
         <img
-          className="h-auto w-full shadow-lg sm:h-64 md:h-80 lg:h-96 object-cover"
+          className="h-auto w-full shadow-lg sm:h-64 md:h-80 lg:h-96 object-cover mt-20"
           src={banner}
           alt="Hospital banner"
         />
