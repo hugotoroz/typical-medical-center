@@ -47,7 +47,7 @@ const TextSwitcher = () => {
           transition={{ duration: 1.0 }}
           className="absolute w-full"
         >
-          <h1 className="text-xxs font-bold mb-3 sm:text-xl md:text-2xl lg:text-3xl">
+          <h1 className="text-xs sm:text-sm md:text-xl lg:text-4xl font-bold mb-3">
             {texts[index]}
           </h1>
         </motion.div>
@@ -127,7 +127,7 @@ const MainPage = () => {
         className="relative mt-nav"
       >
         <img
-          className="h-auto w-full shadow-lg sm:h-64 md:h-80 lg:h-96 object-cover mt-20"
+          className="h-auto w-full shadow-lg object-cover mt-28 sm:mt-20"
           src={banner}
           alt="Hospital banner"
         />
