@@ -25,6 +25,7 @@ const NewDoctor = () => {
       apellidoMaterno: '',
       fechaNacimiento: '',
       numeroCelular: '',
+      genero: '',
       especialidades: []
     });
 
@@ -134,6 +135,7 @@ const NewDoctor = () => {
               fechaNacimiento: formattedFechaNacimiento,  // Formato de la fecha
               edad: dataJason.data.age,  // Asumí que esto es la edad
               estadoCivil: dataJason.data.marital_status,
+              genero: dataJason.data.gender,
             });
           }
         } catch (error) {
@@ -391,6 +393,7 @@ const NewDoctor = () => {
                     placeholder="Nombre"
                     value={formData.nombre}
                     onChange={handleInputChange}
+                    disabled
                   />
                 </div>
                 <div>
@@ -403,6 +406,7 @@ const NewDoctor = () => {
                     placeholder="Apellido Paterno"
                     value={formData.apellidoPaterno}
                     onChange={handleInputChange}
+                    disabled
                   />
                 </div>
               </div>
@@ -418,6 +422,7 @@ const NewDoctor = () => {
                     placeholder="Apellido Materno"
                     value={formData.apellidoMaterno}
                     onChange={handleInputChange}
+                    disabled
                   />
                 </div>
                 <div>
@@ -431,10 +436,25 @@ const NewDoctor = () => {
                     value={formData.fechaNacimiento}
                     onChange={handleInputChange}
                     max={getYesterday()}
+                    disabled
                   />
                 </div>
               </div>
   
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Genero</label>
+                <input
+                  type="tel"
+                  name="numeroCelular"
+                  id="numeroCelular"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Genero"
+                  value={formData.genero}
+                  onChange={handleInputChange}
+                  disabled
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">Número de Celular</label>
                 <input
