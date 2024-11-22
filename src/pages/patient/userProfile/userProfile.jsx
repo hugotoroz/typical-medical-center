@@ -149,7 +149,15 @@ const UserProfile = () => {
                         <ProfileSection icon={CreditCard} label="RUT" value={rut} />
                         <ProfileSection icon={Mail} label="Correo Electrónico" value={email} />
                         <ProfileSection icon={Phone} label="Teléfono" value={cellphone} />
-                        <ProfileSection icon={Calendar} label="Fecha de Nacimiento" value={userDetails.date_of_birth} />
+                        <ProfileSection 
+                            icon={Calendar} 
+                            label="Fecha de Nacimiento" 
+                            value={new Date(dateBirth).toLocaleDateString('es-CL', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric' 
+                            })} 
+                            />
                     </div>
 
                     <div className="mt-6 flex justify-center">
@@ -237,7 +245,7 @@ const UserProfile = () => {
                                     <td className="p-2 border">{new Date(appointment.fecha).toLocaleDateString()}</td>
                                     <td className="p-2 border">{appointment.nombre_especialidad}</td>
                                     <td className="p-2 border">{appointment.estado}</td>
-                                    <td className="p-2 border">{appointment.hora_inicio}</td>
+                                    <td className="p-2 border">{appointment.hora_inicio.slice(0, 5)}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -246,41 +254,7 @@ const UserProfile = () => {
             )}
         </div>
     );
-
-    {/*const fetchUserData = async () => {
-      const token = sessionStorage.getItem('token');
-      const userRut = "21255252-6"; // Asegúrate de que tienes el RUT en el estado
-
-      console.log(userRut);
     
-        const response = await axios.post(`${API_URL}/user/data`, {
-          rut: userRut,  // Rut enviado en el cuerpo de la solicitud
-        }, {
-          headers: {
-            'Content-Type': 'application/json', // Asegúrate de que el tipo de contenido es JSON
-          }
-        });
-
-        console.log(response);
-    
-        if (response.data && response.data.status === 'success') {
-          const { name, father_lastname, mother_lastname, date_of_birth, age, gender, nationality, marital_status } = response.data.data;
-          setUserDetails({
-            name,
-            father_lastname,
-            mother_lastname,
-            date_of_birth,
-            age,
-            gender,
-            nationality,
-            marital_status
-          });
-        } else {
-          console.error('Error al obtener los detalles del usuario', response.data);
-        }
-     
-    };*/}
-
     return (
         <>
             <Navbar />
