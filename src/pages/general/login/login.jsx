@@ -2,10 +2,12 @@ import React,{useState} from 'react';
 import Navbar from '../../../components/navbar/navbar.jsx';
 import loginImg from '../../../images/login/centromedico.jpg';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { API_URL } from '../../../../config.js';
 import axios from 'axios';
+import LoadingButton from '../../../components/button/loadingButton.jsx';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const Login = () => {
   });
   
   const [errors, setErrors] = useState({});
-  
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,37 +39,27 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-
-    console.log(formData.rut);
-    console.log(formData.clave);
   
     if (Object.keys(validationErrors).length === 0) {
+      setIsLoading(true);
       try {
-        // Usamos axios para hacer la solicitud POST
         const response = await axios.post(`${API_URL}/user/login`, {
           rut: formData.rut,
           password: formData.clave
         });
   
-        console.log('Respuesta del servidor:', response.data); // Verificamos qué estamos recibiendo
+        const data = response.data;
   
-        const data = response.data; // axios ya parsea la respuesta como JSON
-  
-        // Si todo es correcto, continuamos con el proceso
-        console.log('Form submitted successfully', data);
         sessionStorage.setItem('token', data.data.token);
-        console.log('token: ' + data.data.token);
   
-        // Decodificamos el token
         const decodedToken = jwtDecode(data.data.token);
         const userRole = decodedToken.roleId;
   
-        // Dependiendo del rol, redirigimos al usuario
-        if (userRole === '3') {
+        if (userRole === 3) {
           navigate('/'); 
-        } else if (userRole === '2') {
+        } else if (userRole === 2) {
           navigate('/doctor/doctorsPage'); 
-        } else if (userRole === '1'){
+        } else if (userRole === 1){
           navigate('/admin/adminManagment'); 
         } else {
           console.error('Rol desconocido');
@@ -77,18 +69,15 @@ const Login = () => {
       } catch (error) {
         console.error('Error submitting form', error);
   
-        // Manejo de errores de red o de otro tipo
         if (error.response) {
-          // El servidor respondió con un estado de error
-          console.error('Error from server:', error.response.status, error.response.data);
           setErrors({ form: 'Credenciales inválidas' });
         } else if (error.request) {
-          // La solicitud fue realizada pero no hubo respuesta
           setErrors({ form: 'Problema de red. Verifica tu conexión.' });
         } else {
-          // Otro tipo de error
           setErrors({ form: 'Error desconocido. Intenta más tarde.' });
         }
+      } finally {
+        setIsLoading(false);
       }
     } else {
       setErrors(validationErrors);
@@ -119,7 +108,7 @@ const Login = () => {
             {errors.clave && <p className="text-red-500">{errors.clave}</p>}
           </div>
           {errors.form && <p className="text-red-500">{errors.form}</p>}
-          <button className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white'>Ingresar</button>
+          <LoadingButton text="Ingresar" isLoading={isLoading} />
           <div className='flex justify-between'>
             <p className='flex items-center'><input className='mr-2' type="checkbox" /> Recuerdame</p>
             <Link to="/patient/register">

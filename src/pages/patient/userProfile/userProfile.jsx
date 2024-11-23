@@ -212,7 +212,15 @@ const UserProfile = () => {
                         <ProfileSection icon={CreditCard} label="RUT" value={rut} />
                         <ProfileSection icon={Mail} label="Correo Electrónico" value={email} />
                         <ProfileSection icon={Phone} label="Teléfono" value={cellphone} />
-                        <ProfileSection icon={Calendar} label="Fecha de Nacimiento" value={userDetails.date_of_birth} />
+                        <ProfileSection 
+                            icon={Calendar} 
+                            label="Fecha de Nacimiento" 
+                            value={new Date(dateBirth).toLocaleDateString('es-CL', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric' 
+                            })} 
+                            />
                     </div>
 
                     <div className="mt-6 flex justify-center">
@@ -299,7 +307,7 @@ const UserProfile = () => {
                                     <td className="p-2 border">{new Date(appointment.fecha).toLocaleDateString()}</td>
                                     <td className="p-2 border">{appointment.nombre_especialidad}</td>
                                     <td className="p-2 border">{appointment.estado}</td>
-                                    <td className="p-2 border">{appointment.hora_inicio}</td>
+                                    <td className="p-2 border">{appointment.hora_inicio.slice(0, 5)}</td>
                                 </tr>
                             ))}
                         </tbody>
