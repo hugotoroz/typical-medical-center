@@ -6,6 +6,8 @@ import './navbar.css';
 import { jwtDecode } from "jwt-decode";
 // Button component
 import Button from '../button/hrefButton.jsx';
+import LogOutButton from '../button/logOutButton.jsx';
+import LoginButton from '../button/loginButton.jsx';
 
 function Navbar() {
   const [rut, setRut] = useState('');
@@ -118,12 +120,10 @@ function Navbar() {
           <Button text="Agendar Cita" href="/patient/schedule" />
           {isLoggedIn ? (
           <>
-            <button
+            <LogOutButton
               onClick={handleLogout}
-              className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition duration-150 text-white"
-            >
-              Cerrar sesión
-            </button>
+              text="Cerrar Sesión"
+            />
             <Link to="/patient/userProfile">
               {userName ? (
                 <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center">
@@ -137,11 +137,9 @@ function Navbar() {
             </Link>
           </>
         ) : (
-          <Link to="/login">
-            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-6 border border-blue-500 hover:border-transparent rounded-lg">
-              Iniciar Sesión
-            </button>
-          </Link>
+
+          <LoginButton text="Iniciar Sesión" href="/login"/>
+
         )}
 
           </div>

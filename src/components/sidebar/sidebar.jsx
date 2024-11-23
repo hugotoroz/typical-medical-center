@@ -3,6 +3,7 @@ import { useContext, createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link, useLocation,useNavigate } from "react-router-dom";
 import logo from "../../images/logo/logo2.jpeg";
+import ResponsiveLogoutButton from '../button/ResponsiveLogoutButton.jsx';
 
 const SidebarContext = createContext();
 
@@ -85,17 +86,10 @@ export function Sidebar() {
 
         {/* Botón de cerrar sesión con íconos para pantallas pequeñas */}
         <div className="flex p-3 justify-center">
-          <button
+        <ResponsiveLogoutButton 
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded font-medium w-full"
-          >
-            <div className={`flex items-center justify-center ${expanded ? 'block' : 'hidden'}`}>
-              Cerrar sesión
-            </div>
-            <div className={`flex items-center justify-center ${expanded ? 'hidden' : 'block'}`}>
-              <i className="fa fa-sign-out"></i> {/* Aquí el icono para pantallas pequeñas */}
-            </div>
-          </button>
+            expanded={expanded}
+        />
         </div>
 
         <div className="border-t flex p-3">

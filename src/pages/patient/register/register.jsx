@@ -6,6 +6,7 @@ import { API_URL } from '../../../../config.js';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Loader2 } from 'lucide-react';
+import LoadingButton from '../../../components/button/loadingButton.jsx';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -253,15 +254,17 @@ const Register = () => {
           value={formData.rut} 
           onChange={(e) => {
             handleChange(e);
-            if (e.target.value === '') {
-              setFormData({
-                ...formData,
+            if (!value || value.trim() === '') {
+              setFormData(prev => ({
+                ...prev,
                 nombres: '',
                 apellidoPaterno: '',
                 apellidoMaterno: '',
                 genero: '',
-                fechaNacimiento: ''
-              });
+                fechaNacimiento: '',
+                rut: ''
+              }));
+              return;
             }
           }}
           placeholder="Ingrese RUT"
@@ -396,20 +399,7 @@ const Register = () => {
     </div>
 
     <div className='flex space-x-4'>
-    <button
-          className='w-full flex justify-center items-center border my-5 py-2 bg-green-300 hover:bg-green-200 text-white rounded font-medium transition duration-200' 
-          type='submit'
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Registrando...
-            </>
-          ) : (
-            'Continuar'
-          )}
-        </button>
+    <LoadingButton text="Ingresar" isLoading={isLoading} />
       <button 
         type='button' 
         className='border flex-1 my-5 py-2 bg-red-300 hover:bg-red-200 text-white rounded font-medium transition duration-200'

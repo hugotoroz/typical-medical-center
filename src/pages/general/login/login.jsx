@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { API_URL } from '../../../../config.js';
 import axios from 'axios';
+import LoadingButton from '../../../components/button/loadingButton.jsx';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -107,16 +108,7 @@ const Login = () => {
             {errors.clave && <p className="text-red-500">{errors.clave}</p>}
           </div>
           {errors.form && <p className="text-red-500">{errors.form}</p>}
-          <button 
-            className='border w-full my-5 py-2 bg-green-300 hover:bg-green-200 text-white flex justify-center items-center' 
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              'Ingresar'
-            )}
-          </button>
+          <LoadingButton text="Ingresar" isLoading={isLoading} />
           <div className='flex justify-between'>
             <p className='flex items-center'><input className='mr-2' type="checkbox" /> Recuerdame</p>
             <Link to="/patient/register">
