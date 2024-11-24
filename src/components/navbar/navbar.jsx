@@ -109,12 +109,6 @@ function Navbar() {
             >
               ¿Quiénes Somos?
             </NavLink>
-            <NavLink
-              to="/contact"
-              className={`text-gray-700 underline-black ${location.pathname === '/contact' ? 'active' : ''}`}
-            >
-              Contáctanos
-            </NavLink>
           </div>
           <div className="flex items-center space-x-6 ml-auto">
           <Button text="Agendar Cita" href="/patient/schedule" />

@@ -190,14 +190,14 @@ const MainPage = () => {
             personalizados, enfocados en la prevención, el diagnóstico y el
             tratamiento de diversas condiciones de salud.
           </motion.p>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-blue-500 hover:text-blue-600 transition-colors duration-300"
-            href="#"
-          >
-            Click aquí para más información
-          </motion.a>
+          <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/aboutUs')}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-xl"
+        >
+          Click aquí para más información
+          </motion.button>
         </motion.div>
 
         <motion.div
@@ -214,21 +214,21 @@ const MainPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-gray-700 leading-relaxed max-w-3xl mx-auto mb-6"
           >
-            Somos un nuevo centro médico ubicado en la comuna de Lampa, con el
-            objetivo de brindar atención de alta calidad a nuestra comunidad.
-            Nuestro equipo de profesionales altamente capacitados está
-            comprometido en ofrecer servicios médicos integrales y
-            personalizados, enfocados en la prevención, el diagnóstico y el
-            tratamiento de diversas condiciones de salud.
+            En el corazón de la comuna de Lampa, nuestro centro médico se destaca por ofrecer una atención de excelencia, 
+            respaldada por un equipo multidisciplinario de especialistas. 
+            Nos enorgullece brindar servicios médicos en áreas clave como medicina general, pediatría, ginecología, 
+            dermatología, cardiología, entre muchas otras, asegurando un cuidado integral y personalizado. 
+            Nuestro compromiso es velar por la salud y el bienestar de nuestra comunidad, enfocándonos en la prevención, 
+            el diagnóstico oportuno y tratamientos efectivos que se ajusten a las necesidades de cada paciente.
           </motion.p>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-blue-500 hover:text-blue-600 transition-colors duration-300"
-            href="#"
-          >
-            Click aquí para más información
-          </motion.a>
+          <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/specialities')}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-xl"
+        >
+          Click aquí para más información
+          </motion.button>
         </motion.div>
 
         <motion.div
@@ -237,9 +237,6 @@ const MainPage = () => {
           transition={{ duration: 0.5 }}
           className="mb-20"
         >
-          <h2 className="text-center text-3xl font-semibold text-gray-800 mb-12">
-            Especialidades
-          </h2>
           <div className="flex flex-wrap justify-center gap-4 my-4 sm:gap-6 md:gap-8 lg:gap-12 mb-16">
             <SpecialityCard
               image={generalPractitioner}

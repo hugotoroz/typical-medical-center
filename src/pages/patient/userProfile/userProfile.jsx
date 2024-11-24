@@ -129,10 +129,16 @@ const UserProfile = () => {
             }
         } catch (error) {
             console.error("Error al actualizar el usuario:", error);
+            
+            // Verificamos si existe el mensaje de error específico
+            const errorMessage = error.response?.data?.message || error.message;
+            
             Swal.fire({
                 icon: 'error',
-                title: 'Hubo un error al actualizar los datos.',
-                text: error.message || 'Inténtalo de nuevo más tarde.',
+                title: 'Error al actualizar',
+                text: errorMessage === 'Error: El email ya está registrado' 
+                    ? 'El email ingresado ya está registrado en el sistema'
+                    : 'Hubo un error al actualizar los datos. Inténtalo de nuevo más tarde.',
             });
         }
     };

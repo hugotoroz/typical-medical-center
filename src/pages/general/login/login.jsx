@@ -96,7 +96,7 @@ const Login = () => {
 
       <div className='bg-gray-100 flex flex-col justify-center h-full'>
         <form className='max-w-[400px] w-full mx-auto bg-white p-8 rounded-lg shadow-lg' onSubmit={handleSubmit}>
-          <h2 className='text-4xl font-bold text-center py-6'>Inicio de Sesion</h2>
+          <h2 className='text-4xl font-bold text-center py-6'>Inicio de Sesión</h2>
           <div className='flex flex-col py-2'>
             <label>Rut</label>
             <input className='border p-2' type="text" name='rut' value={formData.rut} onChange={handleChange}/>
@@ -109,12 +109,24 @@ const Login = () => {
           </div>
           {errors.form && <p className="text-red-500">{errors.form}</p>}
           <LoadingButton text="Ingresar" isLoading={isLoading} />
-          <div className='flex justify-between'>
-            <p className='flex items-center'><input className='mr-2' type="checkbox" /> Recuerdame</p>
-            <Link to="/patient/register">
-            <p>Registrarme</p>
-            </Link>
-          </div>
+          <Link to="/patient/register" className="w-full">
+          <p className='flex items-center justify-center text-black hover:text-blue-800 transition-colors duration-300 font-medium group'>
+            Registrarme 
+            <svg 
+              className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth="2" 
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </p>
+        </Link>
         </form>
       </div>
     </div>
