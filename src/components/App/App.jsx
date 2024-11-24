@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from '../../pages/general/index/index';
 import Login from '../../pages/general/login/login';
-import Contact from '../../pages/general/contact/contact';
 import AboutUs from '../../pages/general/aboutUs/aboutUs';
 import Specialities from '../../pages/general/specialities/specialities';
 import AdminManagment from '../../pages/admin/adminManagment/adminManagment';
@@ -25,7 +24,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />}/>
           <Route path="/login" element={<Login />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/specialities" element={<Specialities />} />
           <Route path="patient/register" element={<Register />} />
