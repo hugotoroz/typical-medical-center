@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import { Loader2 } from 'lucide-react';
 import LoadingButton2 from '../../../components/button/loadingButton2.jsx';
 import ClearButton from '../../../components/button/clearButton.jsx';
+import '../../patient/register/register.css';
+
 const Register = () => {
   const navigate = useNavigate();
 
@@ -232,184 +234,186 @@ const Register = () => {
 
 
 
-  return (
-    <>
+return (
+  <>
     <Navbar/>
-    <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
-  <div className='hidden sm:block'>
-    <img className='w-full h-full object-cover  mt-10' src={loginImg} alt="" />
-  </div>
 
-  <div className='bg-gray-100 flex flex-col justify-center h-full mt-10'>
-  <form className='bg-white p-6 rounded-lg shadow-lg max-w-[500px] mx-auto' onSubmit={handleSubmit}>
-  <p className='text-2xl font-bold text-center py-4'>Registrarse</p>
+    <div className=' flex flex-col grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
 
-    <div className='grid grid-cols-2 gap-4'>
-      <div>
-        <label className="font-medium">Rut</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="text" 
-          name='rut' 
-          value={formData.rut} 
-          onChange={(e) => {
-            handleChange(e);
-            if (!value || value.trim() === '') {
-              setFormData(prev => ({
-                ...prev,
-                nombres: '',
-                apellidoPaterno: '',
-                apellidoMaterno: '',
-                genero: '',
-                fechaNacimiento: '',
-                rut: ''
-              }));
-              return;
-            }
-          }}
-          placeholder="Ingrese RUT"
-        />
-        {errors.rut && <p className="text-red-500 text-sm mt-1">{errors.rut}</p>}
+      <div className='hidden sm:block'>
+        <img className='w-full h-full object-cover mt-10' src={loginImg} alt="" />
       </div>
 
-      <div>
-        <label className="font-medium">Número de Documento</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="number" 
-          name='numDoc' 
-          value={formData.numDoc} 
-          onChange={handleChange} 
-        />
-        {errors.numDoc && <p className="text-red-500 text-sm mt-1">{errors.numDoc}</p>}
-      </div>
+      <div className='form-container bg-gray-100 flex flex-col justify-center h-full mt-10'>
+        <form className='bg-white p-4 p-6 rounded-lg shadow-lg max-w-[490px] mx-auto' onSubmit={handleSubmit}>
+          <p className='text-xl md:text-2xl font-bold text-center py-4'>Registrarse</p>
 
-      <div>
-        <label className="font-medium mb-1">Nombres</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="text" 
-          name='nombres' 
-          value={formData.nombres} 
-          onChange={handleChange}
-          disabled={isDisabled}
-        />
-        {errors.nombres && <p className="text-red-500 text-sm mt-1">{errors.nombres}</p>}
-      </div>
 
-      <div>
-        <label className="font-medium mb-1">Apellido Paterno</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="text" 
-          name='apellidoPaterno' 
-          value={formData.apellidoPaterno} 
-          onChange={handleChange}
-          disabled={isDisabled}
-        />
-        {errors.apellidoPaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoPaterno}</p>}
-      </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4'>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Rut</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="text" 
+                name='rut' 
+                value={formData.rut} 
+                onChange={(e) => {
+                  handleChange(e);
+                  if (!value || value.trim() === '') {
+                    setFormData(prev => ({
+                      ...prev,
+                      nombres: '',
+                      apellidoPaterno: '',
+                      apellidoMaterno: '',
+                      genero: '',
+                      fechaNacimiento: '',
+                      rut: ''
+                    }));
+                    return;
+                  }
+                }}
+                placeholder="Ingrese RUT"
+              />
+              {errors.rut && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.rut}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Apellido Materno</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="text" 
-          name='apellidoMaterno' 
-          value={formData.apellidoMaterno} 
-          onChange={handleChange}
-          disabled={isDisabled}
-        />
-        {errors.apellidoMaterno && <p className="text-red-500 text-sm mt-1">{errors.apellidoMaterno}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Número de Documento</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="number" 
+                name='numDoc' 
+                value={formData.numDoc} 
+                onChange={handleChange} 
+              />
+              {errors.numDoc && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.numDoc}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Género</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="text" 
-          name='genero' 
-          value={formData.genero} 
-          onChange={handleChange}
-          disabled={isDisabled}
-        />
-        {errors.genero && <p className="text-red-500 text-sm mt-1">{errors.genero}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Nombres</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="text" 
+                name='nombres' 
+                value={formData.nombres} 
+                onChange={handleChange}
+                disabled={isDisabled}
+              />
+              {errors.nombres && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.nombres}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Fecha de Nacimiento</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300 w-[200px] text-center' 
-          type="date" 
-          name='fechaNacimiento' 
-          value={formData.fechaNacimiento} 
-          onChange={handleChange}
-          disabled={isDisabled}
-        />
-        {errors.fechaNacimiento && <p className="text-red-500 text-sm mt-1">{errors.fechaNacimiento}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Apellido Paterno</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="text" 
+                name='apellidoPaterno' 
+                value={formData.apellidoPaterno} 
+                onChange={handleChange}
+                disabled={isDisabled}
+              />
+              {errors.apellidoPaterno && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.apellidoPaterno}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Correo Electrónico</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="email" 
-          name='email' 
-          value={formData.email} 
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Apellido Materno</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="text" 
+                name='apellidoMaterno' 
+                value={formData.apellidoMaterno} 
+                onChange={handleChange}
+                disabled={isDisabled}
+              />
+              {errors.apellidoMaterno && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.apellidoMaterno}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Teléfono</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="number" 
-          name='telefono' 
-          value={formData.telefono} 
-          onChange={handleChange}
-        />
-        {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Género</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="text" 
+                name='genero' 
+                value={formData.genero} 
+                onChange={handleChange}
+                disabled={isDisabled}
+              />
+              {errors.genero && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.genero}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Clave</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="password" 
-          name='clave' 
-          value={formData.clave} 
-          onChange={handleChange}
-        />
-        {errors.clave && <p className="text-red-500 text-sm mt-1">{errors.clave}</p>}
-      </div>
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Fecha de Nacimiento</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="date" 
+                name='fechaNacimiento' 
+                value={formData.fechaNacimiento} 
+                onChange={handleChange}
+                disabled={isDisabled}
+              />
+              {errors.fechaNacimiento && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.fechaNacimiento}</p>}
+            </div>
 
-      <div>
-        <label className="font-medium mb-1">Confirmar Clave</label>
-        <input 
-          className='border p-2 rounded focus:outline-none focus:border-green-300' 
-          type="password" 
-          name='confirmarClave' 
-          value={formData.confirmarClave} 
-          onChange={handleChange}
-        />
-        {errors.confirmarClave && <p className="text-red-500 text-sm mt-1">{errors.confirmarClave}</p>}
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Correo Electrónico</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="email" 
+                name='email' 
+                value={formData.email} 
+                onChange={handleChange}
+              />
+              {errors.email && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.email}</p>}
+            </div>
+
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Teléfono</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="number" 
+                name='telefono' 
+                value={formData.telefono} 
+                onChange={handleChange}
+              />
+              {errors.telefono && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.telefono}</p>}
+            </div>
+
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Clave</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="password" 
+                name='clave' 
+                value={formData.clave} 
+                onChange={handleChange}
+              />
+              {errors.clave && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.clave}</p>}
+            </div>
+
+            <div className='space-y-1'>
+              <label className="font-medium text-sm md:text-base">Confirmar Clave</label>
+              <input 
+                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
+                type="password" 
+                name='confirmarClave' 
+                value={formData.confirmarClave} 
+                onChange={handleChange}
+              />
+              {errors.confirmarClave && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.confirmarClave}</p>}
+            </div>
+          </div>
+
+          <div className='flex flex-row justify-between items-center space-x-4 mt-6'>
+            <LoadingButton2 text="Ingresar" isLoading={isLoading} />
+            <ClearButton setFormData={setFormData} />
+          </div>
+          
+        </form>
       </div>
     </div>
-
-    <div className='flex space-x-4'>
-    <LoadingButton2 text="Ingresar" isLoading={isLoading} />
-        <ClearButton 
-          setFormData={setFormData}
-        />
-    </div>
-    
-  </form>
-</div>
-</div>
   </>
-  );
+);
 };
- 
+
+
 export default Register;
