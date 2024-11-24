@@ -5,7 +5,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/navbar/navbar.jsx';
 import { User, Mail, Phone, Calendar, CreditCard, FileText } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
+import pdf_image from '../../../images/doctor/pdf_image.png';
 import Swal from 'sweetalert2';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 const UserProfile = () => {
     const [rut, setRut] = useState('');
@@ -20,6 +25,8 @@ const UserProfile = () => {
     const [appointments, setAppointments] = useState([]);
     const [activeTab, setActiveTab] = useState('profile');
     const [historial, setHistorial] = useState([]);
+    const [selectedDoc, setSelectedDoc] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [userDetails, setUserDetails] = useState({
         name: '',
@@ -32,33 +39,7 @@ const UserProfile = () => {
         marital_status: ''
     });
 
-    // Datos de ejemplo para documentos
-    const patientDocuments = [
-        {
-            id: 1,
-            fileName: 'Radiografía Dental.pdf',
-            date: '2024-03-15',
-            url: 'https://ejemplo.com/documentos/radiografia.pdf'
-        },
-        {
-            id: 2,
-            fileName: 'Resultados Laboratorio.pdf',
-            date: '2024-03-10',
-            url: 'https://ejemplo.com/documentos/laboratorio.pdf'
-        },
-        {
-            id: 3,
-            fileName: 'Receta Médica.pdf',
-            date: '2024-03-05',
-            url: 'https://ejemplo.com/documentos/receta.pdf'
-        },
-        {
-            id: 4,
-            fileName: 'Informe Médico.pdf',
-            date: '2024-02-28',
-            url: 'https://ejemplo.com/documentos/informe.pdf'
-        }
-    ];
+    const [isLoading, setIsLoading] = useState(false);
 
     const ProfileSection = ({ icon: Icon, label, value }) => (
         <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
@@ -173,14 +154,14 @@ const UserProfile = () => {
 
           // Haz la petición al backend
           axios
-            .get(`${API_URL}/patients/${idPaciente}/observations`, {
+            .get(`${API_URL}/patients/myDocuments/search`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             })
             .then((response) => {
-                console.log(response.data);
+                console.log("Documentos del paciente: ", response.data);
                 setHistorial(response.data);
             })
             
@@ -188,6 +169,138 @@ const UserProfile = () => {
           console.log("No se encontró un ID actual del paciente.");
         }
       }, []); // Solo se ejecuta al montar el componente
+
+
+      const handleOpenModal = (doc) => {
+        setSelectedDoc(doc);
+        setIsModalOpen(true);
+      };
+
+      const cerrarModal = () => {
+        setSelectedDoc(null);
+        setIsModalOpen(false);
+      };
+
+    ////////////filtros documentos
+
+    // Estados para los selects
+    const [documentTypes, setDocumentTypes] = useState([]);
+    const [specialties, setSpecialties] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    
+    // Estados para los valores seleccionados
+    const [selectedType, setSelectedType] = useState('');
+    const [selectedSpecialty, setSelectedSpecialty] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');
+
+    // Función para cargar los tipos de documento
+    const fetchDocumentTypes = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/documents/types`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            });
+            console.log(response.data.data)
+            setDocumentTypes(response.data.data);
+        } catch (error) {
+            console.error('Error fetching document types:', error);
+        }
+    };
+
+    // Función para cargar las especialidades
+    const fetchSpecialties = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/doctors/specialities`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            });
+            setSpecialties(response.data);
+        } catch (error) {
+            console.error('Error fetching specialties:', error);
+        }
+    };
+
+    // Cargar datos al montar el componente
+    useEffect(() => {
+        fetchDocumentTypes();
+        fetchSpecialties();
+    }, []);
+
+    const fetchHistorial = async (filters = {}) => {
+        setIsLoading(true); // Activar spinner
+        try {
+            const token = sessionStorage.getItem("token");
+            if (!token) return;
+
+            const queryParams = new URLSearchParams();
+            if (filters.specialityId) queryParams.append('specialityId', filters.specialityId);
+            if (filters.documentTypeId) queryParams.append('documentTypeId', filters.documentTypeId);
+            if (filters.date) queryParams.append('date', filters.date);
+
+            const url = `${API_URL}/patients/myDocuments/search${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+            const response = await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("Documentos filtrados: ", response.data);
+            setHistorial(response.data);
+        } catch (error) {
+            console.error("Error fetching filtered documents:", error);
+            setHistorial([]);
+        } finally {
+            setIsLoading(false); // Desactivar spinner
+        }
+    };
+
+    // Modificar los manejadores de filtros para incluir el estado de carga
+    const handleTypeChange = async (e) => {
+        const newType = e.target.value;
+        setSelectedType(newType);
+        await fetchHistorial({
+            documentTypeId: newType || undefined,
+            specialityId: selectedSpecialty || undefined,
+            date: selectedDate || undefined
+        });
+    };
+
+    const handleSpecialtyChange = async (e) => {
+        const newSpecialty = e.target.value;
+        setSelectedSpecialty(newSpecialty);
+        await fetchHistorial({
+            documentTypeId: selectedType || undefined,
+            specialityId: newSpecialty || undefined,
+            date: selectedDate || undefined
+        });
+    };
+
+    const handleDateChange = async (date) => {
+        if (date === null) {
+            setSelectedDate(null);
+            console.log("Fecha borrada");
+            await fetchHistorial({
+                documentTypeId: selectedType || undefined,
+                specialityId: selectedSpecialty || undefined,
+                date: null
+            });
+        } else {
+            const newDate = format(date, "yyyy-MM-dd");
+            setSelectedDate(newDate);
+            console.log(newDate);
+            await fetchHistorial({
+                documentTypeId: selectedType || undefined,
+                specialityId: selectedSpecialty || undefined,
+                date: newDate || undefined
+            });
+        }
+    };
+
+    ///////////////////////////////
 
     const renderProfile = () => (
         <div className="max-w-7xl mx-auto p-4 mt-20">
@@ -312,30 +425,159 @@ const UserProfile = () => {
     const renderDocuments = () => (
         <div className="p-4 mt-20">
             <div className="max-w-7xl mx-auto">
-                <h2 className="text-2xl font-bold mb-6">Mis Documentos</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {patientDocuments.map((doc) => (
-                        <div
-                            key={doc.id}
-                            onClick={() => window.open(doc.url, '_blank')}
-                            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
+                <div className="flex flex-col items-center mb-8">
+                    <h2 className="text-2xl font-bold mb-6">Mis Documentos</h2>
+                    <div className="flex gap-4">
+                    <select
+                            value={selectedType}
+                            onChange={handleTypeChange}
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                         >
-                            <div className="flex items-center space-x-4">
-                                <div className="bg-blue-100 p-3 rounded-full">
-                                    <FileText className="h-6 w-6 text-blue-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-900">
-                                        {doc.fileName}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        {new Date(doc.date).toLocaleDateString()}
-                                    </p>
+                            <option value="">Todos los documentos</option>
+                            {documentTypes.map((type) => (
+                                <option key={type.id} value={type.id}>
+                                    {type.nom}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={selectedSpecialty}
+                            onChange={handleSpecialtyChange}
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                        >
+                            <option value="">Todas las especialidades</option>
+                            {specialties.map((specialty) => (
+                                <option key={specialty.id} value={specialty.id}>
+                                    {specialty.nom}
+                                </option>
+                            ))}
+                        </select>
+
+                        <DatePicker
+                            selected={selectedDate ? new Date(selectedDate + 'T00:00:00') : null} // Forzamos la fecha a la zona horaria local
+                            onChange={handleDateChange}
+                            dateFormat="dd/MM/yyyy"
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                            placeholderText="Selecciona una fecha"
+                            isClearable
+                            locale={es}
+                        />
+
+
+                    </div>
+                </div>
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {historial.map((doc) => (
+                            <div
+                                key={doc.id_cita}
+                                onClick={() => handleOpenModal(doc)}
+                                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
+                            >
+                                <div className="flex items-center space-x-4">
+                                    <div className="bg-blue-100 p-3 rounded-full">
+                                        <FileText className="h-6 w-6 text-blue-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-medium text-gray-900">
+                                            {doc.nombre_especialidad}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            {new Date(doc.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+                )}
+                {isModalOpen && selectedDoc && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full transform transition-all">
+                            {/* Header */}
+                            <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                                <h2 className="text-xl font-semibold text-gray-800">
+                                    Detalles de la Consulta
+                                </h2>
+                                <button 
+                                    onClick={cerrarModal}
+                                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="px-6 py-4">
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">Doctor</p>
+                                        <p className="text-gray-800 font-semibold">{selectedDoc.nombre_doctor}</p>
+                                    </div>
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">Especialidad</p>
+                                        <p className="text-gray-800 font-semibold">{selectedDoc.nombre_especialidad}</p>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 gap-4 mb-6">
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">Fecha</p>
+                                        <p className="text-gray-800 font-semibold">
+                                            {new Date(selectedDoc.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Documents Section */}
+                                <div className="mt-6">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Documentos Adjuntos</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {selectedDoc.documents.map((document, index) => (
+                                            <a
+                                                key={index}
+                                                href={document.src}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                                            >
+                                                <img 
+                                                    src={pdf_image} 
+                                                    alt="PDF" 
+                                                    className="w-10 h-10 object-contain mr-3"
+                                                />
+                                                <div className="flex-1">
+                                                    <p className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                        {document.tipo_documento || `Documento ${index + 1}`}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        Clic para ver
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="border-t border-gray-100 px-6 py-4 flex justify-end">
+                                <button
+                                    onClick={cerrarModal}
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );
