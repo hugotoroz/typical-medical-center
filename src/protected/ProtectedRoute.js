@@ -1,20 +1,63 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import Swal from 'sweetalert2';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token'); // Asegúrate de que 'token' está almacenado en sessionStorage
+    const token = sessionStorage.getItem('token');
 
     if (!token) {
-      // Redirige a la página de login si no hay token
+      // No hay token, redirigir a login
       navigate('/login');
+      return;
     }
-  }, [navigate]);
 
-  // Si hay token, renderiza el componente hijo
+    try {
+      // Decodificar token usando jwt-decode
+      const decodedToken = jwtDecode(token);
+
+      // Verificar si el rol está permitido
+      if (!allowedRoles.includes(decodedToken.roleId)) {
+        // Mostrar alerta de acceso denegado
+        Swal.fire({
+          icon: 'error',
+          title: 'Acceso Denegado',
+          text: 'No tienes permisos para acceder a esta página.',
+          confirmButtonText: 'Iniciar Sesión',
+          allowOutsideClick: false
+        }).then(() => {
+          // Limpiar el token y redirigir al login
+          sessionStorage.removeItem('token');
+          navigate('/login');
+        });
+        return;
+      }
+
+    } catch (error) {
+      console.error('Error al validar token:', error);
+      
+      // Limpiar el token inválido y redirigir al login
+      sessionStorage.removeItem('token');
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Sesión Inválida',
+        text: 'Tu sesión no es válida. Por favor, inicia sesión nuevamente.',
+        confirmButtonText: 'Iniciar Sesión',
+        allowOutsideClick: false
+      }).then(() => {
+        navigate('/login');
+      });
+      return;
+    }
+  }, [navigate, allowedRoles]);
+
+  // Si el token es válido y el rol está permitido, renderiza el componente hijo
   return children;
 };
+
 
 export default ProtectedRoute;
