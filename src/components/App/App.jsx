@@ -23,7 +23,12 @@ function App() {
     <>
       <Router>
         <Routes>
-        <Route path="admin/adminManagment" element={<ProtectedRoute allowedRoles={[1]}><AdminManagment /></ProtectedRoute>} />
+          <Route path="/" element={<Index />}/>
+          <Route path="/login" element={<Login />} />
+          <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/specialities" element={<Specialities />} />
+          <Route path="patient/register" element={<Register />} />
+          <Route path="admin/adminManagment" element={<ProtectedRoute allowedRoles={[1]}><AdminManagment /></ProtectedRoute>} />
           <Route path="patient/schedule" element={<ProtectedRoute allowedRoles={[3]}><Schedule /></ProtectedRoute>} />
           <Route path="doctor/doctorsPage" element={<ProtectedRoute allowedRoles={[2]}><DoctorsPage /></ProtectedRoute>} />
           <Route path="admin/newDoctor" element={<ProtectedRoute allowedRoles={[1]}><NewDoctor /></ProtectedRoute>} />
