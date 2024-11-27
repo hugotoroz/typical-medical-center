@@ -138,7 +138,7 @@ return (
                                     idPaciente={appointment.pacienteId} // Pasar idPaciente
                                   />
                                 ) : null}
-                                <Option setOpen={setOpenId} Icon={FiShare} text="Modificar" />
+                                
                                 <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
                               </motion.ul>
                             </motion.div>

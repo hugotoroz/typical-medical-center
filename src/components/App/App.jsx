@@ -13,6 +13,7 @@ import NewDoctor from '../../pages/admin/newDoctor/newDoctor';
 import ProtectedRoute from '../../protected/ProtectedRoute.js';
 import Diagnosis from '../../pages/doctor/diagnosis/diagnosis';
 import UserProfile from '../../pages/patient/userProfile/userProfile';
+import DoctorSchedule from '../../pages/doctor/doctorSchedule/doctorSchedule.jsx';
 
 // Configures routes and renders the application with routing.
 
@@ -27,12 +28,13 @@ function App() {
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/specialities" element={<Specialities />} />
           <Route path="patient/register" element={<Register />} />
-          <Route path="admin/adminManagment" element={<ProtectedRoute allowedRoles={[1]}><AdminManagment /></ProtectedRoute>} />
-          <Route path="patient/schedule" element={<ProtectedRoute allowedRoles={[3]}><Schedule /></ProtectedRoute>} />
-          <Route path="doctor/doctorsPage" element={<ProtectedRoute allowedRoles={[2]}><DoctorsPage /></ProtectedRoute>} />
-          <Route path="admin/newDoctor" element={<ProtectedRoute allowedRoles={[1]}><NewDoctor /></ProtectedRoute>} />
-          <Route path="patient/userProfile" element={<ProtectedRoute allowedRoles={[3]}><UserProfile /></ProtectedRoute>} />
-          <Route path="doctor/diagnosis" element={<ProtectedRoute allowedRoles={[2]}><Diagnosis /></ProtectedRoute>} />
+          <Route path="admin/adminManagment" element={<ProtectedRoute><AdminManagment /></ProtectedRoute>} />
+          <Route path="patient/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
+          <Route path="doctor/doctorsPage" element={<ProtectedRoute><DoctorsPage /></ProtectedRoute>} />
+          <Route path="admin/newDoctor" element={<ProtectedRoute><NewDoctor /></ProtectedRoute>} />
+          <Route path="patient/userProfile" element={<UserProfile />} />
+          <Route path="doctor/diagnosis" element={<ProtectedRoute><Diagnosis /></ProtectedRoute>} />
+          <Route path="doctor/doctorSchedule" element={<ProtectedRoute><DoctorSchedule /></ProtectedRoute>} />
         </Routes>
       </Router>
     </>

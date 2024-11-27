@@ -302,23 +302,37 @@ const NewDoctor = () => {
         name: formData.nombre,
         patSurName: formData.apellidoPaterno,
         matSurName: formData.apellidoMaterno,
-        genre: "", 
+        genre: formData.genero, 
         dateBirth: formData.fechaNacimiento,
         cellphone: formData.numeroCelular,
         specialities: formData.especialidades, // Array de especialidades
       };
 
-      axios.post(`${API_URL}/doctors`, dataToSend)
+      axios.post(`${API_URL}/doctors`, dataToSend, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      })
       .then((response) => {
-        // Aquí puedes manejar la respuesta del servidor
-        console.log('Respuesta del servidor:', response);
-        Swal.fire({
-          icon: 'success',
-          title: 'Doctor añadido',
-          text: 'Se ha creado un doctor con éxito.',
-        }).then(() => {       
-          navigate('/adminManagment');  
-        });
+        // Verificar si la respuesta contiene un 'status' igual a 'error'
+        if (response.data.status === 'error') {
+              // Si el status es 'error', mostramos el mensaje de error del servidor
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error al registrar doctor',
+                  text: response.data.message || 'Ha ocurrido un error desconocido.',
+              });
+          } else {
+              // Si el status no es 'error', se muestra el mensaje de éxito
+              console.log('Respuesta del servidor:', response);
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Doctor añadido',
+                  text: 'Se ha creado un doctor con éxito.',
+              }).then(() => {
+                  navigate('/admin/adminManagment');  
+              });
+          }
       })
       .catch((error) => {
         // Aquí puedes manejar errores
