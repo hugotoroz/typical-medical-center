@@ -76,7 +76,7 @@ const AdminManagment = () => {
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                      <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -93,7 +93,7 @@ const AdminManagment = () => {
                                 onClick={() => setOpenId(openId === user.id ? null : user.id)} // Alternate Id
                                 className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
                               >
-                                <span className="font-medium text-sm">Post actions</span>
+                                <span className="font-medium text-sm">Opciones</span>
                                 <motion.span variants={iconVariants}>
                                   <FiChevronDown />
                                 </motion.span>
@@ -106,8 +106,8 @@ const AdminManagment = () => {
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
                                 <Option setOpen={setOpenId} Icon={FiEdit} text="Modificar" />
-                                <Option setOpen={setOpenId} Icon={FiEyeOff} text="Desactivar" rut={user.rut}/>
-                                <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar" rut={user.rut}/>
+                                <Option setOpen={setOpenId} Icon={FiEyeOff} text="Desactivar" rut={user.rut} fetchData={fetchData}/>
+                                <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar" rut={user.rut} fetchData={fetchData}/>
                               </motion.ul>
                             </motion.div>
                           </div>
@@ -127,7 +127,7 @@ const AdminManagment = () => {
   );
 };
 
-const Option = ({ text, Icon, setOpen, rut }) => {
+const Option = ({ text, Icon, setOpen, rut, fetchData  }) => {
 
   const handleClick = async (action) => { 
     if (action === "Desactivar") {
@@ -170,24 +170,31 @@ const Option = ({ text, Icon, setOpen, rut }) => {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, desactivar',
+        confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar',
       }).then(async (result) => { // Cambia esta función anónima a async
         if (result.isConfirmed) {
           setOpen(null);
           try {
+            console.log("rut: ", rut)
             const token = sessionStorage.getItem('token');
             // Envía el RUT al backend para desactivar el doctor
-            await axios.put(`${API_URL}/user/delete`, 
-              { rut }, 
+            const response = await axios.delete(`${API_URL}/user/delete`, 
               {
                 headers: {
-                  Authorization: `Bearer ${token}`
-                }
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                data: { rut: rut } // Aquí se pasa el RUT
               }
             );
+
+            // Muestra la respuesta completa
+            console.log("Respuesta del servidor:", response);
+
+            // Si todo va bien, actualizamos los datos y mostramos el mensaje
             fetchData();
-            Swal.fire('Eliminado!', 'El doctor ha sido eliminado con exito.', 'success');
+            Swal.fire('Eliminado!', 'El doctor ha sido eliminado con éxito.', 'success');
           } catch (error) {
             Swal.fire('Error', 'Hubo un problema al eliminar al doctor.', 'error');
             console.error('Error eliminando doctor:', error);

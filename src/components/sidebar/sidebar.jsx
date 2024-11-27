@@ -18,8 +18,8 @@ const iconMap = {
 const sidebarOptionsByRole = {
   "1": [ // Ejemplo de ID para 'admin'
     { path: "/admin/adminManagment", iconName: "Home", text: "Doctores" },
-    { path: "/admin/newDoctor", iconName: "User", text: "Crear doctor" },
-    { path: "/settings", iconName: "Settings", text: "Perfil" }
+    { path: "/admin/newDoctor", iconName: "User", text: "Crear doctor" }
+    //{ path: "/settings", iconName: "Settings", text: "Perfil" }
   ],
   "2": [ // Ejemplo de ID para 'doctor'
     { path: "/doctor/doctorsPage", iconName: "Home", text: "Dashboard" },
@@ -105,7 +105,7 @@ export function Sidebar() {
               <h4 className="font-semibold">{userName || "Doctor"}</h4>
               <span className="text-xs text-gray-600">{rut || "N/A"}</span>
             </div>
-            <MoreVertical size={20} />
+            
           </div>
         </div>
       </nav>

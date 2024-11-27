@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Sidebar } from '../../../components/sidebar/sidebar.jsx';
 import axios from 'axios';
 import { API_URL } from '../../../../config.js';
-import { Document, Page, Text, StyleSheet, PDFDownloadLink, View, pdf  } from '@react-pdf/renderer'; 
+import { Document, Page, Text, StyleSheet, PDFDownloadLink, View, pdf, Image  } from '@react-pdf/renderer'; 
 import Editor from '../../../components/editor/Editor.jsx';
 import 'quill/dist/quill.snow.css'; // Tema "snow"
 import 'quill/dist/quill.bubble.css';
@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 import pdf_image from '../../../images/doctor/pdf_image.png';
 import OnClickButton from '../../../components/button/onClickButton.jsx';
 import { Tooltip as ReactTooltip } from 'react-tooltip'
+import { useNavigate } from 'react-router-dom';
+import logo from "../../../images/logo/logo2.jpeg";
+import { jwtDecode } from "jwt-decode";
 
 const Delta = Quill.import('delta');
 
@@ -49,9 +52,19 @@ const Diagnosis = () => {
 
     const token = sessionStorage.getItem('token');
 
+    const decodedToken = jwtDecode(token);
+
     const [selectedDocumentTypeId, setSelectedDocumentTypeId] = useState(''); 
 
-    const [loading, setLoading] = useState(false);
+    const [selectedDocumentTypeNom, setSelectedDocumentName] = useState(''); 
+
+    const [loading1, setLoading1] = useState(false);
+    
+    const [loading2, setLoading2] = useState(false);
+
+    const [loading3, setLoading3] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Recuperar el valor almacenado en localStorage
@@ -138,13 +151,49 @@ const Diagnosis = () => {
         console.log("Contenido para el PDF:", htmlContent);
     
         const elements = [];
+
+        const styles = StyleSheet.create({
+            page: {
+                padding: 20,
+            },
+            image: {
+                width: 150, // Define un ancho máximo para la imagen
+                marginBottom: 20, // Espaciado después de la imagen
+                objectFit: 'contain', // Mantiene el aspecto original de la imagen
+            },
+            content: {
+                fontSize: 12,
+                lineHeight: 1.5,
+            },
+        });
+
+        // Agregar la imagen al inicio (logo o encabezado)
+        elements.push(
+            <Image
+                key="logo"
+                style={styles.image}
+                src={logo} // Ruta del logo que se pasa como parámetro
+            />
+        );
     
         // Agregar el título "Diagnóstico" por defecto
         elements.push(
             <Text key="title" style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' }}>
-                Diagnóstico
+                {selectedDocumentTypeNom}
             </Text>
         );
+
+        elements.push(
+            <Text key="doctor" style={{ fontSize: 14, marginBottom: 10, marginTop: 10, textAlign: 'left' }}>
+                Doctor: {decodedToken.fullName}
+            </Text>
+        );
+        
+        /*elements.push(
+            <Text key="especialidad" style={{ fontSize: 14, marginBottom: 10, textAlign: 'left' }}>
+                Especialidad: {especialidad}
+            </Text>
+        );*/
     
         // Función para procesar texto con etiquetas de formato (negrita, cursiva)
         const processText = (node) => {
@@ -192,6 +241,125 @@ const Diagnosis = () => {
                         {processText(node)}
                     </Text>
                 );
+            } else if (node.nodeName === 'IMG') {
+                // Si encontramos una imagen (img), agregarla al documento
+                const src = node.getAttribute('src'); // Obtener la URL o base64 de la imagen
+                if (src) {
+                    elements.push(
+                        <Image key={`img-${index}`} style={styles.image} src={src} />
+                    );
+                }
+            }
+        });
+    
+        return elements;
+    };
+    
+    const renderHTMLToPDF2 = (htmlContent) => {
+
+        const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+    
+        console.log("Contenido para el PDF:", htmlContent);
+    
+        const elements = [];
+
+        const styles = StyleSheet.create({
+            page: {
+                padding: 20,
+            },
+            image: {
+                width: 150, // Define un ancho máximo para la imagen
+                marginBottom: 20, // Espaciado después de la imagen
+                objectFit: 'contain', // Mantiene el aspecto original de la imagen
+            },
+            content: {
+                fontSize: 12,
+                lineHeight: 1.5,
+            },
+        });
+
+        // Agregar la imagen al inicio (logo o encabezado)
+        elements.push(
+            <Image
+                key="logo"
+                style={styles.image}
+                src={logo} // Ruta del logo que se pasa como parámetro
+            />
+        );
+    
+        // Agregar el título "Diagnóstico" por defecto
+        elements.push(
+            <Text key="title" style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' }}>
+                Anamnesis
+            </Text>
+        );
+
+        elements.push(
+            <Text key="doctor" style={{ fontSize: 14, marginBottom: 10, marginTop: 10, textAlign: 'left' }}>
+                Doctor: {decodedToken.fullName}
+            </Text>
+        );
+        
+        /*elements.push(
+            <Text key="especialidad" style={{ fontSize: 14, marginBottom: 10, textAlign: 'left' }}>
+                Especialidad: {especialidad}
+            </Text>
+        );*/
+    
+        // Función para procesar texto con etiquetas de formato (negrita, cursiva)
+        const processText = (node) => {
+            let textParts = [];
+            
+            node.childNodes.forEach((childNode, index) => {
+                if (childNode.nodeName === 'B' || childNode.nodeName === 'STRONG') {
+                    textParts.push(<Text key={`bold-${index}`} style={{ fontWeight: 'bold' }}>{childNode.textContent}</Text>);
+                } else if (childNode.nodeName === 'I' || childNode.nodeName === 'EM') {
+                    textParts.push(<Text key={`italic-${index}`} style={{ fontStyle: 'italic' }}>{childNode.textContent}</Text>);
+                } else if (childNode.nodeName === '#text') {
+                    textParts.push(childNode.textContent);
+                }
+            });
+    
+            return textParts;
+        };
+    
+        // Recorrer todos los nodos del HTML para mantener el orden
+        const childNodes = doc.body.childNodes;
+    
+        childNodes.forEach((node, index) => {
+            if (node.nodeName === 'OL') {
+                // Si encontramos una lista ordenada (ol), recorrer sus elementos
+                node.querySelectorAll('li').forEach((li, liIndex) => {
+                    elements.push(
+                        <Text key={`ol-${index}-${liIndex}`} style={{ marginBottom: 5 }}>
+                            {liIndex + 1}. {processText(li)}
+                        </Text>
+                    );
+                });
+            } else if (node.nodeName === 'UL') {
+                // Si encontramos una lista no ordenada (ul), recorrer sus elementos
+                node.querySelectorAll('li').forEach((li, liIndex) => {
+                    elements.push(
+                        <Text key={`ul-${index}-${liIndex}`} style={{ marginBottom: 5 }}>
+                            • {processText(li)}
+                        </Text>
+                    );
+                });
+            } else if (node.nodeName === 'P') {
+                // Si encontramos un párrafo (p), agregarlo como texto
+                elements.push(
+                    <Text key={`p-${index}`} style={{ marginBottom: 10 }}>
+                        {processText(node)}
+                    </Text>
+                );
+            } else if (node.nodeName === 'IMG') {
+                // Si encontramos una imagen (img), agregarla al documento
+                const src = node.getAttribute('src'); // Obtener la URL o base64 de la imagen
+                if (src) {
+                    elements.push(
+                        <Image key={`img-${index}`} style={styles.image} src={src} />
+                    );
+                }
             }
         });
     
@@ -216,7 +384,7 @@ const Diagnosis = () => {
 
     //Diagnostico
 
-    const guardarDiagnostico = () => {
+    const guardarDiagnostico = async () => {
         console.log('Botón clickeado');  // Asegúrate de que esto se imprima en la consola
         Swal.fire({
             title: '¿Estás seguro?',
@@ -225,18 +393,88 @@ const Diagnosis = () => {
             showCancelButton: true,
             confirmButtonText: 'Sí, guardar',
             cancelButtonText: 'Cancelar'
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                const content = quillRef.current?.root.innerHTML;
+                setLoading1(true);
+                try {
+                    // Obtener el contenido del editor
+                    const content = quillRef.current?.root.innerHTML;
+                    setHtmlContent(content);
+                    console.log(content);
+            
+                    // Crear el documento PDF con @react-pdf/renderer
+                    const pdfDoc = (
+                        <Document>
+                            <Page style={{ padding: 20 }}>
+                                <View>{renderHTMLToPDF2(content)}</View>
+                            </Page>
+                        </Document>
+                    );
+            
+                    // Generar el PDF y obtener el blob
+                    const pdfBlob = await pdf(pdfDoc).toBlob();
+            
+                    // Crear un FormData para enviar el archivo y los parámetros
+                    const formData = new FormData();
+                    formData.append('document', pdfBlob, 'anamnesis.pdf'); // PDF
+                    formData.append('appointmentId', idCita); // Reemplazar con el ID real
+            
+                    // Verificar si existe el token de autenticación
+                    if (!token) {
+                        console.error('No se encontró el token de autenticación.');
+                        setLoading1(false);
+                        return;
+                    }
+            
+                    // Intentar guardar el documento en el servidor
+                    const response = await axios.post(`${API_URL}/appointments/finish`, formData, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+            
+                    // Si la respuesta es exitosa (status 200)
+                    if (response.status === 200) {
+                        console.log("Cita finalizada exitosamente.");
 
-                const diagnosisData = {
-                    observation: content,  // El contenido HTML de Quill
-                    idCita: idCita,        // El ID de la cita
-                };
+                        console.log("respuesta del servidor al finalizar la cita: ", response)
+    
+                        // Limpiar el editor Quill y restablecer el select
+                        quillRef.current?.root && (quillRef.current.root.innerHTML = '');
+                        setHtmlContent(''); // Restablecer estado de contenido
+    
+                        setLoading1(false); 
 
-                console.log(diagnosisData);
-                console.log('El diagnóstico ha sido guardado');  // Verifica si esto se imprime
-                Swal.fire('Guardado!', 'El diagnóstico ha sido guardado.', 'success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Cita finalizada exitosamente!',
+                            text: `La cita ha finalizado y la observación se ha guardado`,
+                        }).then(() => {
+                            // Redirigir a otra ruta
+                            navigate('/doctor/doctorsPage'); // Cambiar '/ruta-destino' a la ruta deseada
+                        });
+                            
+                    } else {
+                        console.error('Error al guardar el documento:', response);
+                        setLoading1(false);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo guardar el documento.',
+                        });
+                    }
+                } catch (error) {
+                    setLoading1(false); 
+                    console.error("Error al finalizar la cita:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un error al procesar la solicitud.',
+                    });
+                } finally {
+                    setLoading1(false); // Detener el indicador de carga
+                }
             }
         });
     };
@@ -250,7 +488,7 @@ const Diagnosis = () => {
         // Si existe el idPaciente
         if (idPaciente) {
             // Establecer loading en true para mostrar la rueda de carga
-            setLoading(true);
+            setLoading2(true);
     
             // Realiza la petición
             axios
@@ -261,6 +499,7 @@ const Diagnosis = () => {
                     }
                 })
                 .then((response) => {
+                    console.log(response.data);
                     setHistorial(response.data);
                 })
                 .catch((error) => {
@@ -269,7 +508,7 @@ const Diagnosis = () => {
                 })
                 .finally(() => {
                     // Establecer loading en false después de que se carguen los datos
-                    setLoading(false);
+                    setLoading2(false);
                 });
         } else {
             console.log("No se encontró un ID de paciente en el localStorage.");
@@ -279,15 +518,20 @@ const Diagnosis = () => {
     ////////////modal paciente documento
 
     const handleDocumentTypeChange = (e) => {
-        setSelectedDocumentTypeId(e.target.value); // Actualiza el estado con el ID seleccionado
+        const selectedId = e.target.value;
+        const selectedName = e.target.options[e.target.selectedIndex].getAttribute("data-name");
+        
+        // Actualiza tanto el ID como el nombre en el estado
+        setSelectedDocumentTypeId(selectedId);
+        setSelectedDocumentName(selectedName);
     };
 
     const guardarDocumentoPaciente = async () => {
-        setLoading(true);
+        setLoading3(true);
     
         // Verificar si se seleccionó un tipo de documento
         if (!selectedDocumentTypeId) {
-            setLoading(false);
+            setLoading3(false);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -323,7 +567,7 @@ const Diagnosis = () => {
             // Verificar si existe el token de autenticación
             if (!token) {
                 console.error('No se encontró el token de autenticación.');
-                setLoading(false);
+                setLoading3(false);
                 return;
             }
     
@@ -387,7 +631,7 @@ const Diagnosis = () => {
                 text: 'Hubo un error al procesar la solicitud.',
             });
         } finally {
-            setLoading(false); // Detener el indicador de carga
+            setLoading3(false); // Detener el indicador de carga
         }
     };
 
@@ -412,7 +656,15 @@ const Diagnosis = () => {
                     </div>
 
                     <div className="modal-footer flex justify-center space-x-4 mt-4">
-                        <OnClickButton text="Guardar Diagnostico" func={guardarDiagnostico} />
+                        <OnClickButton
+                            text={loading1 ? "Finalizando..." : "Guardar Diagnostico"} // Cambia el texto según el estado de carga
+                            func={guardarDiagnostico}
+                            disabled={loading1} // Desactiva el botón mientras carga
+                        >
+                            {loading1 && (
+                                <div className="w-4 h-4 border-4 border-t-4 border-gray-200 border-solid rounded-full animate-spin border-t-blue-500 ml-2" />
+                            )}
+                        </OnClickButton>
                         <OnClickButton text="Crear Documento" func={toggleModal} />
                     </div>
 
@@ -450,7 +702,7 @@ const Diagnosis = () => {
                                         Seleccione el documento
                                     </option>
                                     {documentTypes.map((docType) => (
-                                        <option key={docType.id} value={docType.id}>
+                                        <option key={docType.id} value={docType.id} data-name={docType.nom}>
                                             {docType.nom}
                                         </option>
                                     ))}
@@ -458,11 +710,11 @@ const Diagnosis = () => {
                             </div>
 
                             <OnClickButton
-                                text={loading ? "Generando..." : "Generar Pdf"} // Cambia el texto según el estado de carga
+                                text={loading3 ? "Generando..." : "Generar Pdf"} // Cambia el texto según el estado de carga
                                 func={guardarDocumentoPaciente}
-                                disabled={loading} // Desactiva el botón mientras carga
+                                disabled={loading3} // Desactiva el botón mientras carga
                             >
-                                {loading && (
+                                {loading3 && (
                                     <div className="w-4 h-4 border-4 border-t-4 border-gray-200 border-solid rounded-full animate-spin border-t-blue-500 ml-2" />
                                 )}
                             </OnClickButton>
@@ -492,7 +744,7 @@ const Diagnosis = () => {
                             {error && <p className="text-red-500 mt-4">{error}</p>}
 
                             {/* Mostrar la rueda de carga si se está cargando */}
-                            {loading ? (
+                            {loading2 ? (
                                 <div className="flex justify-center items-center space-x-2">
                                     <div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-solid rounded-full animate-spin border-t-blue-500"></div>
                                     <span>Cargando...</span>
@@ -513,11 +765,23 @@ const Diagnosis = () => {
                                                 <td className="border border-gray-300 px-4 py-2">
                                                     {new Date(item.fecha).toLocaleDateString()}
                                                 </td>
-                                                <td className="border border-gray-300 px-4 py-2">
-                                                    <OnClickButton 
-                                                        text="Ver Observación" 
-                                                        func={() => abrirModalObservacion(item.observacion,item.fecha)} 
-                                                    />
+                                                <td className="border border-gray-300 px-12 py-2">
+                                                    
+                                                    <a
+                                                        key={index}
+                                                        href={item.observacion}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="bg-white p-1 rounded"
+                                                        //data-tooltip-id={`tooltip-${index}`}
+                                                        //data-tooltip-content={"Observacion"}
+                                                    >
+                                                        <img
+                                                            src={pdf_image}
+                                                            alt={"Observacion"}
+                                                            className="w-8 h-8 object-cover"
+                                                        />
+                                                    </a>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
                                                     {item.documents.length > 0 ? (
