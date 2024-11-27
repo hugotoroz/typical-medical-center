@@ -54,6 +54,8 @@ const Login = () => {
   
         const decodedToken = jwtDecode(data.data.token);
         const userRole = decodedToken.roleId;
+
+        console.log(data.data.token);
   
         if (userRole === 3) {
           navigate('/'); 
