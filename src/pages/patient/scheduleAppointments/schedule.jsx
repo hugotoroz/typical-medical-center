@@ -9,6 +9,8 @@ import Imagen from "../../../images/appointment/medicine.jpg";
 import { API_URL } from '../../../../config.js';
 import Swal from 'sweetalert2';
 import './schedule.css'; // Importamos los estilos CSS
+import { format } from 'date-fns';
+import ClearButton from '../../../components/button/clearFilter.jsx'
 
 const Schedule = () => {
   const [specialties, setSpecialties] = useState([]);
@@ -122,6 +124,15 @@ const Schedule = () => {
     });
   };
 
+
+  const handleClearFilters = () => {
+    setSelectedSpecialty('');
+    setSelectedDoctor('');
+    setSelectedDate('');
+    setAppointments([]);
+  };
+
+
   return (
     <>
       <Navbar />
@@ -151,7 +162,7 @@ const Schedule = () => {
               </div>
             </div>
           </div>
-          <form action="">
+        <form action="">
         <div className="grid grid-cols-3 gap-6 mb-10">
           <div className="mb-10">
             <label htmlFor="specialty-select" className="block text-sm font-medium text-gray-700">
@@ -210,7 +221,9 @@ const Schedule = () => {
             className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
           />
         </div>
+        
         </div>
+        <ClearButton onClick={handleClearFilters} text="Limpiar Filtros" />
       </form>
 
 
@@ -218,7 +231,7 @@ const Schedule = () => {
 
         </div>
 
-        <div className="container mx-auto flex-grow px-4 mt-10">
+        <div className="container mx-auto flex-grow px-4 mt-10 mb-10">
           {console.log("Datos de citas:", appointments)}
           <div className="flex justify-center"></div>
           <div className="overflow-x-auto">
@@ -241,7 +254,7 @@ const Schedule = () => {
                       </td>
                       <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
                       {format(new Date(appointment.fecha), 'dd/MM/yyyy')}
-                      </td>
+                </td>
                       <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
                         {appointment.hora_inicio}
                       </td>
