@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
 import { motion } from "framer-motion";
 import Swal from 'sweetalert2';
+import { es } from "date-fns/locale";
 import {
     FiEdit,
     FiChevronDown,
@@ -29,6 +30,7 @@ const DoctorsPage = () => {
       }, []);
 
       const fetchData = async () => {
+
         setIsLoading(true);
         try {
             const response = await axios.get(`${API_URL}/appointments/doctor`, {
@@ -46,7 +48,7 @@ const DoctorsPage = () => {
                 // Si es un array con datos, filtramos y mapeamos
                 const filteredData = data.map((appointment) => ({
                     especialidad: appointment.nombre_especialidad,  // Especialidad
-                    fecha: new Date(appointment.fecha).toLocaleDateString(),  // Fecha en formato de cadena
+                    fecha: new Date(appointment.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' }),  // Fecha en formato de cadena
                     horario: `${appointment.hora_inicio} - ${appointment.hora_fin}`,  // Hora inicio y fin combinadas
                     estado: appointment.estado,  // Estado de la cita
                     pacienteId: appointment.id_paciente,
@@ -65,9 +67,11 @@ const DoctorsPage = () => {
                 // Manejar específicamente el error 404
                 setData([]);
                 setError('No hay citas médicas actuales.'); // Mensaje para cuando no haya citas
+                setIsLoading(false); // Finaliza la carga
             } else {
                 setError('Error buscando la data'); // Manejar otros errores
                 console.error('Error fetching data:', error);
+                setIsLoading(false); // Finaliza la carga
             }
         }
     };
@@ -83,8 +87,22 @@ return (
           <h2 className="text-2xl font-semibold mb-6">Citas medicas</h2>
           <div className="container mx-auto  flex-grow px-4">
             
-          {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
-            <div className="flex justify-center"></div>
+          {error && <div className="flex items-center p-4 mb-4 text-sm text-red-800 bg-red-50 rounded-lg border border-red-300" role="alert">
+              <svg
+                className="w-5 h-5 mr-2 text-red-800"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 8A8 8 0 11 2 8a8 8 0 0116 0zM9 4a1 1 0 012 0v4a1 1 0 01-2 0V4zm1 8a1 1 0 100 2 1 1 0 000-2z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>{error}</span>
+            </div>} {/* Mostrar error si existe */}
+            
             {isLoading ? (
               // Muestra solo el spinner mientras se cargan los datos
               <div className="flex justify-center items-center h-64">
@@ -109,7 +127,9 @@ return (
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.especialidad}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
-                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.estado}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                          {appointment.estado ? appointment.estado : 'Pendiente'}
+                        </td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm">
                           <div className="flex items-center justify-center">
                             <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
@@ -129,8 +149,8 @@ return (
                                 style={{ originY: "top", translateX: "-50%" }}
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
-                                {appointment.pacienteId ? (
-                                    <Option
+                                {appointment.pacienteId && appointment.estado !== "Completada" ? (
+                                  <Option
                                     setOpen={setOpenId}
                                     Icon={FiPlusSquare}
                                     text="Diagnosticar"

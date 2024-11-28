@@ -23,7 +23,7 @@ const sidebarOptionsByRole = {
   ],
   "2": [ // Ejemplo de ID para 'doctor'
     { path: "/doctor/doctorsPage", iconName: "Home", text: "Dashboard" },
-    { path: "/doctor/doctorSchedule", iconName: "User", text: "Horario" },
+    { path: "/doctor/doctorSchedule", iconName: "User", text: "Generar Horario" },
     { path: "/profile", iconName: "User", text: "Perfil" }
   ]
   // Otros roles según necesites

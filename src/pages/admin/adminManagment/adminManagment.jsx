@@ -37,12 +37,15 @@ const AdminManagment = () => {
         }
       }); 
 
+      console.log(response.data);
+
       // Bring all the data
       const filteredData = response.data.map((user) => ({
         id: user.id, 
         name: user.nom, 
         rut: user.rut, 
-        email: user.email 
+        email: user.email, 
+        estado: user.is_active
       }));
 
       setData(filteredData); // Actualizar el estado con los datos filtrados
@@ -72,20 +75,20 @@ const AdminManagment = () => {
                 <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rut</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                      <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                       <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.map((user) => (
                       <tr key={user.id} className="hover:bg-gray-100 transition-colors duration-200">
-                        <td className="px-4 py-3 border-b border-gray-200 text-sm">{user.id}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.rut}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.estado === 1 ? 'Activo' : 'Inactivo'}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm">
                           <div className="flex items-center justify-center">
                             <motion.div animate={openId === user.id ? "open" : "closed"} className="absolute">
@@ -106,7 +109,14 @@ const AdminManagment = () => {
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
                                 <Option setOpen={setOpenId} Icon={FiEdit} text="Modificar" />
-                                <Option setOpen={setOpenId} Icon={FiEyeOff} text="Desactivar" rut={user.rut} fetchData={fetchData}/>
+                                <Option 
+                                  setOpen={setOpenId} 
+                                  Icon={FiEyeOff} 
+                                  text={user.estado === 1 ? "Desactivar" : "Activar"} 
+                                  rut={user.rut} 
+                                  estado={user.estado} 
+                                  fetchData={fetchData} 
+                                />
                                 <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar" rut={user.rut} fetchData={fetchData}/>
                               </motion.ul>
                             </motion.div>
@@ -127,7 +137,7 @@ const AdminManagment = () => {
   );
 };
 
-const Option = ({ text, Icon, setOpen, rut, fetchData  }) => {
+const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
 
   const handleClick = async (action) => { 
     if (action === "Desactivar") {
@@ -155,10 +165,42 @@ const Option = ({ text, Icon, setOpen, rut, fetchData  }) => {
               }
             );
             fetchData();
-            Swal.fire('Desactivado!', 'El doctor ha sido desactivado.', 'success');
+            Swal.fire('Desactivado!', 'El doctor ha sido desactivado con exito.', 'success');
           } catch (error) {
             Swal.fire('Error', 'Hubo un problema al desactivar al doctor.', 'error');
             console.error('Error desactivando doctor:', error);
+          }
+        }
+      });
+    }else if (action === "Activar") {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Está seguro de activar al doctor con RUT ${rut}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, activar',
+        cancelButtonText: 'Cancelar',
+      }).then(async (result) => { // Cambia esta función anónima a async
+        if (result.isConfirmed) {
+          setOpen(null);
+          try {
+            const token = sessionStorage.getItem('token');
+            // Envía el RUT al backend para desactivar el doctor
+            await axios.put(`${API_URL}/user/status`, 
+              { rut }, 
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+            fetchData();
+            Swal.fire('Activado!', 'El doctor ha sido activado con exito.', 'success');
+          } catch (error) {
+            Swal.fire('Error', 'Hubo un problema al activar al doctor.', 'error');
+            console.error('Error activando doctor:', error);
           }
         }
       });

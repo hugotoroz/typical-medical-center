@@ -5,6 +5,8 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
 import { motion } from "framer-motion";
+import OnClickButton from '../../../components/button/onClickButton.jsx';
+import LogOutButton from '../../../components/button/logOutButton.jsx';
 import Swal from 'sweetalert2';
 import {
     FiEdit,
@@ -17,10 +19,21 @@ import { API_URL } from '../../../../config.js'; //VARIABLE DE ENTORNO
 import './doctorSchedule.css';
 
 const Schedule = () => {
+
+  const [specialitiesTypes, setSpecialitiesTypes] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [scheduleSlots, setScheduleSlots] = useState({});
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const token = sessionStorage.getItem('token');
+
   const [formData, setFormData] = useState({
     startTime: '09:00',
     endTime: '17:00',
-    speciality: 1,
+    speciality: '',
     weekdays: true,
     saturdays: true,
     sundays: true
@@ -46,6 +59,120 @@ const Schedule = () => {
     // Add your submission logic here
   };
 
+  /////buscar items del select
+
+  useEffect(() => {
+      const fetchSpecialitiesTypes = async () => {
+          try {
+              console.log("entra");
+              // Aquí llamamos a la API
+              const response = await axios.get(`${API_URL}/doctors/Myspecialities`, {
+                  headers: {
+                      Authorization: `Bearer ${token}` // Enviar el token en los headers
+                  }
+              });
+
+              // Log de la respuesta para inspección
+              console.log('API response:', response.data);
+
+              // Asumiendo que el formato de la respuesta es como el JSON original
+              const data = response.data;
+
+              // Actualizamos el estado con los datos obtenidos
+              setSpecialitiesTypes(data); // Suponiendo que la respuesta tenga el mismo formato
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+
+      // Llamamos a la función fetchDocumentTypes
+      fetchSpecialitiesTypes();
+  }, []); // El efecto se ejecuta solo una vez cuando el componente se monta
+
+  const generarHorario = async () => {
+    console.log('Botón clickeado');// Asegúrate de que esto se imprima en la consola
+
+    console.log("sdadasd", formData);
+
+    if(formData.speciality == ""){
+      Swal.fire({
+        title: 'Error',
+        text: 'Debe de seleccionar la especialidad del horario',
+        icon: 'error', // Icono de éxito
+        confirmButtonText: 'Aceptar',
+      });
+      
+    }else{
+      setIsLoading(true);
+      try {
+        const response = await axios.post(
+          `${API_URL}/appointments/doctor/generate`, 
+          formData, // Aquí pasamos el objeto completo
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+    
+        console.log('Respuesta de la API:', response.data.data);
+  
+        setScheduleSlots(response.data.data);
+        setIsModalOpen(true);
+        // Maneja la respuesta según sea necesario
+      } catch (error) {
+        console.error('Error al enviar los datos:', error.response || error.message);
+        // Maneja el error según sea necesario
+      } finally {
+        setIsLoading(false);  // Set loading to false after API call
+      }
+    }
+
+  };
+
+  const crearHorario = async () => {
+    console.log(scheduleSlots);
+    console.log(formData.speciality);
+    try {
+      // Realiza la solicitud POST con los datos de los horarios y la especialidad
+      const response = await axios.post(
+        `${API_URL}/appointments/doctor/create`,
+        {
+          appointments: scheduleSlots, // Los slots de los horarios
+          speciality: formData.speciality, // El ID de la especialidad seleccionada
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // El token de autorización
+          },
+        }
+      );
+  
+      // Mostrar un mensaje de éxito con SweetAlert2
+      Swal.fire({
+        title: '¡Éxito!',
+        text: 'El horario ha sido creado correctamente.',
+        icon: 'success', // Icono de éxito
+        confirmButtonText: 'Aceptar',
+      });
+      
+      // Aquí puedes agregar cualquier lógica adicional, como resetear el formulario o cerrar el modal
+      setIsModalOpen(false); // Cierra el modal si lo deseas
+  
+    } catch (error) {
+      console.error("Error al crear horario:", error);
+  
+      // Mostrar un mensaje de error si la solicitud falla
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Hubo un problema al crear el horario. Inténtalo de nuevo.',
+        icon: 'error', // Icono de error
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  };
+  
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-teal-100 to-teal-150">
       <Sidebar />
@@ -53,14 +180,14 @@ const Schedule = () => {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md bg-white shadow-2xl rounded-xl p-8 border border-gray-200">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            Doctor Schedule
+            HORARIO MEDICO
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-2">
-                  Start Time
+                  Hora Inicio
                 </label>
                 <input
                   type="time"
@@ -72,7 +199,7 @@ const Schedule = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-2">
-                  End Time
+                  Hora Termino
                 </label>
                 <input
                   type="time"
@@ -86,7 +213,7 @@ const Schedule = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-2">
-                Speciality
+                Especialidad
               </label>
               <select
                 name="speciality"
@@ -94,10 +221,13 @@ const Schedule = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
               >
-                {specialties.map((spec) => (
-                  <option key={spec.id} value={spec.id}>
-                    {spec.name}
-                  </option>
+                <option value="" disabled>
+                    Seleccione la especialidad
+                </option>
+                {specialitiesTypes.map((espType) => (
+                    <option key={espType.id} value={espType.id} data-name={espType.nom}>
+                        {espType.nom}
+                    </option>
                 ))}
               </select>
             </div>
@@ -122,16 +252,69 @@ const Schedule = () => {
                 </div>
               ))}
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-teal-600 text-white py-3 rounded-md hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-            >
-              Generar Horario
-            </button>
+            <OnClickButton
+              text={isLoading ? "Generando..." : "Generar Horario"}
+              func={generarHorario}
+              disabled={isLoading}
+            />
           </form>
         </div>
       </div>
+      {isModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div
+      className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 overflow-hidden"
+      style={{ maxHeight: '80vh' }}
+    >
+      {/* Contenido del Modal */}
+      <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(80vh - 4rem)' }}>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Horario Generado</h2>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-teal-50">
+                <th className="border p-3 text-left text-sm font-semibold text-gray-700">Fecha</th>
+                <th className="border p-3 text-left text-sm font-semibold text-gray-700">Hora Inicio</th>
+                <th className="border p-3 text-left text-sm font-semibold text-gray-700">Hora termino</th>
+              </tr>
+            </thead>
+            <tbody>
+            {Object.entries(scheduleSlots).length === 0 ? (
+              // Si no hay slots, mostrar un mensaje
+              <tr>
+                <td colSpan="3" className="border p-3 text-sm text-center text-gray-600">
+                  No hay citas generadas.
+                </td>
+              </tr>
+            ) : (
+              // Si hay slots, mostrar la lista de citas
+              Object.entries(scheduleSlots).map(([key, slot]) => (
+                <tr key={key} className="hover:bg-teal-100 transition-colors">
+                  <td className="border p-3 text-sm text-gray-600">
+                    {new Date(slot.date).toLocaleDateString()}
+                  </td>
+                  <td className="border p-3 text-sm text-gray-600">{slot.starttime}</td>
+                  <td className="border p-3 text-sm text-gray-600">{slot.endtime}</td>
+                </tr>
+              ))
+            )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Footer Fijo */}
+      <div className="p-4 bg-gray-100 border-t space-x-4">
+        <LogOutButton text="Cancelar horario" onClick={() => setIsModalOpen(false)}></LogOutButton>
+        {Object.entries(scheduleSlots).length > 0 && (
+          <OnClickButton text="Aceptar horario" func={crearHorario}></OnClickButton>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

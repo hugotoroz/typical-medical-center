@@ -593,7 +593,7 @@ const Diagnosis = () => {
                             },
                         });
     
-                        console.log(historialResponse.data);
+                        console.log("historial actualizado: ",historialResponse.data);
                         setHistorial(historialResponse.data);
     
                         // Limpiar el editor Quill y restablecer el select
@@ -750,7 +750,11 @@ const Diagnosis = () => {
                                     <span>Cargando...</span>
                                 </div>
                             ) : (
-                                // Si no se está cargando, mostrar la tabla con los datos
+                                <>
+                                
+                                
+                                <div className="overflow-auto max-h-96">
+                                
                                 <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
                                     <thead className="bg-gray-50">
                                         <tr>
@@ -767,21 +771,21 @@ const Diagnosis = () => {
                                                 </td>
                                                 <td className="border border-gray-300 px-12 py-2">
                                                     
+                                                {item.observacion ? (
                                                     <a
                                                         key={index}
                                                         href={item.observacion}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="bg-white p-1 rounded"
-                                                        //data-tooltip-id={`tooltip-${index}`}
-                                                        //data-tooltip-content={"Observacion"}
+                                                        className="bg-white rounded"
                                                     >
                                                         <img
                                                             src={pdf_image}
-                                                            alt={"Observacion"}
+                                                            alt={"Observación"}
                                                             className="w-8 h-8 object-cover"
                                                         />
                                                     </a>
+                                                ) : null}
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
                                                     {item.documents.length > 0 ? (
@@ -815,6 +819,8 @@ const Diagnosis = () => {
                                         ))}
                                     </tbody>
                                 </table>
+                            </div>
+                            </>
                             )}
 
                             <button
