@@ -195,37 +195,20 @@ const Register = () => {
       });
       
     } catch (error) {
-      if (error.response && error.response.data?.error_code === 'DUPLICATE_KEY') {
-        const duplicateFields = error.response.data.fields || {};
+      console.error('Error submitting form:', error);
   
-        const newErrors = {
-          ...(duplicateFields.rut && { rut: 'RUT ya está registrado' }),
-          ...(duplicateFields.numDoc && { numDoc: 'N° Documento ya está registrado' }),
-          ...(duplicateFields.email && { email: 'Correo electrónico ya está registrado' }),
-        };
-
-        setErrors((prev) => ({
-          ...prev,
-          ...newErrors
-        }));
-
-        Swal.fire({
-          title: 'Error de registro',
-          text: Object.values(newErrors)[0],
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-
-        return;
-      } else {
-        console.error('Error submitting form:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Hubo un problema con el registro. Intente nuevamente.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-      }
+      // Directly use the message from the backend response
+      const errorMessage = error.response?.data?.message || 
+                           'Hubo un problema con el registro. Intente nuevamente.';
+    
+      Swal.fire({
+        title: 'Error de Registro',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -259,7 +242,7 @@ return (
                 value={formData.rut} 
                 onChange={(e) => {
                   handleChange(e);
-                  if (!value || value.trim() === '') {
+                  if (!e.target.value || e.target.value.trim() === '') {
                     setFormData(prev => ({
                       ...prev,
                       nombres: '',
