@@ -21,6 +21,7 @@ const Schedule = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchSpecialties();
@@ -54,27 +55,68 @@ const Schedule = () => {
     }
   };
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (filters = {}) => {
+    setIsLoading(true);
     try {
-      let url = `${API_URL}/appointments/search?`;
-      if (selectedSpecialty) {
-        url += `speciality=${selectedSpecialty}&`;
+      const queryParams = new URLSearchParams();
+      
+      // Add filters based on the provided object
+      if (filters.speciality) queryParams.append('speciality', filters.speciality);
+      if (filters.doctor) queryParams.append('doctor', filters.doctor);
+      if (filters.date) {
+        // Ensure date is in the correct format (YYYY-MM-DD)
+        const formattedDate = new Date(filters.date).toISOString().split('T')[0];
+        queryParams.append('date', formattedDate);
       }
-      if (selectedDoctor) {
-        url += `doctor=${selectedDoctor}&`;
-      }
-       if (selectedDate) {
-         url += `date=${new Date(selectedDate).toISOString().split('T')[0]}&`;
-       }
+  
+      // Construct the URL with optional query parameters
+      const url = `${API_URL}/appointments/search${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+  
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
       });
+  
+      console.log("Appointments filtered:", response.data);
       setAppointments(response.data.data);
     } catch (error) {
-      console.error('Error fetching appointments:', error);
+      console.error("Error fetching filtered appointments:", error);
+      setAppointments([]);
+    }finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSpecialtyChange = async (e) => {
+    const newSpecialty = e.target.value;
+    setSelectedSpecialty(newSpecialty);
+    await fetchAppointments({
+      speciality: newSpecialty || undefined,
+      doctor: selectedDoctor || undefined,
+      date: selectedDate || undefined
+    });
+  };
+
+  const handleDoctorChange = async (e) => {
+    const newDoctor = e.target.value;
+    setSelectedDoctor(newDoctor);
+    await fetchAppointments({
+      speciality: selectedSpecialty || undefined,
+      doctor: newDoctor || undefined,
+      date: selectedDate || undefined
+    });
+  };
+  
+  const handleDateChange = async (e) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    await fetchAppointments({
+      speciality: selectedSpecialty || undefined,
+      doctor: selectedDoctor || undefined,
+      date: newDate || undefined
+    });
   };
 
   const handleAppointmentBooking = async (availabilityId) => {
@@ -172,10 +214,7 @@ const Schedule = () => {
             <select
               id="specialty-select"
               value={selectedSpecialty}
-              onChange={(e) => {
-                setSelectedSpecialty(e.target.value);
-                fetchAppointments();
-              }}
+              onChange={handleSpecialtyChange}
               className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
             >
               <option value="">Selecciona una especialidad</option>
@@ -193,10 +232,7 @@ const Schedule = () => {
             <select
               id="doctor-select"
               value={selectedDoctor}
-              onChange={(e) => {
-                setSelectedDoctor(e.target.value);
-                fetchAppointments();
-              }}
+              onChange={handleDoctorChange}
               className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
             >
               <option value="">Selecciona un doctor</option>
@@ -215,10 +251,7 @@ const Schedule = () => {
             type="date"
             id="date-select"
             value={selectedDate}
-            onChange={(e) => {
-              setSelectedDate(e.target.value);
-              fetchAppointments();
-            }}
+            onChange={handleDateChange}
             className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:outline focus:outline-2 focus:outline-primary focus:ring-0"
           />
         </div>
@@ -232,50 +265,61 @@ const Schedule = () => {
 
         </div>
 
-        <div className="container mx-auto flex-grow px-4 mt-10 mb-10">
-          {console.log("Datos de citas:", appointments)}
-          <div className="flex justify-center"></div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
-                  <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
-                  <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario de inicio</th>
-                  <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre doctor</th>
-                  <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reservar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.length > 0 ? (
-                  appointments.map((appointment, index) => (
-                    <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                        {appointment.nombre_especialidad}
-                      </td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                      {new Date(appointment.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
-                </td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                        {appointment.hora_inicio}
-                      </td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                        {appointment.nombre_doctor}
-                      </td>
-                      <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                        <button onClick={() => confirmAppointmentBooking(appointment.id_disponibilidad)} className="bg-blue-500 text-white px-2 py-1 rounded">Reservar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="px-4 py-3 border-b border-gray-200 text-sm text-center">No hay citas disponibles</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+  <div className="container mx-auto flex-grow px-4 mt-10 mb-10 relative">
+  {isLoading ? (
+    <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/50">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
+    </div>
+  ) : null}
+
+  <div className="overflow-x-auto">
+    <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
+      <thead className="bg-gray-50">
+        <tr>
+          <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
+          <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha Cita</th>
+          <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Horario de inicio</th>
+          <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre doctor</th>
+          <th className="px-4 py-2 border-b border-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reservar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {appointments.length > 0 ? (
+          appointments.map((appointment, index) => (
+            <tr key={index} className="hover:bg-gray-100 transition-colors duration-200">
+              <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                {appointment.nombre_especialidad}
+              </td>
+              <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                {new Date(appointment.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
+              </td>
+              <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                {appointment.hora_inicio}
+              </td>
+              <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                {appointment.nombre_doctor}
+              </td>
+              <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+                <button 
+                  onClick={() => confirmAppointmentBooking(appointment.id_disponibilidad)} 
+                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                >
+                  Reservar
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5" className="px-4 py-3 border-b border-gray-200 text-sm text-center">
+              No hay citas disponibles
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
 
       </div>
 
