@@ -259,7 +259,7 @@ return (
                 value={formData.rut} 
                 onChange={(e) => {
                   handleChange(e);
-                  if (!value || value.trim() === '') {
+                  if (!e.target.value || e.target.value.trim() === '') {
                     setFormData(prev => ({
                       ...prev,
                       nombres: '',

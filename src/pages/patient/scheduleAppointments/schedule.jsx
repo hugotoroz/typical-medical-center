@@ -125,7 +125,8 @@ const Schedule = () => {
   };
 
 
-  const handleClearFilters = () => {
+  const handleClearFilters = (e) => {
+    e.preventDefault();
     setSelectedSpecialty('');
     setSelectedDoctor('');
     setSelectedDate('');
@@ -162,7 +163,7 @@ const Schedule = () => {
               </div>
             </div>
           </div>
-        <form action="">
+        <form action="" onSubmit={(e) => e.preventDefault()}>
         <div className="grid grid-cols-3 gap-6 mb-10">
           <div className="mb-10">
             <label htmlFor="specialty-select" className="block text-sm font-medium text-gray-700">
@@ -223,7 +224,7 @@ const Schedule = () => {
         </div>
         
         </div>
-        <ClearButton onClick={handleClearFilters} text="Limpiar Filtros" />
+        <ClearButton type="button" onClick={handleClearFilters} text="Limpiar Filtros" />
       </form>
 
 
