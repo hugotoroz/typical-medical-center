@@ -254,7 +254,7 @@ const Schedule = () => {
                         {appointment.nombre_especialidad}
                       </td>
                       <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                      {format(new Date(appointment.fecha), 'dd/MM/yyyy')}
+                      {new Date(appointment.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
                 </td>
                       <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
                         {appointment.hora_inicio}
