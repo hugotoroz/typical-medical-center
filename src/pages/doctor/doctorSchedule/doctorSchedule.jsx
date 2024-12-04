@@ -292,7 +292,7 @@ const Schedule = () => {
               Object.entries(scheduleSlots).map(([key, slot]) => (
                 <tr key={key} className="hover:bg-teal-100 transition-colors">
                   <td className="border p-3 text-sm text-gray-600">
-                    {new Date(slot.date).toLocaleDateString()}
+                    {new Date(slot.date).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
                   </td>
                   <td className="border p-3 text-sm text-gray-600">{slot.starttime}</td>
                   <td className="border p-3 text-sm text-gray-600">{slot.endtime}</td>

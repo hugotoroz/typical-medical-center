@@ -14,6 +14,8 @@ const NewDoctor = () => {
     const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
     const [error, setError] = useState(null); // Estado para manejar errores
     const [isLoading, setIsLoading] = useState(true); // Estado para el spinner de carga
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     // Estados para cada campo del formulario
     const [formData, setFormData] = useState({
@@ -152,7 +154,7 @@ const NewDoctor = () => {
 
     // Función para manejar el envío del formulario
     const handleSubmit = (e) => {
-    
+      setIsSubmitting(true);
       // Validación del campo Rut
       if (!formData.rut || formData.rut.trim() === '') {
         Swal.fire({
@@ -160,6 +162,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Rut es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (formData.rut.length > 12) {
         Swal.fire({
@@ -167,6 +170,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El Rut no puede tener más de 12 caracteres.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -177,6 +181,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Contraseña es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (formData.contrasena.length > 20) {
         Swal.fire({
@@ -184,7 +189,16 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'La Contraseña no puede tener más de 20 caracteres.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
+      } else if (!/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.contrasena) || formData.contrasena.length < 8) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La contraseña debe contener minimo 8 caracteres, al menos una mayúscula, una minúscula, un número y un carácter especial.',
+        });
+        setIsSubmitting(false);
+        return;
       }
     
       // Validación del Correo Electrónico
@@ -194,6 +208,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Correo Electrónico es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (!validateEmail(formData.correoElectronico)) {
         Swal.fire({
@@ -201,6 +216,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El Correo Electrónico no es válido.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -211,6 +227,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Nombre es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (formData.nombre.length > 50) {
         Swal.fire({
@@ -218,6 +235,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El Nombre no puede tener más de 50 caracteres.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -228,6 +246,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Apellido Paterno es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (formData.apellidoPaterno.length > 50) {
         Swal.fire({
@@ -235,6 +254,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El Apellido Paterno no puede tener más de 50 caracteres.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -245,6 +265,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Apellido Materno es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       } else if (formData.apellidoMaterno.length > 50) {
         Swal.fire({
@@ -252,6 +273,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El Apellido Materno no puede tener más de 50 caracteres.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -262,6 +284,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'La Fecha de Nacimiento es obligatoria.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -272,14 +295,16 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'El campo Número de Celular es obligatorio.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
-      } else if (formData.numeroCelular.length > 15) {
+      } else if (!/^9\d{8}$/.test(formData.numeroCelular)) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'El Número de Celular no puede tener más de 15 caracteres.',
+          text: 'El Número de Celular debe comenzar con 9 y tener exactamente 9 dígitos.',
         });
-        return; // Evitamos que el formulario se envíe si hay error
+        setIsSubmitting(false);
+        return;
       }
     
       // Validación de las Especialidades
@@ -289,6 +314,7 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'Debe seleccionar al menos una especialidad.',
         });
+        setIsSubmitting(false);
         return; // Evitamos que el formulario se envíe si hay error
       }
     
@@ -342,10 +368,22 @@ const NewDoctor = () => {
           title: 'Error',
           text: 'Hubo un problema con los datos.',
         });
+      })
+      .finally(() => {
+        setIsSubmitting(false); // Reset submitting state
       });
-      
     };
 
+    const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
+
+    const validatePassword = (password) => {
+      return password.length >= 8 && 
+             /(?=.*[A-Z])/.test(password) && 
+             /(?=.*\d)/.test(password) && 
+             /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(password);
+    };
 
     return (
       <>
@@ -359,6 +397,7 @@ const NewDoctor = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Rut</label>
+                  <div className="relative">
                   <input
                     type="text"
                     name="rut"
@@ -369,17 +408,44 @@ const NewDoctor = () => {
                     onChange={handleRutChange}
                   />
                 </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Formato de rut: 12345678-9
+                </p>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Contraseña</label>
-                  <input
-                    type="password"
-                    name="contrasena"
-                    id="contrasena"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Contraseña"
-                    value={formData.contrasena}
-                    onChange={handleInputChange}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      name="contrasena"
+                      id="contrasena"
+                      className={`mt-1 block w-full px-4 py-2 border ${
+                        formData.contrasena && !validatePassword(formData.contrasena) 
+                          ? 'border-red-500' 
+                          : 'border-gray-300'
+                      } rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500`}
+                      placeholder="Contraseña"
+                      value={formData.contrasena}
+                      onChange={handleInputChange}
+                    />
+                    
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute inset-y-0 right-0 px-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </button>                  
+                  </div>
+                  {formData.contrasena && !validatePassword(formData.contrasena) && (
+                      <p className="mt-1 text-xs text-red-500">
+                        La contraseña no cumple con los requisitos
+                      </p>
+                    )}
+                  <p className="mt-1 text-xs text-gray-500">
+                    Debe incluir: mayúscula, número, carácter especial y minimo 8 caracteres.
+                  </p>
+                  
                 </div>
               </div>
   
@@ -454,32 +520,38 @@ const NewDoctor = () => {
                   />
                 </div>
               </div>
-  
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Genero</label>
-                <input
-                  type="tel"
-                  name="numeroCelular"
-                  id="numeroCelular"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Genero"
-                  value={formData.genero}
-                  onChange={handleInputChange}
-                  disabled
-                />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Número de Celular</label>
-                <input
-                  type="tel"
-                  name="numeroCelular"
-                  id="numeroCelular"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Número de Celular"
-                  value={formData.numeroCelular}
-                  onChange={handleInputChange}
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Genero</label>
+                  <input
+                    type="tel"
+                    name="numeroCelular"
+                    id="numeroCelular"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Genero"
+                    value={formData.genero}
+                    onChange={handleInputChange}
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Número de Celular</label>
+                  <div className="relative">
+                  <input
+                    type="tel"
+                    name="numeroCelular"
+                    id="numeroCelular"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Número de Celular"
+                    value={formData.numeroCelular}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  El número debe comenzar con <strong>9</strong> seguido de 8 dígitos más. Ejemplo: <code>912345678</code>.
+                </p>
+                </div>
               </div>
   
               <div>
@@ -515,9 +587,37 @@ const NewDoctor = () => {
               <div className="flex justify-center lg:justify-end">
                 <button
                   type="button"
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 focus:outline-none"
-                 onClick={handleSubmit}>
-                  Añadir Doctor
+                  className="px-6 py-2 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 focus:outline-none flex items-center justify-center"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting} // Disable button while submitting
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center">
+                      <svg 
+                        className="animate-spin h-5 w-5 mr-3" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" 
+                        viewBox="0 0 24 24"
+                      >
+                        <circle 
+                          className="opacity-25" 
+                          cx="12" 
+                          cy="12" 
+                          r="10" 
+                          stroke="currentColor" 
+                          strokeWidth="4"
+                        ></circle>
+                        <path 
+                          className="opacity-75" 
+                          fill="currentColor" 
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Añadiendo...
+                    </div>
+                  ) : (
+                    "Añadir Doctor"
+                  )}
                 </button>
               </div>
             </form>
