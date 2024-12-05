@@ -139,7 +139,7 @@ const AdminManagment = () => {
 
 const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
 
-  const handleClick = async (action) => { 
+  const handleClick = async (action) => {
     if (action === "Desactivar") {
       Swal.fire({
         title: '¿Estás seguro?',
