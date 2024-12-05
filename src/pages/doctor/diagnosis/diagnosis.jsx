@@ -767,7 +767,7 @@ const Diagnosis = () => {
                                         {historial.map((item, index) => (
                                             <tr key={index}>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    {new Date(item.fecha).toLocaleDateString()}
+                                                    {new Date(item.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
                                                 </td>
                                                 <td className="border border-gray-300 px-12 py-2">
                                                     
