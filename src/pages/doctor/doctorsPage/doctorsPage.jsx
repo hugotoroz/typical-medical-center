@@ -149,7 +149,8 @@ return (
                                 style={{ originY: "top", translateX: "-50%" }}
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
-                                {appointment.pacienteId && appointment.estado !== "Completada" ? (
+                                {appointment.pacienteId && appointment.estado !== "Completada" && appointment.citaID ? (
+                                  <>
                                   <Option
                                     setOpen={setOpenId}
                                     Icon={FiPlusSquare}
@@ -157,9 +158,10 @@ return (
                                     idCita={appointment.citaID}
                                     idPaciente={appointment.pacienteId} // Pasar idPaciente
                                   />
+                                  <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" appointmentId={appointment.citaID} fetchData={fetchData} />
+                                  </>
+                                  
                                 ) : null}
-                                
-                                <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" />
                               </motion.ul>
                             </motion.div>
                           </div>
@@ -180,7 +182,7 @@ return (
 );
 };
 
-const Option = ({ text, Icon, setOpen, idCita, idPaciente }) => {
+const Option = ({ text, Icon, setOpen, idCita, idPaciente , appointmentId, fetchData}) => {
   const navigate = useNavigate();
 
   const handleOptionClick = async (action) => { 
@@ -188,6 +190,38 @@ const Option = ({ text, Icon, setOpen, idCita, idPaciente }) => {
         localStorage.setItem("idCita", idCita);
         localStorage.setItem("idPaciente", idPaciente);
         navigate(`/doctor/diagnosis`);
+      }else if (action === "Eliminar cita") {
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: `¿Está seguro de cancelar esta cita?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, cancelar',
+          cancelButtonText: 'Cancelar',
+        }).then(async (result) => { // Cambia esta función anónima a async
+          if (result.isConfirmed) {
+            setOpen(null);
+            try {
+              const token = sessionStorage.getItem('token');
+              // Envía el RUT al backend para desactivar el doctor
+              await axios.put(`${API_URL}/doctors/cancelAppointment`, 
+                { appointmentId }, 
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                }
+              );
+              fetchData();
+              Swal.fire('Cancelada!', 'La cita ha sido cancelada con exito.', 'success');
+            } catch (error) {
+              Swal.fire('Error', 'Hubo un problema al cancelar la cita.', 'error');
+              console.error('Error cancelando la cita:', error);
+            }
+          }
+        });
       }
     };
 

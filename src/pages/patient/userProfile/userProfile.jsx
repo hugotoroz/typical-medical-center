@@ -322,7 +322,7 @@ const UserProfile = () => {
                             <h2 className="text-2xl font-bold text-gray-900">
                                 {userName} {patSurName} {matSurName}
                             </h2>
-                            <p className="text-gray-500">Perfil de Usuario</p>
+                            <p className="text-gray-500 text-left">Perfil de Usuario</p>
                         </div>
                     </div>
                 </div>
@@ -334,10 +334,11 @@ const UserProfile = () => {
                         <ProfileSection 
                             icon={Calendar} 
                             label="Fecha de Nacimiento" 
-                            value={new Date(dateBirth).toLocaleDateString('es-CL', { 
+                            value={new Date(dateBirth).toLocaleDateString('es-ES', { 
                                 day: '2-digit', 
                                 month: '2-digit', 
-                                year: 'numeric' 
+                                year: 'numeric', 
+                                timeZone: 'UTC' 
                             })} 
                             />
                     </div>
@@ -511,116 +512,116 @@ const UserProfile = () => {
                     </div>
                 )}
                 {isModalOpen && selectedDoc && (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-        <div
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full transform transition-all"
-            style={{ maxHeight: '90vh', overflowY: 'auto' }}
-        >
-            {/* Header */}
-            <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-800">
-                    Detalles de la Consulta
-                </h2>
-                <button
-                    onClick={cerrarModal}
-                    className="text-gray-400 hover:text-gray-500 transition-colors"
-                >
-                    <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                </button>
-            </div>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                        <div
+                            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full transform transition-all"
+                            style={{ maxHeight: '90vh', overflowY: 'auto' }}
+                        >
+                            {/* Header */}
+                            <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                                <h2 className="text-xl font-semibold text-gray-800">
+                                    Detalles de la Consulta
+                                </h2>
+                                <button
+                                    onClick={cerrarModal}
+                                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                                >
+                                    <svg
+                                        className="w-6 h-6"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
 
-            {/* Content */}
-            <div className="px-6 py-4">
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm text-blue-600 font-medium mb-1">
-                            Doctor
-                        </p>
-                        <p className="text-gray-800 font-semibold">
-                            {selectedDoc.nombre_doctor}
-                        </p>
-                    </div>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm text-blue-600 font-medium mb-1">
-                            Especialidad
-                        </p>
-                        <p className="text-gray-800 font-semibold">
-                            {selectedDoc.nombre_especialidad}
-                        </p>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 gap-4 mb-6">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm text-blue-600 font-medium mb-1">
-                            Fecha
-                        </p>
-                        <p className="text-gray-800 font-semibold">
-                            {new Date(selectedDoc.fecha).toLocaleDateString(
-                                'es-ES',
-                                { timeZone: 'UTC' }
-                            )}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Documents Section */}
-                <div className="mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Documentos Adjuntos
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedDoc.documents.map((document, index) => (
-                            <a
-                                key={index}
-                                href={document.src}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
-                            >
-                                <img
-                                    src={pdf_image}
-                                    alt="PDF"
-                                    className="w-10 h-10 object-contain mr-3"
-                                />
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                                        {document.tipo_documento ||
-                                            `Documento ${index + 1}`}
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                        Clic para ver
-                                    </p>
+                            {/* Content */}
+                            <div className="px-6 py-4">
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">
+                                            Doctor
+                                        </p>
+                                        <p className="text-gray-800 font-semibold">
+                                            {selectedDoc.nombre_doctor}
+                                        </p>
+                                    </div>
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">
+                                            Especialidad
+                                        </p>
+                                        <p className="text-gray-800 font-semibold">
+                                            {selectedDoc.nombre_especialidad}
+                                        </p>
+                                    </div>
                                 </div>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                                <div className="grid grid-cols-1 gap-4 mb-6">
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <p className="text-sm text-blue-600 font-medium mb-1">
+                                            Fecha
+                                        </p>
+                                        <p className="text-gray-800 font-semibold">
+                                            {new Date(selectedDoc.fecha).toLocaleDateString(
+                                                'es-ES',
+                                                { timeZone: 'UTC' }
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
 
-            {/* Sticky Footer */}
-            <div className="border-t border-gray-100 px-6 py-4 flex justify-end sticky bottom-0 bg-white">
-                <button
-                    onClick={cerrarModal}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                    Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-)}
+                                {/* Documents Section */}
+                                <div className="mt-6">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                        Documentos Adjuntos
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {selectedDoc.documents.map((document, index) => (
+                                            <a
+                                                key={index}
+                                                href={document.src}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                                            >
+                                                <img
+                                                    src={pdf_image}
+                                                    alt="PDF"
+                                                    className="w-10 h-10 object-contain mr-3"
+                                                />
+                                                <div className="flex-1">
+                                                    <p className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                        {document.tipo_documento ||
+                                                            `Documento ${index + 1}`}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        Clic para ver
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sticky Footer */}
+                            <div className="border-t border-gray-100 px-6 py-4 flex justify-end sticky bottom-0 bg-white">
+                                <button
+                                    onClick={cerrarModal}
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
             </div>
         </div>
