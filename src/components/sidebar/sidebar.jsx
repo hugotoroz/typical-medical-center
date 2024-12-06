@@ -18,8 +18,8 @@ const iconMap = {
 const sidebarOptionsByRole = {
   "1": [ // Ejemplo de ID para 'admin'
     { path: "/admin/adminManagment", iconName: "Home", text: "Doctores" },
-    { path: "/admin/newDoctor", iconName: "User", text: "Crear doctor" },
-    { path: "/admin/newDoctor", iconName: "User", text: "Usuarios" },
+    { path: "/admin/patientsPage", iconName: "User", text: "Pacientes" },
+    { path: "/admin/newDoctor", iconName: "User", text: "Crear doctor" }
     //{ path: "/settings", iconName: "Settings", text: "Perfil" }
   ],
   "2": [ // Ejemplo de ID para 'doctor'

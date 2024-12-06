@@ -15,6 +15,7 @@ import Diagnosis from '../../pages/doctor/diagnosis/diagnosis';
 import UserProfile from '../../pages/patient/userProfile/userProfile';
 import DoctorSchedule from '../../pages/doctor/doctorSchedule/doctorSchedule.jsx';
 import DoctorProfile from '../../pages/doctor/doctorProfile/doctorProfile.jsx';
+import PatientsPage from '../../pages/admin/patientsPage/patientsPage.jsx';
 
 // Configures routes and renders the application with routing.
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="doctor/diagnosis" element={<ProtectedRoute allowedRoles={[2]}><Diagnosis /></ProtectedRoute>} />
           <Route path="doctor/doctorSchedule" element={<ProtectedRoute allowedRoles={[2]}><DoctorSchedule /></ProtectedRoute>} />
           <Route path="doctor/doctorProfile" element={<ProtectedRoute allowedRoles={[2]}><DoctorProfile /></ProtectedRoute>} />
+          <Route path="admin/patientsPage" element={<ProtectedRoute allowedRoles={[1]}><PatientsPage /></ProtectedRoute>} />
         </Routes>
       </Router>
     </>

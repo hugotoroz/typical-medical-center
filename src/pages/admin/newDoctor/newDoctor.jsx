@@ -51,8 +51,8 @@ const NewDoctor = () => {
         setData(filteredData); // Actualizar el estado con las especialidades
         setIsLoading(false); // Finaliza la carga
       } catch (error) {
-        setError('Error fetching data');
-        console.error('Error fetching data:', error);
+        setError('Error buscando la informacion');
+        console.error('Error buscando la informacion:', error);
         setIsLoading(false); // Finaliza la carga
       }
     };
@@ -141,7 +141,7 @@ const NewDoctor = () => {
             });
           }
         } catch (error) {
-          setError('Error fetching data');
+          setError('Error buscando la informacion');
           console.error('Error fetching user data:', error.response?.data || error.message);
         }
       }
