@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import Chatbot from '../../../components/chatbot/chatbot.jsx';
 import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
-import { Link, useLocation,useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {
   FiEdit,
@@ -13,9 +13,9 @@ import {
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { API_URL } from '../../../../config.js'; //VARIABLE DE ENTORNO
-import './adminManagment.css';
+import './patientsPage.css';
 
-const AdminManagment = () => {
+const PatientsPage = () => {
   const [openId, setOpenId] = useState(null); // State to store user ID open
   const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos de la API
   const [error, setError] = useState(null); // Estado para manejar errores
@@ -31,7 +31,7 @@ const AdminManagment = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/doctors`, {
+      const response = await axios.get(`${API_URL}/patients`, {
         headers: {
           Authorization: `Bearer ${token}` // Enviar el token en los headers
         }
@@ -52,7 +52,7 @@ const AdminManagment = () => {
       setIsLoading(false); // Finaliza la carga
     } catch (error) {
       setError('Error fetching data'); // Manejar error si la API falla
-      console.error('Error fetching data:', error);
+      console.error('Error buscando la infomacion:', error);
       setIsLoading(false); // Finaliza la carga
     }
   };
@@ -63,7 +63,7 @@ const AdminManagment = () => {
         <Sidebar />
         <div className="flex-1 p-8 bg-white bg-opacity-90 rounded-lg shadow-lg m-4">
           <div className="container mx-auto flex-grow px-4">
-          <h2 className="text-2xl font-semibold mb-6">Doctores</h2>
+          <h2 className="text-2xl font-semibold mb-6">Pacientes</h2>
           {error && <p className="text-red-500">{error}</p>} {/* Mostrar error si existe */}
             {isLoading ? (
               // Muestra solo el spinner mientras se cargan los datos
@@ -108,7 +108,7 @@ const AdminManagment = () => {
                                 style={{ originY: "top", translateX: "-50%" }}
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
-                                <Option setOpen={setOpenId} Icon={FiEdit} text="Modificar" />
+                                
                                 <Option 
                                   setOpen={setOpenId} 
                                   Icon={FiEyeOff} 
@@ -138,13 +138,12 @@ const AdminManagment = () => {
 };
 
 const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
-  const navigate = useNavigate();
 
-  const handleClick = async (action) => {
+  const handleClick = async (action) => { 
     if (action === "Desactivar") {
       Swal.fire({
         title: '¿Estás seguro?',
-        text: `¿Está seguro de desactivar al doctor con RUT ${rut}?`,
+        text: `¿Está seguro de desactivar al paciente con RUT ${rut}?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -166,17 +165,17 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
               }
             );
             fetchData();
-            Swal.fire('Desactivado!', 'El doctor ha sido desactivado con exito.', 'success');
+            Swal.fire('Desactivado!', 'El paciente ha sido desactivado con exito.', 'success');
           } catch (error) {
-            Swal.fire('Error', 'Hubo un problema al desactivar al doctor.', 'error');
-            console.error('Error desactivando doctor:', error);
+            Swal.fire('Error', 'Hubo un problema al desactivar al paciente.', 'error');
+            console.error('Error desactivando paciente:', error);
           }
         }
       });
     }else if (action === "Activar") {
       Swal.fire({
         title: '¿Estás seguro?',
-        text: `¿Está seguro de activar al doctor con RUT ${rut}?`,
+        text: `¿Está seguro de activar al paciente con RUT ${rut}?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -198,17 +197,17 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
               }
             );
             fetchData();
-            Swal.fire('Activado!', 'El doctor ha sido activado con exito.', 'success');
+            Swal.fire('Activado!', 'El paciente ha sido activado con exito.', 'success');
           } catch (error) {
-            Swal.fire('Error', 'Hubo un problema al activar al doctor.', 'error');
-            console.error('Error activando doctor:', error);
+            Swal.fire('Error', 'Hubo un problema al activar al paciente.', 'error');
+            console.error('Error activando paciente:', error);
           }
         }
       });
     }else if (action === "Eliminar") {
       Swal.fire({
         title: '¿Estás seguro?',
-        text: `¿Está seguro de eliminar al doctor con RUT ${rut}?`,
+        text: `¿Está seguro de eliminar al paciente con RUT ${rut}?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -237,15 +236,13 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
 
             // Si todo va bien, actualizamos los datos y mostramos el mensaje
             fetchData();
-            Swal.fire('Eliminado!', 'El doctor ha sido eliminado con éxito.', 'success');
+            Swal.fire('Eliminado!', 'El paciente ha sido eliminado con éxito.', 'success');
           } catch (error) {
-            Swal.fire('Error', 'Hubo un problema al eliminar al doctor.', 'error');
-            console.error('Error eliminando doctor:', error);
+            Swal.fire('Error', 'Hubo un problema al eliminar al paciente.', 'error');
+            console.error('Error eliminando paciente:', error);
           }
         }
       });
-    }else if (action === "Modificar") {
-      navigate('/login');
     }
   };
 
@@ -264,7 +261,7 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
   );
 };
 
-export default AdminManagment;
+export default PatientsPage;
 
 // Variants for animations
 const wrapperVariants = {
