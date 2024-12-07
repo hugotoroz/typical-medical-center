@@ -6,7 +6,10 @@ import { jwtDecode } from "jwt-decode";
 import { Sidebar, SidebarItem } from '../../../components/sidebar/sidebar.jsx';
 import { motion } from "framer-motion";
 import Swal from 'sweetalert2';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale";
+import { format, parse } from "date-fns";
 import {
     FiEdit,
     FiChevronDown,
@@ -23,19 +26,46 @@ const DoctorsPage = () => {
     const [error, setError] = useState(null); // Estado para manejar errores
     const [isLoading, setIsLoading] = useState(true); // Estado para el spinner de carga
 
+    // Nuevos estados para los selects
+    const [specialties, setSpecialties] = useState([]);
+    const [statusOptions, setStatusOptions] = useState([]);
+
+    const [selectedSpecialty, setSelectedSpecialty] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedTime, setSelectedTime] = useState('');
+
     const token = sessionStorage.getItem('token');
 
     useEffect(() => {
         fetchData();
+        fetchStatusOptions();
+        fetchSpecialties();
       }, []);
 
-      const fetchData = async () => {
+      const fetchData = async (filters = {}) => {
+
+        //console.log(selectedTime);
 
         setIsLoading(true);
         try {
-            const response = await axios.get(`${API_URL}/appointments/doctor`, {
+
+            console.log(filters.time);
+            console.log(filters.statusId, "sdasdad");
+            console.log(filters.time, "sdasdad");
+
+            const queryParams = new URLSearchParams();
+            if (filters.specialityId) queryParams.append('specialityId', filters.specialityId);
+            if (filters.date) queryParams.append('date', filters.date);
+            if (filters.time) queryParams.append('time', filters.time);
+            if (filters.statusId) queryParams.append('statusId', filters.statusId);
+
+            const url = `${API_URL}/appointments/doctor${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+            const response = await axios.get(url, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Enviar el token en los headers
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
                 }
             });
           
@@ -54,6 +84,7 @@ const DoctorsPage = () => {
                     pacienteId: appointment.id_paciente,
                     citaID: appointment.id_cita
                 }));
+                setError('');
                 setData(filteredData); // Actualizar el estado con los datos filtrados
                 setIsLoading(false); // Finaliza la carga
             } else {
@@ -75,8 +106,117 @@ const DoctorsPage = () => {
             }
         }
     };
-    
-    
+
+    ///////////////////fetchs
+
+  const fetchStatusOptions = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/appointments/status`, {
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        }
+      });
+      console.log(response.data.data);
+      setStatusOptions(response.data.data); // Asegúrate de que esto es un array de objetos.
+    } catch (error) {
+      console.error('Error fetching document types:', error);
+    }
+  };
+
+  const fetchSpecialties = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/doctors/specialities`, {
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            }
+        });
+        setSpecialties(response.data);
+    } catch (error) {
+        console.error('Error fetching specialties:', error);
+    }
+};
+
+///////////////////////////////////////
+
+/////////////////////////////handles
+
+const handleStatusChange = async (e) => {
+  const newStatus = e.target.value;
+  console.log(newStatus);
+  setSelectedStatus(newStatus);
+  await fetchData({
+      statusId: newStatus || undefined,
+      specialityId: selectedSpecialty || undefined,
+      date: selectedDate || undefined,
+      time: selectedTime || undefined,
+  });
+};
+
+const handleSpecialtyChange = async (e) => {
+  const newSpecialty = e.target.value;
+  console.log(newSpecialty);
+  setSelectedSpecialty(newSpecialty);
+  await fetchData({
+      statusId: selectedStatus || undefined,
+      specialityId: newSpecialty || undefined,
+      date: selectedDate || undefined,
+      time: selectedTime || undefined,
+  });
+};
+
+const handleDateChange = async (date) => {
+  console.log(date);
+  if (date === null) {
+      setSelectedDate(null);
+      console.log("Fecha borrada");
+      await fetchData({
+          statusId: selectedStatus || undefined,
+          specialityId: selectedSpecialty || undefined,
+          date: null,
+          time: selectedTime || undefined,
+      });
+  } else {
+      const newDate = format(date, "yyyy-MM-dd");
+      setSelectedDate(newDate);
+      console.log(newDate);
+      await fetchData({
+          statusId: selectedStatus || undefined,
+          specialityId: selectedSpecialty || undefined,
+          date: newDate || undefined,
+          time: selectedTime || undefined,
+      });
+  }
+};
+
+const handleTimeChange = async (time) => {
+  if (time === null) {
+      setSelectedTime(null);
+      console.log("Fecha borrada");
+      await fetchData({
+          statusId: selectedStatus || undefined,
+          specialityId: selectedSpecialty || undefined,
+          date: selectedDate || undefined,
+          time: null
+      });
+  } else {
+      const hours = time.getHours(); // Obtiene la hora
+      const minutes = time.getMinutes(); // Obtiene los minutos
+
+      // Formatea la hora a "HH:mm:ss" y ajusta medianoche
+      const formattedTime = `${hours === 0 ? 12 : hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:00`;
+      setSelectedTime(formattedTime);
+      console.log(formattedTime);
+      await fetchData({
+          statusId: selectedStatus || undefined,
+          specialityId: selectedSpecialty || undefined,
+          date: selectedDate || undefined,
+          time: formattedTime || undefined,
+      });
+  }
+};
+
+///////////////////////////////////////////
+
 
 return (
     <>
@@ -109,7 +249,66 @@ return (
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
               </div>
             ) : (
-              // Muestra la tabla completa solo cuando los datos están listos
+              <>
+              <div className="flex flex-col items-center mb-8">
+                    <div className="flex gap-4">
+
+                        <select
+                            value={selectedSpecialty}
+                            onChange={handleSpecialtyChange}
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                        >
+                            <option value="">Todas las especialidades</option>
+                            {specialties.map((specialty) => (
+                                <option key={specialty.id} value={specialty.id}>
+                                    {specialty.nom}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                        value={selectedStatus}
+                        onChange={handleStatusChange}
+                        className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                        >
+                          <option value="">Todos los estados</option>
+                          {statusOptions.map(option => (
+                            <option key={option.id} value={option.id}>
+                              {option.nombre}
+                            </option>
+                          ))}
+                        </select>
+
+                        <DatePicker
+                            selected={selectedDate ? new Date(selectedDate + 'T00:00:00') : null} // Forzamos la fecha a la zona horaria local
+                            onChange={handleDateChange}
+                            dateFormat="dd/MM/yyyy"
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                            placeholderText="Selecciona una fecha"
+                            isClearable
+                            locale={es}
+                        />
+
+                        <DatePicker
+                              selected={
+                                  selectedTime
+                                      ? parse(selectedTime, "HH:mm:ss", new Date("1970-01-01"))
+                                      : null
+                              } // Convierte el estado al objeto Date
+                              onChange={handleTimeChange}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeIntervals={10} // Intervalos de 10 minutos
+                              timeCaption="Hora"
+                              dateFormat="HH:mm" // Formato visible en el input
+                              className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                              placeholderText="Selecciona una hora"
+                              isClearable
+                              timeFormat="HH:mm" // Asegura formato de 24 horas en la lista desplegable
+                          />
+
+                    </div>
+                </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
                   <thead className="bg-gray-50">
@@ -128,42 +327,44 @@ return (
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.fecha}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">{appointment.horario}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
-                          {appointment.estado ? appointment.estado : 'Pendiente'}
+                          {appointment.estado ? appointment.estado : 'No ha sido tomada'}
                         </td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm">
                           <div className="flex items-center justify-center">
-                            <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
-                              <button
-                                onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
-                              >
-                                <span className="font-medium text-sm">Opciones</span>
-                                <motion.span variants={iconVariants}>
-                                  <FiChevronDown />
-                                </motion.span>
-                              </button>
-
-                              <motion.ul
-                                initial={wrapperVariants.closed}
-                                variants={wrapperVariants}
-                                style={{ originY: "top", translateX: "-50%" }}
-                                className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
-                              >
-                                {appointment.pacienteId && appointment.estado !== "Completada" && appointment.citaID ? (
+                            
+                                {appointment.pacienteId && (appointment.estado !== "Completada" && appointment.estado !== "Cancelada por Doctor" && appointment.estado !== "Cancelada por Paciente") && appointment.citaID ? (
                                   <>
-                                  <Option
-                                    setOpen={setOpenId}
-                                    Icon={FiPlusSquare}
-                                    text="Diagnosticar"
-                                    idCita={appointment.citaID}
-                                    idPaciente={appointment.pacienteId} // Pasar idPaciente
-                                  />
-                                  <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" appointmentId={appointment.citaID} fetchData={fetchData} />
+                                  <motion.div animate={openId === index ? "open" : "closed"} className="absolute">
+                                  <button
+                                    onClick={() => setOpenId(openId === index ? null : index)} // Alternate Id
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
+                                  >
+                                    <span className="font-medium text-sm">Opciones</span>
+                                    <motion.span variants={iconVariants}>
+                                      <FiChevronDown />
+                                    </motion.span>
+                                  </button>
+
+                                        <motion.ul
+                                          initial={wrapperVariants.closed}
+                                          variants={wrapperVariants}
+                                          style={{ originY: "top", translateX: "-50%" }}
+                                          className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
+                                        >
+                                        <Option
+                                          setOpen={setOpenId}
+                                          Icon={FiPlusSquare}
+                                          text="Diagnosticar"
+                                          idCita={appointment.citaID}
+                                          idPaciente={appointment.pacienteId} // Pasar idPaciente
+                                        />
+                                        <Option setOpen={setOpenId} Icon={FiTrash} text="Eliminar cita" appointmentId={appointment.citaID} fetchData={fetchData} />
+                                        </motion.ul>
+                                  </motion.div>
                                   </>
                                   
                                 ) : null}
-                              </motion.ul>
-                            </motion.div>
+                              
                           </div>
                         </td>
                       </tr>
@@ -171,6 +372,7 @@ return (
                   </tbody>
                 </table>
               </div>
+              </>
             )}
           </div>
 
