@@ -326,7 +326,7 @@ const Schedule = () => {
 
 
       <Footer />
-      <Chatbot />
+      
 
     </>
   );

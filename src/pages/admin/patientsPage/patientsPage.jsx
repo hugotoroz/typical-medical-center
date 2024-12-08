@@ -89,12 +89,15 @@ const PatientsPage = () => {
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.name}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.email}</td>
                         <td className="px-4 py-3 border-b border-gray-200 text-sm text-left">{user.estado === 1 ? 'Activo' : 'Inactivo'}</td>
-                        <td className="px-4 py-3 border-b border-gray-200 text-sm">
+                        <td className="px-4 py-3 border-b border-gray-200 text-sm text-center">
                           <div className="flex items-center justify-center">
-                            <motion.div animate={openId === user.id ? "open" : "closed"} className="absolute">
+                          <motion.div
+                            animate={openId === user.id ? "open" : "closed"}
+                            className="absolute w-full max-w-[90px] xl:max-w-[120px]"
+                          >
                               <button
                                 onClick={() => setOpenId(openId === user.id ? null : user.id)} // Alternate Id
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors z-10"
+                                className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-600 transition-colors text-sm"
                               >
                                 <span className="font-medium text-sm">Opciones</span>
                                 <motion.span variants={iconVariants}>

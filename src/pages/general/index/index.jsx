@@ -258,7 +258,6 @@ const MainPage = () => {
       </motion.div>
 
       <Footer />
-      <Chatbot />
     </>
   );
 };
