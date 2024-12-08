@@ -35,6 +35,7 @@ const Login = () => {
 
     return errors;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +102,7 @@ const Login = () => {
           <h2 className='text-4xl font-bold text-center py-6'>Inicio de Sesión</h2>
           <div className='flex flex-col py-2'>
             <label>Rut</label>
-            <input className='border p-2' type="text" name='rut' placeholder="Ingrese RUT 11111111-1" value={formData.rut} onChange={handleChange}/>
+            <input className='border p-2' type="text" name='rut' placeholder="11111111-1" value={formData.rut} onChange={handleChange}/>
             {errors.rut && <p className="text-red-500">{errors.rut}</p>}
           </div>
           <div className='flex flex-col py-2'>

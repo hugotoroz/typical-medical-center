@@ -23,13 +23,13 @@ const Register = () => {
     numDoc: '',
     telefono: '',
     fechaNacimiento: '',
-    clave: '',
-    confirmarClave: ''
+    clave: ''
   });
 
   const [errors, setErrors] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -138,14 +138,20 @@ const Register = () => {
     
     if (!formData.email) tempErrors.email = 'Email es requerido';
     if (!validateEmail(formData.email)) tempErrors.email = 'Email no es válido';
-    
-    if (!formData.clave) tempErrors.clave = 'Clave es requerido';
-    if (formData.clave.length > 20) tempErrors.clave = 'Clave no puede tener más de 20 caracteres';
-    
-    if (formData.clave !== formData.confirmarClave) tempErrors.confirmarClave = 'Las claves no coinciden';
   
     return tempErrors;
   }; 
+
+  const validatePassword = (password) => {
+    return password.length >= 8 && 
+           /(?=.*[A-Z])/.test(password) && 
+           /(?=.*\d)/.test(password) && 
+           /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(password);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -224,10 +230,10 @@ return (
     <div className=' flex flex-col grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
 
       <div className='hidden sm:block'>
-        <img className='w-full h-full object-cover mt-10' src={loginImg} alt="" />
+        <img className='w-full h-full object-cover mt-20' src={loginImg} alt="" />
       </div>
 
-      <div className='form-container bg-gray-100 flex flex-col justify-center h-full mt-10'>
+      <div className='form-container bg-gray-100 flex flex-col justify-center h-full mt-20'>
         <form className='bg-white p-4 p-6 rounded-lg shadow-lg max-w-[490px] mx-auto' onSubmit={handleSubmit}>
           <p className='text-xl md:text-2xl font-bold text-center py-4'>Registrarse</p>
 
@@ -255,7 +261,7 @@ return (
                     return;
                   }
                 }}
-                placeholder="Ingrese RUT"
+                placeholder="11111111-1"
               />
               {errors.rut && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.rut}</p>}
             </div>
@@ -358,32 +364,39 @@ return (
                 value={formData.telefono} 
                 onChange={handleChange}
               />
+                <p className="mt-1 text-xs text-gray-500">
+                  El número debe comenzar con <strong>9</strong> seguido de 8 dígitos más. Ejemplo: <code>912345678</code>.
+                </p>
               {errors.telefono && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.telefono}</p>}
             </div>
 
-            <div className='space-y-1'>
-              <label className="font-medium text-sm md:text-base">Clave</label>
-              <input 
-                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
-                type="password" 
-                name='clave' 
-                value={formData.clave} 
-                onChange={handleChange}
-              />
-              {errors.clave && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.clave}</p>}
-            </div>
-
-            <div className='space-y-1'>
-              <label className="font-medium text-sm md:text-base">Confirmar Clave</label>
-              <input 
-                className='border p-2 rounded focus:outline-none focus:border-green-300 w-full' 
-                type="password" 
-                name='confirmarClave' 
-                value={formData.confirmarClave} 
-                onChange={handleChange}
-              />
-              {errors.confirmarClave && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.confirmarClave}</p>}
-            </div>
+            <div className='space-y-1 relative'>
+  <label className="font-medium text-sm md:text-base">Clave</label>
+  <div className="relative">
+    <input 
+      className='border p-2 pr-10 rounded focus:outline-none focus:border-green-300 w-full' 
+      type={showPassword ? 'text' : 'password'} 
+      name='clave' 
+      value={formData.clave} 
+      onChange={handleChange}
+    />
+    <button
+      type="button"
+      onClick={togglePasswordVisibility}
+      className="absolute inset-y-0 right-0 px-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
+    >
+      {showPassword ? '🙈' : '👁️'}
+    </button>
+  </div>
+  {formData.clave && !validatePassword(formData.clave) && (
+    <p className="mt-1 text-xs text-red-500">
+      La contraseña no cumple con los requisitos
+    </p>
+  )}
+  <p className="mt-1 text-xs text-gray-500">
+    Debe incluir: mayúscula, número, carácter especial y minimo 8 caracteres.
+  </p>
+</div>
           </div>
 
           <div className='flex flex-row justify-between items-center space-x-4 mt-6'>
