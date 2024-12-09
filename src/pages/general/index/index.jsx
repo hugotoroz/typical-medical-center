@@ -8,7 +8,7 @@ import Footer from "../../../components/footer/footer.jsx";
 import Chatbot from "../../../components/chatbot/chatbot.jsx";
 import Button from "../../../components/button/hrefButton.jsx";
 // Banner image
-import banner from "../../../images/index/banner.png";
+import banner from "../../../images/index/banner.webp";
 // Specialities images
 import generalPractitioner from "../../../images/specialities/generalPractitioner.webp";
 import ophthalmologist from "../../../images/specialities/ophthalmologist.webp";
