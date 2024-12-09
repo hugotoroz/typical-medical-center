@@ -11,10 +11,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { Trash2, X } from 'lucide-react';
+
 
 const UserProfile = () => {
     const [rut, setRut] = useState('');
     const [email, setEmail] = useState('');
+    const [editedEmail, setEditedEmail] = useState('');
+    const [editedCellphone, setEditedCellphone] = useState('');
     const [password, setPassword] = useState('');
     const [userName, setUserName] = useState('');
     const [patSurName, setPatSurName] = useState('');
@@ -27,6 +31,7 @@ const UserProfile = () => {
     const [historial, setHistorial] = useState([]);
     const [selectedDoc, setSelectedDoc] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [hoveredAppointment, setHoveredAppointment] = useState(null);
 
     const [userDetails, setUserDetails] = useState({
         name: '',
@@ -86,12 +91,53 @@ const UserProfile = () => {
         handleCloseModal();
     };
 
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+      };
+
     const handleSave = async (e) => {
         e.preventDefault();
         try {
+            if (!editedEmail || editedEmail.trim() === '') {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'El campo Correo Electrónico es obligatorio.',
+                });
+                //setIsSubmitting(false);
+                return; // Evitamos que el formulario se envíe si hay error
+              } else if (!validateEmail(editedEmail)) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'El Correo Electrónico no es válido.',
+                });
+                //setIsSubmitting(false);
+                return; // Evitamos que el formulario se envíe si hay error
+              }
+
+            // Validación del Número de Celular
+            if (!editedCellphone || String(editedCellphone).trim() === '') {
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El campo Número de Celular es obligatorio.',
+                });
+                //setShowModal(false);
+                return; // Evitamos que el formulario se envíe si hay error
+            } else if (!/^9\d{8}$/.test(editedCellphone)) {
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El Número de Celular debe comenzar con 9 y tener exactamente 9 dígitos.',
+                });
+                //setShowModal(false);
+                return;
+            }
             const response = await axios.put(
                 `${API_URL}/user/update`,
-                { email, cellphone },
+                { email: editedEmail, cellphone: editedCellphone },
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -101,6 +147,9 @@ const UserProfile = () => {
 
             if (response.data.status === "success") {
                 sessionStorage.setItem("token", response.data.data.token);
+                const decodedToken = jwtDecode(response.data.data.token);
+                setEmail(decodedToken.email);
+                setCellphone(decodedToken.cellphone);
                 Swal.fire({
                     icon: 'success',
                     title: '¡Usuario actualizado exitosamente!',
@@ -108,6 +157,7 @@ const UserProfile = () => {
                 });
                 setShowModal(false);
             }
+
         } catch (error) {
             console.error("Error al actualizar el usuario:", error);
             
@@ -124,18 +174,67 @@ const UserProfile = () => {
         }
     };
 
+    const handleCancelAppointment = async (appointmentId) => {
+        try {
+            
+            const result = await Swal.fire({
+                title: '¿Está seguro?',
+                text: 'Esta acción no se puede revertir',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, cancelar cita',
+                cancelButtonText: 'No, mantener cita'
+            });
+
+            if (result.isConfirmed) {
+                const token = sessionStorage.getItem('token'); 
+
+                await axios.put(
+                    `${API_URL}/patients/cancelAppointment`, 
+                    { appointmentId },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );            
+                fetchAppointments();
+                Swal.fire(
+                    'Cancelada',
+                    'Su cita ha sido cancelada exitosamente.',
+                    'success'
+                );
+            }
+        } catch (error) {
+            console.error('Error cancelling appointment:', error);
+            Swal.fire(
+                'Error',
+                'No se pudo cancelar la cita. Intente nuevamente.',
+                'error'
+            );
+        }
+    };
+
     useEffect(() => {
         const token = sessionStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserName(decodedToken.fullName);
             setRut(decodedToken.rut);
-            setEmail(decodedToken.email);
             setPassword(decodedToken.password);
             setPatSurName(decodedToken.patSurName);
             setMatSurName(decodedToken.matSurName);
             setDateBirth(decodedToken.dateBirth);
-            setCellphone(decodedToken.cellphone);
+
+                        // Guardar los datos originales
+                        setEmail(decodedToken.email);
+                        setCellphone(decodedToken.cellphone);
+            
+                        // Inicializar los datos editados con los originales
+                        setEditedEmail(decodedToken.email);
+                        setEditedCellphone(decodedToken.cellphone);
         }
     }, []);
 
@@ -275,6 +374,13 @@ const UserProfile = () => {
         });
     };
 
+    const handleCancel = () => {
+        // Restaurar los datos editados a los originales
+        setEditedEmail(email);
+        setEditedCellphone(cellphone);
+        setShowModal(false);
+    };
+
     const handleSpecialtyChange = async (e) => {
         const newSpecialty = e.target.value;
         setSelectedSpecialty(newSpecialty);
@@ -311,7 +417,7 @@ const UserProfile = () => {
     const renderProfile = () => (
         <div className="max-w-7xl mx-auto p-4 mt-20">
             <div className="bg-white rounded-lg shadow-lg">
-                <div className="p-6 pb-4 border-b">
+                <div className="p-6 pb-4 border-b mt-10">
                     <div className="flex items-center space-x-4">
                         <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-16 h-16 rounded-full flex items-center justify-center">
                             <span className="text-2xl font-bold text-white">
@@ -358,17 +464,20 @@ const UserProfile = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 w-full max-w-md">
                         <h3 className="text-xl font-bold mb-4">Editar Perfil</h3>
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSave} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
                                     Correo Electrónico
                                 </label>
                                 <input
                                     type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={editedEmail}
+                                    onChange={(e) => setEditedEmail(e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 />
+                                <p className="mt-1 text-xs text-gray-500">
+                                Formato de correo: correo@ejemplo.com
+                                </p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
@@ -376,15 +485,18 @@ const UserProfile = () => {
                                 </label>
                                 <input
                                     type="tel"
-                                    value={cellphone}
-                                    onChange={(e) => setCellphone(e.target.value)}
+                                    value={editedCellphone}
+                                    onChange={(e) => setEditedCellphone(e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 />
+                                <p className="mt-1 text-xs text-gray-500">
+                                Formato de Numero: 912345678
+                                </p>
                             </div>
                             <div className="flex justify-end space-x-2">
                                 <button
                                     type="button"
-                                    onClick={() => setShowModal(false)}
+                                    onClick={handleCancel}
                                     className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
                                 >
                                     Cancelar
@@ -402,14 +514,15 @@ const UserProfile = () => {
             )}
         </div>
     );
+    
 
     const renderAppointments = () => (
-        <div className="p-4">
+        <div className="p-4 mt-10 overflow-y-auto ">
             <h2 className="text-xl font-bold mb-4 mt-20">Citas Médicas</h2>
             {appointments.length === 0 ? (
                 <p>No hay citas médicas registradas.</p>
             ) : (
-                <div className="overflow-x-auto mx-12">
+                <div className="overflow-x-auto mx-12 ">
                     <table className="min-w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg">
                         <thead className="bg-gray-50">
                             <tr>
@@ -418,16 +531,43 @@ const UserProfile = () => {
                                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Especialidad</th>
                                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
                                 <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Hora inicio</th>
+                                <th className="px-4 py-2 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Rechazar cita</th>
                             </tr>
                         </thead>
                         <tbody>
                             {appointments.map((appointment, index) => (
                                 <tr key={index}>
                                     <td className="p-2 border">{appointment.nombre_doctor}</td>
-                                    <td className="p-2 border">{new Date(appointment.fecha).toLocaleDateString()}</td>
+                                    <td className="p-2 border">{new Date(appointment.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
                                     <td className="p-2 border">{appointment.nombre_especialidad}</td>
                                     <td className="p-2 border">{appointment.estado}</td>
                                     <td className="p-2 border">{appointment.hora_inicio.slice(0, 5)}</td>
+                                    <td 
+                                        className="p-2 border text-center flex justify-center items-center"
+                                        onMouseEnter={() => setHoveredAppointment(appointment.id)}
+                                        onMouseLeave={() => setHoveredAppointment(null)}
+                                    >
+                                    <button 
+                                        className={`relative flex items-center justify-center font-bold py-1 px-2 rounded text-xs transition-all duration-300 ease-in-out transform group
+                                            ${(appointment.estado !== 'Confirmada' || appointment.estado === 'Cancelada por Doctor')
+                                                ? 'bg-gray-300 cursor-not-allowed opacity-50' 
+                                                : 'bg-red-500 hover:bg-red-700 text-white hover:scale-110'
+                                            }`}
+                                        onClick={() => handleCancelAppointment(appointment.id_cita)}
+                                        disabled={appointment.estado !== 'Confirmada' || appointment.estado === 'Cancelada por Doctor'}
+                                    >
+                                        {(appointment.estado !== 'Confirmada' || appointment.estado === 'Cancelada por Doctor') ? (
+                                            <X className="w-4 h-4 text-gray-600" />
+                                        ) : (
+                                            hoveredAppointment === appointment.id_cita ? (
+                                                <X className="w-4 h-4 animate-pulse" />
+                                            ) : (
+                                                <Trash2 className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                                            )
+                                        )}
+                                    </button>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
@@ -441,7 +581,7 @@ const UserProfile = () => {
         <div className="p-4 mt-20">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col items-center mb-8">
-                    <h2 className="text-2xl font-bold mb-6">Mis Documentos</h2>
+                    <h2 className="text-2xl font-bold mb-6 mt-10">Mis Documentos</h2>
                     <div className="flex gap-4">
                     <select
                             value={selectedType}
@@ -630,40 +770,40 @@ const UserProfile = () => {
     return (
         <>
             <Navbar />
-            <div className="flex h-screen">
-                <div className="w-16 bg-gray-800 text-white flex flex-col items-center py-4 mt-20">
-                    <button
-                        onClick={() => setActiveTab('profile')}
-                        className={`p-3 rounded-lg mb-4 transition-colors ${
-                            activeTab === 'profile' ? 'bg-blue-500' : 'hover:bg-gray-700'
-                        }`}
-                    >
-                        <User size={24} />
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('appointments')}
-                        className={`p-3 rounded-lg mb-4 transition-colors ${
-                            activeTab === 'appointments' ? 'bg-blue-500' : 'hover:bg-gray-700'
-                        }`}
-                    >
-                        <Calendar size={24} />
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('documents')}
-                        className={`p-3 rounded-lg transition-colors ${
-                            activeTab === 'documents' ? 'bg-blue-500' : 'hover:bg-gray-700'
-                        }`}
-                    >
-                        <FileText size={24} />
-                    </button>
-                </div>
+            <div className="flex h-screen overflow-hidden">
+    <div className="w-16 bg-gray-800 text-white flex flex-col items-center py-4 mt-20 fixed left-0 top-0 bottom-0">
+        <button
+            onClick={() => setActiveTab('profile')}
+            className={`p-3 rounded-lg mb-4 transition-colors ${
+                activeTab === 'profile' ? 'bg-blue-500' : 'hover:bg-gray-700'
+            }`}
+        >
+            <User size={24} />
+        </button>
+        <button
+            onClick={() => setActiveTab('appointments')}
+            className={`p-3 rounded-lg mb-4 transition-colors ${
+                activeTab === 'appointments' ? 'bg-blue-500' : 'hover:bg-gray-700'
+            }`}
+        >
+            <Calendar size={24} />
+        </button>
+        <button
+            onClick={() => setActiveTab('documents')}
+            className={`p-3 rounded-lg transition-colors ${
+                activeTab === 'documents' ? 'bg-blue-500' : 'hover:bg-gray-700'
+            }`}
+        >
+            <FileText size={24} />
+        </button>
+    </div>
 
-                <div className="flex-1 bg-gray-50">
-                    {activeTab === 'profile' ? renderProfile() : 
-                     activeTab === 'appointments' ? renderAppointments() : 
-                     renderDocuments()}
-                </div>
-            </div>
+    <div className="flex-1 bg-gray-50 ml-16 overflow-y-auto h-screen">
+        {activeTab === 'profile' ? renderProfile() : 
+         activeTab === 'appointments' ? renderAppointments() : 
+         renderDocuments()}
+    </div>
+</div>
         </>
     );
 };
