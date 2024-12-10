@@ -109,38 +109,7 @@ const Register = () => {
   };
 
 
-  
 
-
-
-
-  const validate = () => {
-    let tempErrors = {};
-  
-    if (!formData.nombres) tempErrors.nombres = 'Nombres es requerido';
-    if (formData.nombres.length > 50) tempErrors.nombres = 'Nombres no puede tener más de 50 caracteres';
-    
-    if (!formData.apellidoPaterno) tempErrors.apellidoPaterno = 'Apellido Paterno es requerido';
-    if (formData.apellidoPaterno.length > 50) tempErrors.apellidoPaterno = 'Apellido Paterno no puede tener más de 50 caracteres';
-    
-    if (!formData.apellidoMaterno) tempErrors.apellidoMaterno = 'Apellido Materno es requerido';
-    if (formData.apellidoMaterno.length > 50) tempErrors.apellidoMaterno = 'Apellido Materno no puede tener más de 50 caracteres';
-
-    if (!formData.rut) tempErrors.rut = 'Rut es requerido';
-    if (formData.rut.length > 12) tempErrors.rut = 'Rut no puede tener más de 12 caracteres';
-    
-    if (!formData.numDoc) tempErrors.numDoc = 'Número de Documento es requerido';
-    
-    if (!formData.telefono) tempErrors.telefono = 'Telefono es requerido';
-    if (formData.telefono.length > 15) tempErrors.telefono = 'Telefono no puede tener más de 15 caracteres';
-    
-    if (!formData.fechaNacimiento) tempErrors.fechaNacimiento = 'Fecha de Nacimiento es requerido';
-    
-    if (!formData.email) tempErrors.email = 'Email es requerido';
-    if (!validateEmail(formData.email)) tempErrors.email = 'Email no es válido';
-  
-    return tempErrors;
-  }; 
 
   const validatePassword = (password) => {
     return password.length >= 8 && 
@@ -157,27 +126,169 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
   
-
-    
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setIsLoading(false);
-      return;
-    }
   
     try {
 
       const isRutValid = await validateRut(formData.rut, formData.numDoc);
+      if (!formData.rut || formData.rut.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Rut es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (formData.rut.length > 12) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Rut no puede tener más de 12 caracteres.',
+        });
+
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+
+      if (!formData.numDoc || formData.numDoc.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Numero de documento es obligatorio.',
+        });
+
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+
       if (!isRutValid) {
-        setErrors((prev) => ({
-          ...prev,
-          numDoc: 'N° Documento no es válido',
-        }));
+        Swal.fire({
+          icon: 'error',
+          title: 'Documento Inválido',
+          text: 'El N° Documento no es válido',
+          confirmButtonText: 'Aceptar'
+        });
         setIsLoading(false);
         return;
       }
-  
+
+    
+      // Validación del campo Contraseña
+      if (!formData.clave || formData.clave.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Contraseña es obligatorio.',
+        });
+
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (formData.clave.length > 20) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La Contraseña no puede tener más de 20 caracteres.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (!/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.clave) || formData.clave.length < 8) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La contraseña debe contener minimo 8 caracteres, al menos una mayúscula, una minúscula, un número y un carácter especial.',
+        });
+        return;
+      }
+    
+      // Validación del Correo Electrónico
+      if (!formData.email || formData.email.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Correo Electrónico es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (!validateEmail(formData.email)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Correo Electrónico no es válido.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+    
+      // Validación del campo Nombre
+      if (!formData.nombres || formData.nombres.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Nombre es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (formData.nombres.length > 50) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Nombre no puede tener más de 50 caracteres.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+    
+      // Validación del campo Apellido Paterno
+      if (!formData.apellidoPaterno || formData.apellidoPaterno.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Apellido Paterno es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (formData.apellidoPaterno.length > 50) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Apellido Paterno no puede tener más de 50 caracteres.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+    
+      // Validación del campo Apellido Materno
+      if (!formData.apellidoMaterno || formData.apellidoMaterno.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Apellido Materno es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (formData.apellidoMaterno.length > 50) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Apellido Materno no puede tener más de 50 caracteres.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+    
+      // Validación de la Fecha de Nacimiento
+      if (!formData.fechaNacimiento) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La Fecha de Nacimiento es obligatoria.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      }
+    
+      // Validación del Número de Celular
+      if (!formData.telefono || formData.telefono.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El campo Número de Celular es obligatorio.',
+        });
+        return; // Evitamos que el formulario se envíe si hay error
+      } else if (!/^9\d{8}$/.test(formData.telefono)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El Número de Celular debe comenzar con 9 y tener exactamente 9 dígitos.',
+        });
+        return;
+      }
+    
       const response = await axios.post(`${API_URL}/patients`, {
         rut: formData.rut,
         email: formData.email,
@@ -263,7 +374,6 @@ return (
                 }}
                 placeholder="11111111-1"
               />
-              {errors.rut && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.rut}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -275,7 +385,6 @@ return (
                 value={formData.numDoc} 
                 onChange={handleChange} 
               />
-              {errors.numDoc && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.numDoc}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -288,7 +397,6 @@ return (
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              {errors.nombres && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.nombres}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -301,7 +409,6 @@ return (
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              {errors.apellidoPaterno && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.apellidoPaterno}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -314,7 +421,6 @@ return (
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              {errors.apellidoMaterno && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.apellidoMaterno}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -327,7 +433,6 @@ return (
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              {errors.genero && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.genero}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -340,7 +445,6 @@ return (
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              {errors.fechaNacimiento && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.fechaNacimiento}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -352,7 +456,6 @@ return (
                 value={formData.email} 
                 onChange={handleChange}
               />
-              {errors.email && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.email}</p>}
             </div>
 
             <div className='space-y-1'>
@@ -367,7 +470,6 @@ return (
                 <p className="mt-1 text-xs text-gray-500">
                   El número debe comenzar con <strong>9</strong> seguido de 8 dígitos más. Ejemplo: <code>912345678</code>.
                 </p>
-              {errors.telefono && <p className="text-red-500 text-xs md:text-sm mt-1">{errors.telefono}</p>}
             </div>
 
             <div className='space-y-1 relative'>
