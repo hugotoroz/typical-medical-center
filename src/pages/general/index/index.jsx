@@ -108,6 +108,7 @@ const MainPage = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
       setUserName(decodedToken.fullName);
       setRut(decodedToken.rut);
     }

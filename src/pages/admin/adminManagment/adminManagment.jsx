@@ -111,7 +111,6 @@ const AdminManagment = () => {
                                 style={{ originY: "top", translateX: "-50%" }}
                                 className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden z-20"
                               >
-                                <Option setOpen={setOpenId} Icon={FiEdit} text="Modificar" />
                                 <Option 
                                   setOpen={setOpenId} 
                                   Icon={FiEyeOff} 

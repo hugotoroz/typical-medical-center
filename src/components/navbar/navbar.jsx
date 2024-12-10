@@ -18,6 +18,7 @@ function Navbar() {
     const [matSurName, setMatSurName] = useState('');
     const [dateBirth, setDateBirth] = useState('');
     const [cellphone, setCellphone] = useState('');
+    const [roleId, setRole] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [activeTab, setActiveTab] = useState('profile');
@@ -62,7 +63,9 @@ function Navbar() {
   useEffect(() => {
       const token = localStorage.getItem('token');
       if (token) {
+        
           const decodedToken = jwtDecode(token);
+          console.log("aña" ,decodedToken.roleId);
           setUserName(decodedToken.fullName);
           setRut(decodedToken.rut);
           setEmail(decodedToken.email);
@@ -71,10 +74,24 @@ function Navbar() {
           setMatSurName(decodedToken.matSurName);
           setDateBirth(decodedToken.dateBirth);
           setCellphone(decodedToken.cellphone);
+          setRole(decodedToken.roleId);
 
+          console.log("Role set to:", roleId);
           //fetchUserData();
       }
   }, []);
+
+  const getRoleBasedRoute = () => {
+    console.log("Current roleId:", roleId); // Debug log
+    if(roleId == '1'){
+      return "/admin/adminManagment";
+    }else if(roleId == '2'){
+      return "/doctor/doctorsPage";
+    }else if(roleId == '3'){
+      return "/patient/userProfile";
+    }
+    
+};
 
   return (
     <>
@@ -118,7 +135,8 @@ function Navbar() {
               onClick={handleLogout}
               text="Cerrar Sesión"
             />
-            <Link to="/patient/userProfile">
+            
+            <Link to={getRoleBasedRoute()}>
               {userName ? (
                 <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-white">
