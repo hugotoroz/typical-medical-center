@@ -105,7 +105,7 @@ const MainPage = () => {
   const [rut, setRut] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserName(decodedToken.fullName);

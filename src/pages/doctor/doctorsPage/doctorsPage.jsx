@@ -35,7 +35,7 @@ const DoctorsPage = () => {
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
 
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchData();
@@ -113,7 +113,7 @@ const DoctorsPage = () => {
     try {
       const response = await axios.get(`${API_URL}/appointments/status`, {
         headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
       console.log(response.data.data);
@@ -127,7 +127,7 @@ const DoctorsPage = () => {
     try {
         const response = await axios.get(`${API_URL}/doctors/specialities`, {
             headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
         setSpecialties(response.data);
@@ -406,7 +406,7 @@ const Option = ({ text, Icon, setOpen, idCita, idPaciente , appointmentId, fetch
           if (result.isConfirmed) {
             setOpen(null);
             try {
-              const token = sessionStorage.getItem('token');
+              const token = localStorage.getItem('token');
               // Envía el RUT al backend para desactivar el doctor
               await axios.put(`${API_URL}/doctors/cancelAppointment`, 
                 { appointmentId }, 

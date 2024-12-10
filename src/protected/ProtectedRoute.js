@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       // No hay token, redirigir a login
@@ -30,7 +30,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
           allowOutsideClick: false
         }).then(() => {
           // Limpiar el token y redirigir al login
-          sessionStorage.removeItem('token');
+          localStorage.removeItem('token');
           navigate('/login');
         });
         return;
@@ -40,7 +40,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       console.error('Error al validar token:', error);
       
       // Limpiar el token inválido y redirigir al login
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
       
       Swal.fire({
         icon: 'error',

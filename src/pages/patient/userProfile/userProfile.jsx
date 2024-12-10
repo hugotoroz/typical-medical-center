@@ -62,7 +62,7 @@ const UserProfile = () => {
         try {
             const response = await axios.get(`${API_URL}/appointments/patient`, {
                 headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
             if (response.data && response.data.data) {
@@ -140,13 +140,13 @@ const UserProfile = () => {
                 { email: editedEmail, cellphone: editedCellphone },
                 {
                     headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 }
             );
 
             if (response.data.status === "success") {
-                sessionStorage.setItem("token", response.data.data.token);
+                localStorage.setItem("token", response.data.data.token);
                 const decodedToken = jwtDecode(response.data.data.token);
                 setEmail(decodedToken.email);
                 setCellphone(decodedToken.cellphone);
@@ -189,7 +189,7 @@ const UserProfile = () => {
             });
 
             if (result.isConfirmed) {
-                const token = sessionStorage.getItem('token'); 
+                const token = localStorage.getItem('token'); 
 
                 await axios.put(
                     `${API_URL}/patients/cancelAppointment`, 
@@ -218,7 +218,7 @@ const UserProfile = () => {
     };
 
     useEffect(() => {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserName(decodedToken.fullName);
@@ -243,7 +243,7 @@ const UserProfile = () => {
     useEffect(() => {
         // Obtén el idCita desde el localStorage
         
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         
         console.log(token);
 
@@ -303,7 +303,7 @@ const UserProfile = () => {
         try {
             const response = await axios.get(`${API_URL}/documents/types`, {
                 headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
             console.log(response.data.data)
@@ -318,7 +318,7 @@ const UserProfile = () => {
         try {
             const response = await axios.get(`${API_URL}/doctors/specialities`, {
                 headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
             setSpecialties(response.data);
@@ -336,7 +336,7 @@ const UserProfile = () => {
     const fetchHistorial = async (filters = {}) => {
         setIsLoading(true); // Activar spinner
         try {
-            const token = sessionStorage.getItem("token");
+            const token = localStorage.getItem("token");
             if (!token) return;
 
             const queryParams = new URLSearchParams();

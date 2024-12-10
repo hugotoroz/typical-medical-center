@@ -51,7 +51,7 @@ const Login = () => {
   
         const data = response.data;
   
-        sessionStorage.setItem('token', data.data.token);
+        localStorage.setItem('token', data.data.token);
   
         const decodedToken = jwtDecode(data.data.token);
         const userRole = decodedToken.roleId;

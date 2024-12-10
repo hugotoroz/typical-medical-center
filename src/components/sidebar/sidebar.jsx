@@ -39,7 +39,7 @@ export function Sidebar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserName(decodedToken.fullName);
@@ -51,7 +51,7 @@ export function Sidebar() {
   const sidebarItems = sidebarOptionsByRole[roleId] || [];
 
   const handleLogout = () => {
-    sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
     navigate('/login');
   };
 

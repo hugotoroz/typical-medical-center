@@ -19,7 +19,7 @@ const Schedule = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState();
   const [selectedDoctor, setSelectedDoctor] = useState();
   const [selectedDate, setSelectedDate] = useState('');
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -121,7 +121,7 @@ const Schedule = () => {
 
   const handleAppointmentBooking = async (availabilityId) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       const response = await axios.post(`${API_URL}/appointments/patient/create`, {
         availabilityId: availabilityId,
       }, {
