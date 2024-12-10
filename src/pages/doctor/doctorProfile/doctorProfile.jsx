@@ -24,7 +24,7 @@ const DoctorProfile = () => {
     const [showModal, setShowModal] = useState(false);
   
     useEffect(() => {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserName(decodedToken.fullName);
@@ -108,14 +108,14 @@ const DoctorProfile = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 }
             );
 
             if (response.data.status === "success") {
-                // Actualizar token en sessionStorage
-                sessionStorage.setItem("token", response.data.data.token);
+                // Actualizar token en localStorage
+                localStorage.setItem("token", response.data.data.token);
 
                 // Decodificar nuevo token para actualizar datos
                 const decodedToken = jwtDecode(response.data.data.token);

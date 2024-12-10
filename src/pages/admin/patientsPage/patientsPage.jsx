@@ -21,7 +21,7 @@ const PatientsPage = () => {
   const [error, setError] = useState(null); // Estado para manejar errores
   const [isLoading, setIsLoading] = useState(true); // Estado para el spinner de carga
 
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchData();
@@ -157,7 +157,7 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
         if (result.isConfirmed) {
           setOpen(null);
           try {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             // Envía el RUT al backend para desactivar el doctor
             await axios.put(`${API_URL}/user/status`, 
               { rut }, 
@@ -189,7 +189,7 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
         if (result.isConfirmed) {
           setOpen(null);
           try {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             // Envía el RUT al backend para desactivar el doctor
             await axios.put(`${API_URL}/user/status`, 
               { rut }, 
@@ -222,7 +222,7 @@ const Option = ({ text, Icon, setOpen, rut, fetchData, estado  }) => {
           setOpen(null);
           try {
             console.log("rut: ", rut)
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             // Envía el RUT al backend para desactivar el doctor
             const response = await axios.delete(`${API_URL}/user/delete`, 
               {

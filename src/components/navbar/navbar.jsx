@@ -50,17 +50,17 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    // Eliminar el token de sessionStorage
-    sessionStorage.removeItem("token");
+    // Eliminar el token de localStorage
+    localStorage.removeItem("token");
     
     // Redirigir al usuario a la página de inicio de sesión
     navigate("/login");
   };
 
-  const isLoggedIn = Boolean(sessionStorage.getItem("token"));
+  const isLoggedIn = Boolean(localStorage.getItem("token"));
 
   useEffect(() => {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (token) {
           const decodedToken = jwtDecode(token);
           setUserName(decodedToken.fullName);

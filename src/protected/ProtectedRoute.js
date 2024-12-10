@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       // No hay token, redirigir a login
@@ -19,13 +19,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       const decodedToken = jwtDecode(token);
 
       if (!allowedRoles.includes(decodedToken.roleId)) {
-        sessionStorage.removeItem('token');
+        localStorage.removeItem('token');
         navigate('/login');
         return;
       }
     } catch (error) {
       console.error('Error al validar token:', error);
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
       navigate('/login');
     }
   }, [navigate, allowedRoles]);

@@ -50,7 +50,7 @@ const Diagnosis = () => {
         setModalObservacion(true); // Abrir el modal
     };
 
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     const decodedToken = jwtDecode(token);
 
@@ -82,13 +82,13 @@ const Diagnosis = () => {
     useEffect(() => {
         const handleBeforeUnload = () => {
             // Solo eliminar el item si no es una recarga
-            if (!sessionStorage.getItem("reloaded")) {
+            if (!localStorage.getItem("reloaded")) {
                 localStorage.removeItem("idCita");
             }
         };
 
-        // Si el componente se recarga, marcarlo en sessionStorage
-        sessionStorage.setItem("reloaded", "true");
+        // Si el componente se recarga, marcarlo en localStorage
+        localStorage.setItem("reloaded", "true");
 
         // Escuchar el evento beforeunload
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -102,8 +102,8 @@ const Diagnosis = () => {
                 localStorage.removeItem("idCita");
             }
 
-            // Limpiar el valor de sessionStorage después de la descarga de la página
-            sessionStorage.removeItem("reloaded");
+            // Limpiar el valor de localStorage después de la descarga de la página
+            localStorage.removeItem("reloaded");
         };
     }, [location]);
 

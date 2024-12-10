@@ -8,7 +8,7 @@ import Footer from "../../../components/footer/footer.jsx";
 import Chatbot from "../../../components/chatbot/chatbot.jsx";
 import Button from "../../../components/button/hrefButton.jsx";
 // Banner image
-import banner from "../../../images/index/banner.png";
+import banner from "../../../images/index/banner.webp";
 // Specialities images
 import generalPractitioner from "../../../images/specialities/generalPractitioner.webp";
 import ophthalmologist from "../../../images/specialities/ophthalmologist.webp";
@@ -105,7 +105,7 @@ const MainPage = () => {
   const [rut, setRut] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserName(decodedToken.fullName);
